@@ -1,0 +1,15 @@
+{
+  "type": "productivemetalworks:block_casting",
+  "cast": {
+    "item": "minecraft:bone"
+  },
+  "consume_cast": true,
+  "fluid": {
+    "amount": 800,
+    "tag": "c:meat"
+  },
+  "result": {
+    "count": 1,
+    "id": "productivemetalworks:meat_block"
+  }
+}

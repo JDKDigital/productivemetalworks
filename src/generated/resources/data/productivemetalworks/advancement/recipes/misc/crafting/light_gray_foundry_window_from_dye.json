@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_foundry_window": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#productivemetalworks:foundry_windows"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "productivemetalworks:crafting/light_gray_foundry_window_from_dye"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_foundry_window"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "productivemetalworks:crafting/light_gray_foundry_window_from_dye"
+    ]
+  }
+}

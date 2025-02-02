@@ -1,0 +1,10 @@
+{
+  "values": [
+    "productivemetalworks:ingot_cast",
+    "productivemetalworks:nugget_cast",
+    "productivemetalworks:gem_cast",
+    "productivemetalworks:gear_cast",
+    "productivemetalworks:rod_cast",
+    "productivemetalworks:plate_cast"
+  ]
+}

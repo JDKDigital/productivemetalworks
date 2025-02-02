@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "productivemetalworks:block/foundry_tap_base",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "productivemetalworks:block/foundry_tap_base"
+    },
+    "facing=south": {
+      "model": "productivemetalworks:block/foundry_tap_base",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "productivemetalworks:block/foundry_tap_base",
+      "y": 270
+    }
+  }
+}

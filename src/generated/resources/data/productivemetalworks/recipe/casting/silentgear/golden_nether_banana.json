@@ -1,0 +1,21 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "silentgear"
+    }
+  ],
+  "type": "productivemetalworks:item_casting",
+  "cast": {
+    "item": "silentgear:nether_banana"
+  },
+  "consume_cast": true,
+  "fluid": {
+    "amount": 720,
+    "tag": "c:molten_gold"
+  },
+  "result": {
+    "count": 1,
+    "id": "silentgear:golden_nether_banana"
+  }
+}

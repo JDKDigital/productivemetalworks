@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "tag": "c:buckets/empty"
+    },
+    "C": {
+      "tag": "c:ingots/copper"
+    },
+    "X": {
+      "item": "productivemetalworks:fire_brick"
+    }
+  },
+  "pattern": [
+    "CCC",
+    "CBC",
+    "XXX"
+  ],
+  "result": {
+    "count": 1,
+    "id": "productivemetalworks:liquid_heating_coil"
+  }
+}

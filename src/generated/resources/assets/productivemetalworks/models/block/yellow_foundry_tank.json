@@ -1,0 +1,8 @@
+{
+  "parent": "productivemetalworks:block/foundry_tank_base",
+  "textures": {
+    "front": "productivemetalworks:block/yellow_foundry_tank_front",
+    "side": "productivemetalworks:block/yellow_fire_bricks",
+    "top": "productivemetalworks:block/yellow_fire_bricks"
+  }
+}

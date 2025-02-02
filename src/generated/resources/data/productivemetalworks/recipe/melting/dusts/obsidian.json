@@ -1,0 +1,23 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:tag_empty",
+        "tag": "c:dusts/obsidian"
+      }
+    }
+  ],
+  "type": "productivemetalworks:item_melting",
+  "ingredient": {
+    "tag": "c:dusts/obsidian"
+  },
+  "maximum_temperature": 0,
+  "minimum_temperature": 1400,
+  "result": [
+    {
+      "amount": 250,
+      "id": "productivemetalworks:molten_obsidian"
+    }
+  ]
+}

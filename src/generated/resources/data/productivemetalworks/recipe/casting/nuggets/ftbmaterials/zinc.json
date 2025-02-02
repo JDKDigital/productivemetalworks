@@ -1,0 +1,21 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "ftbmaterials"
+    }
+  ],
+  "type": "productivemetalworks:item_casting",
+  "cast": {
+    "item": "productivemetalworks:nugget_cast"
+  },
+  "consume_cast": false,
+  "fluid": {
+    "amount": 10,
+    "tag": "c:molten_zinc"
+  },
+  "result": {
+    "count": 1,
+    "id": "ftbmaterials:zinc_nugget"
+  }
+}

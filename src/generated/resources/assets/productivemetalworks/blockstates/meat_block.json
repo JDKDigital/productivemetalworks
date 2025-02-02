@@ -1,0 +1,100 @@
+{
+  "variants": {
+    "axis=x,meat_bites=0": {
+      "model": "productivemetalworks:block/meat_block",
+      "x": 90,
+      "y": 90
+    },
+    "axis=x,meat_bites=1": {
+      "model": "productivemetalworks:block/meat_block_1",
+      "x": 90,
+      "y": 90
+    },
+    "axis=x,meat_bites=2": {
+      "model": "productivemetalworks:block/meat_block_2",
+      "x": 90,
+      "y": 90
+    },
+    "axis=x,meat_bites=3": {
+      "model": "productivemetalworks:block/meat_block_3",
+      "x": 90,
+      "y": 90
+    },
+    "axis=x,meat_bites=4": {
+      "model": "productivemetalworks:block/meat_block_4",
+      "x": 90,
+      "y": 90
+    },
+    "axis=x,meat_bites=5": {
+      "model": "productivemetalworks:block/meat_block_5",
+      "x": 90,
+      "y": 90
+    },
+    "axis=x,meat_bites=6": {
+      "model": "productivemetalworks:block/meat_block_6",
+      "x": 90,
+      "y": 90
+    },
+    "axis=x,meat_bites=7": {
+      "model": "productivemetalworks:block/meat_block_7",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y,meat_bites=0": {
+      "model": "productivemetalworks:block/meat_block"
+    },
+    "axis=y,meat_bites=1": {
+      "model": "productivemetalworks:block/meat_block_1"
+    },
+    "axis=y,meat_bites=2": {
+      "model": "productivemetalworks:block/meat_block_2"
+    },
+    "axis=y,meat_bites=3": {
+      "model": "productivemetalworks:block/meat_block_3"
+    },
+    "axis=y,meat_bites=4": {
+      "model": "productivemetalworks:block/meat_block_4"
+    },
+    "axis=y,meat_bites=5": {
+      "model": "productivemetalworks:block/meat_block_5"
+    },
+    "axis=y,meat_bites=6": {
+      "model": "productivemetalworks:block/meat_block_6"
+    },
+    "axis=y,meat_bites=7": {
+      "model": "productivemetalworks:block/meat_block_7"
+    },
+    "axis=z,meat_bites=0": {
+      "model": "productivemetalworks:block/meat_block",
+      "x": 90
+    },
+    "axis=z,meat_bites=1": {
+      "model": "productivemetalworks:block/meat_block_1",
+      "x": 90
+    },
+    "axis=z,meat_bites=2": {
+      "model": "productivemetalworks:block/meat_block_2",
+      "x": 90
+    },
+    "axis=z,meat_bites=3": {
+      "model": "productivemetalworks:block/meat_block_3",
+      "x": 90
+    },
+    "axis=z,meat_bites=4": {
+      "model": "productivemetalworks:block/meat_block_4",
+      "x": 90
+    },
+    "axis=z,meat_bites=5": {
+      "model": "productivemetalworks:block/meat_block_5",
+      "x": 90
+    },
+    "axis=z,meat_bites=6": {
+      "model": "productivemetalworks:block/meat_block_6",
+      "x": 90
+    },
+    "axis=z,meat_bites=7": {
+      "model": "productivemetalworks:block/meat_block_7",
+      "x": 90
+    }
+  }
+}

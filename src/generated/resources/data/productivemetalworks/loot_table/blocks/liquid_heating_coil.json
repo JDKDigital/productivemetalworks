@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "conditions": [
+            {
+              "condition": "minecraft:survives_explosion"
+            }
+          ],
+          "name": "productivemetalworks:liquid_heating_coil"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "productivemetalworks:blocks/liquid_heating_coil"
+}

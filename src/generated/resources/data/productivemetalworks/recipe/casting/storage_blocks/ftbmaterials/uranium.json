@@ -1,0 +1,19 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "ftbmaterials"
+    }
+  ],
+  "type": "productivemetalworks:block_casting",
+  "cast": [],
+  "consume_cast": false,
+  "fluid": {
+    "amount": 810,
+    "tag": "c:molten_uranium"
+  },
+  "result": {
+    "count": 1,
+    "id": "ftbmaterials:uranium_block"
+  }
+}

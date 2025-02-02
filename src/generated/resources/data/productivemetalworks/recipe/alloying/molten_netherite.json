@@ -1,0 +1,34 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "productivelib:fluid_tag_empty",
+        "tag": "c:molten_ancient_debris"
+      }
+    },
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "productivelib:fluid_tag_empty",
+        "tag": "c:molten_gold"
+      }
+    }
+  ],
+  "type": "productivemetalworks:fluid_alloying",
+  "fluids": [
+    {
+      "amount": 4,
+      "tag": "c:molten_ancient_debris"
+    },
+    {
+      "amount": 4,
+      "tag": "c:molten_gold"
+    }
+  ],
+  "result": {
+    "amount": 1,
+    "id": "productivemetalworks:molten_netherite"
+  },
+  "speed": 10
+}

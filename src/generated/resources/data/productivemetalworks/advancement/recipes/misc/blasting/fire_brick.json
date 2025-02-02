@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_fire_clay": {
+      "conditions": {
+        "items": [
+          {
+            "items": "productivemetalworks:fire_clay"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "productivemetalworks:blasting/fire_brick"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_fire_clay"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "productivemetalworks:blasting/fire_brick"
+    ]
+  }
+}

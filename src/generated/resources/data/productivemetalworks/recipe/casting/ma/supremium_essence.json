@@ -1,0 +1,19 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "mysticalagradditions"
+    }
+  ],
+  "type": "productivemetalworks:item_casting",
+  "cast": [],
+  "consume_cast": false,
+  "fluid": {
+    "amount": 90,
+    "fluid": "mysticalagradditions:molten_supremium"
+  },
+  "result": {
+    "count": 1,
+    "id": "mysticalagriculture:supremium_essence"
+  }
+}

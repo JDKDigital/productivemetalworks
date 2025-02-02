@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "productivemetalworks:block/light_gray_fire_bricks",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "productivemetalworks:block/light_gray_fire_bricks"
+    },
+    "facing=south": {
+      "model": "productivemetalworks:block/light_gray_fire_bricks",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "productivemetalworks:block/light_gray_fire_bricks",
+      "y": 270
+    }
+  }
+}

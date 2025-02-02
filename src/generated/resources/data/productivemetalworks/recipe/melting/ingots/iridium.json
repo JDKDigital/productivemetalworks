@@ -1,0 +1,23 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:tag_empty",
+        "tag": "c:ingots/iridium"
+      }
+    }
+  ],
+  "type": "productivemetalworks:item_melting",
+  "ingredient": {
+    "tag": "c:ingots/iridium"
+  },
+  "maximum_temperature": 0,
+  "minimum_temperature": 1000,
+  "result": [
+    {
+      "amount": 90,
+      "id": "productivemetalworks:molten_iridium"
+    }
+  ]
+}

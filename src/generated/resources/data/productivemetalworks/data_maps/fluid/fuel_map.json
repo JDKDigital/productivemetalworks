@@ -1,0 +1,20 @@
+{
+  "values": {
+    "allthemodium:soul_lava": {
+      "neoforge:conditions": [
+        {
+          "type": "neoforge:mod_loaded",
+          "modid": "allthemodium"
+        }
+      ],
+      "consumption": 0.1,
+      "speed": 2.0,
+      "temperature": 3000
+    },
+    "minecraft:lava": {
+      "consumption": 0.2,
+      "speed": 1.0,
+      "temperature": 1500
+    }
+  }
+}

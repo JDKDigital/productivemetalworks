@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_foundry_tank": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#productivemetalworks:foundry_tanks"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "productivemetalworks:crafting/purple_foundry_tank_from_dye"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_foundry_tank"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "productivemetalworks:crafting/purple_foundry_tank_from_dye"
+    ]
+  }
+}

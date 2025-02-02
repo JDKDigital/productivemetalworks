@@ -1,0 +1,23 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:tag_empty",
+        "tag": "c:storage_blocks/raw_invar"
+      }
+    }
+  ],
+  "type": "productivemetalworks:item_melting",
+  "ingredient": {
+    "tag": "c:storage_blocks/raw_invar"
+  },
+  "maximum_temperature": 0,
+  "minimum_temperature": 1000,
+  "result": [
+    {
+      "amount": 1080,
+      "id": "productivemetalworks:molten_invar"
+    }
+  ]
+}

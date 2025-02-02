@@ -1,0 +1,14 @@
+{
+  "type": "productivemetalworks:item_melting",
+  "ingredient": {
+    "item": "minecraft:diamond_horse_armor"
+  },
+  "maximum_temperature": 0,
+  "minimum_temperature": 1000,
+  "result": [
+    {
+      "amount": 600,
+      "id": "productivemetalworks:molten_diamond"
+    }
+  ]
+}

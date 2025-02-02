@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "tag": "productivemetalworks:fire_bricks"
+    },
+    {
+      "tag": "c:dyes/red"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "productivemetalworks:red_fire_bricks"
+  }
+}

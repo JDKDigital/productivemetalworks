@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "X": {
+      "item": "productivemetalworks:fire_brick"
+    }
+  },
+  "pattern": [
+    "X X",
+    "X X",
+    "XXX"
+  ],
+  "result": {
+    "count": 1,
+    "id": "productivemetalworks:casting_basin"
+  }
+}

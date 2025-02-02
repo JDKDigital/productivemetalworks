@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "O": {
+      "tag": "c:glass_blocks/colorless"
+    },
+    "X": {
+      "item": "productivemetalworks:fire_brick"
+    }
+  },
+  "pattern": [
+    "XOX"
+  ],
+  "result": {
+    "count": 1,
+    "id": "productivemetalworks:black_foundry_window"
+  }
+}

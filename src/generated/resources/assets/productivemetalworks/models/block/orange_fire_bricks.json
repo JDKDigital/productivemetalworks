@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "front": "productivemetalworks:block/orange_fire_bricks",
+    "side": "productivemetalworks:block/orange_fire_bricks",
+    "top": "productivemetalworks:block/orange_fire_bricks"
+  }
+}

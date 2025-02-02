@@ -1,0 +1,8 @@
+{
+  "parent": "productivemetalworks:block/foundry_window_base",
+  "textures": {
+    "front": "productivemetalworks:block/yellow_foundry_window_front",
+    "side": "productivemetalworks:block/yellow_fire_bricks",
+    "top": "productivemetalworks:block/yellow_fire_bricks"
+  }
+}

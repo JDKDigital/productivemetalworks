@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "conditions": [
+            {
+              "block": "productivemetalworks:meat_block",
+              "condition": "minecraft:block_state_property",
+              "properties": {
+                "meat_bites": "0"
+              }
+            }
+          ],
+          "name": "productivemetalworks:meat_block"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "productivemetalworks:blocks/meat_block"
+}

@@ -1,0 +1,45 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "productivelib:fluid_tag_empty",
+        "tag": "c:molten_lead"
+      }
+    },
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "productivelib:fluid_tag_empty",
+        "tag": "c:molten_platinum"
+      }
+    },
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "productivelib:fluid_tag_empty",
+        "tag": "c:molten_ender"
+      }
+    }
+  ],
+  "type": "productivemetalworks:fluid_alloying",
+  "fluids": [
+    {
+      "amount": 27,
+      "tag": "c:molten_lead"
+    },
+    {
+      "amount": 9,
+      "tag": "c:molten_platinum"
+    },
+    {
+      "amount": 20,
+      "tag": "c:molten_ender"
+    }
+  ],
+  "result": {
+    "amount": 36,
+    "id": "productivemetalworks:molten_enderium"
+  },
+  "speed": 1
+}

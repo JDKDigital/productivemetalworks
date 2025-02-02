@@ -1,0 +1,24 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "pneumaticcraft"
+    }
+  ],
+  "type": "productivemetalworks:fluid_alloying",
+  "fluids": [
+    {
+      "amount": 100,
+      "fluid": "pneumaticcraft:lpg"
+    },
+    {
+      "amount": 100,
+      "tag": "c:molten_carbon"
+    }
+  ],
+  "result": {
+    "amount": 1000,
+    "id": "pneumaticcraft:plastic"
+  },
+  "speed": 1
+}

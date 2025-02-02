@@ -1,0 +1,19 @@
+{
+  "type": "productivemetalworks:item_melting",
+  "ingredient": [
+    {
+      "item": "minecraft:coal"
+    },
+    {
+      "item": "minecraft:charcoal"
+    }
+  ],
+  "maximum_temperature": 0,
+  "minimum_temperature": 1000,
+  "result": [
+    {
+      "amount": 100,
+      "id": "productivemetalworks:molten_carbon"
+    }
+  ]
+}

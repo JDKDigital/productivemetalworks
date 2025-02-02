@@ -1,0 +1,79 @@
+{
+  "type": "fusion:connecting",
+  "parent": "productivemetalworks:block/foundry_tank_base",
+  "connections": {
+    "type": "fusion:or",
+    "predicates": [
+      {
+        "type": "fusion:match_block",
+        "block": "productivemetalworks:white_foundry_tank"
+      },
+      {
+        "type": "fusion:match_block",
+        "block": "productivemetalworks:orange_foundry_tank"
+      },
+      {
+        "type": "fusion:match_block",
+        "block": "productivemetalworks:magenta_foundry_tank"
+      },
+      {
+        "type": "fusion:match_block",
+        "block": "productivemetalworks:light_blue_foundry_tank"
+      },
+      {
+        "type": "fusion:match_block",
+        "block": "productivemetalworks:yellow_foundry_tank"
+      },
+      {
+        "type": "fusion:match_block",
+        "block": "productivemetalworks:lime_foundry_tank"
+      },
+      {
+        "type": "fusion:match_block",
+        "block": "productivemetalworks:pink_foundry_tank"
+      },
+      {
+        "type": "fusion:match_block",
+        "block": "productivemetalworks:gray_foundry_tank"
+      },
+      {
+        "type": "fusion:match_block",
+        "block": "productivemetalworks:light_gray_foundry_tank"
+      },
+      {
+        "type": "fusion:match_block",
+        "block": "productivemetalworks:cyan_foundry_tank"
+      },
+      {
+        "type": "fusion:match_block",
+        "block": "productivemetalworks:purple_foundry_tank"
+      },
+      {
+        "type": "fusion:match_block",
+        "block": "productivemetalworks:blue_foundry_tank"
+      },
+      {
+        "type": "fusion:match_block",
+        "block": "productivemetalworks:brown_foundry_tank"
+      },
+      {
+        "type": "fusion:match_block",
+        "block": "productivemetalworks:green_foundry_tank"
+      },
+      {
+        "type": "fusion:match_block",
+        "block": "productivemetalworks:red_foundry_tank"
+      },
+      {
+        "type": "fusion:match_block",
+        "block": "productivemetalworks:black_foundry_tank"
+      }
+    ]
+  },
+  "loader": "fusion:model",
+  "textures": {
+    "front": "productivemetalworks:block/magenta_foundry_tank_front",
+    "side": "productivemetalworks:block/magenta_fire_bricks",
+    "top": "productivemetalworks:block/magenta_fire_bricks"
+  }
+}

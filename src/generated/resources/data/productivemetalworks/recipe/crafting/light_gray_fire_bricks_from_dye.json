@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "D": {
+      "tag": "c:dyes/light_gray"
+    },
+    "X": {
+      "tag": "productivemetalworks:fire_bricks"
+    }
+  },
+  "pattern": [
+    "XXX",
+    "XDX",
+    "XXX"
+  ],
+  "result": {
+    "count": 8,
+    "id": "productivemetalworks:light_gray_fire_bricks"
+  }
+}

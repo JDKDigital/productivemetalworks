@@ -1,0 +1,15 @@
+{
+  "type": "productivemetalworks:item_casting",
+  "cast": {
+    "item": "productivemetalworks:meat_ingot"
+  },
+  "consume_cast": true,
+  "fluid": {
+    "amount": 80,
+    "tag": "c:molten_gold"
+  },
+  "result": {
+    "count": 1,
+    "id": "productivemetalworks:shiny_meat_ingot"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "values": [
+    "productivemetalworks:foundry_tap",
+    "productivemetalworks:casting_basin",
+    "productivemetalworks:casting_table",
+    "productivemetalworks:liquid_heating_coil",
+    "productivemetalworks:powered_heating_coil",
+    "#productivemetalworks:foundry_controllers",
+    "#productivemetalworks:foundry_drains",
+    "#productivemetalworks:foundry_tanks",
+    "#productivemetalworks:foundry_windows",
+    "#productivemetalworks:fire_bricks"
+  ]
+}

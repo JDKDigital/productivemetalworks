@@ -1,0 +1,30 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "patchouli"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "minecraft:book"
+    },
+    "X": {
+      "item": "productivemetalworks:fire_brick"
+    }
+  },
+  "pattern": [
+    " X ",
+    "XBX",
+    " X "
+  ],
+  "result": {
+    "components": {
+      "patchouli:book": "productivemetalworks:guide"
+    },
+    "count": 1,
+    "id": "patchouli:guide_book"
+  }
+}

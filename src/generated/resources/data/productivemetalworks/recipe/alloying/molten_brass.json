@@ -1,0 +1,34 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "productivelib:fluid_tag_empty",
+        "tag": "c:molten_copper"
+      }
+    },
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "productivelib:fluid_tag_empty",
+        "tag": "c:molten_zinc"
+      }
+    }
+  ],
+  "type": "productivemetalworks:fluid_alloying",
+  "fluids": [
+    {
+      "amount": 3,
+      "tag": "c:molten_copper"
+    },
+    {
+      "amount": 1,
+      "tag": "c:molten_zinc"
+    }
+  ],
+  "result": {
+    "amount": 4,
+    "id": "productivemetalworks:molten_brass"
+  },
+  "speed": 10
+}

@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "attached=false": {
+      "model": "productivemetalworks:block/liquid_heating_coil_off"
+    },
+    "attached=true": {
+      "model": "productivemetalworks:block/liquid_heating_coil_on"
+    }
+  }
+}

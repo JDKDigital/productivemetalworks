@@ -1,0 +1,15 @@
+{
+  "type": "productivemetalworks:item_casting",
+  "cast": {
+    "item": "minecraft:apple"
+  },
+  "consume_cast": true,
+  "fluid": {
+    "amount": 720,
+    "tag": "c:molten_gold"
+  },
+  "result": {
+    "count": 1,
+    "id": "minecraft:golden_apple"
+  }
+}

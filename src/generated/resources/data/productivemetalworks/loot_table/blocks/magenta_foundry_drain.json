@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "conditions": [
+            {
+              "condition": "minecraft:survives_explosion"
+            }
+          ],
+          "functions": [
+            {
+              "function": "minecraft:copy_components",
+              "include": [
+                "productivemetalworks:fluid_stack"
+              ],
+              "source": "block_entity"
+            }
+          ],
+          "name": "productivemetalworks:magenta_foundry_drain"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "productivemetalworks:blocks/magenta_foundry_drain"
+}

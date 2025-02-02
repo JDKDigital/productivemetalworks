@@ -1,0 +1,18 @@
+{
+  "type": "productivemetalworks:item_melting",
+  "ingredient": {
+    "item": "productivemetalworks:shiny_meat_ingot"
+  },
+  "maximum_temperature": 0,
+  "minimum_temperature": 1000,
+  "result": [
+    {
+      "amount": 100,
+      "id": "productivemetalworks:meat"
+    },
+    {
+      "amount": 80,
+      "id": "productivemetalworks:molten_gold"
+    }
+  ]
+}

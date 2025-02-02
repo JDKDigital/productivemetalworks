@@ -1,0 +1,13 @@
+{
+  "type": "productivemetalworks:block_casting",
+  "cast": [],
+  "consume_cast": false,
+  "fluid": {
+    "amount": 810,
+    "tag": "c:molten_iron"
+  },
+  "result": {
+    "count": 1,
+    "id": "minecraft:iron_block"
+  }
+}

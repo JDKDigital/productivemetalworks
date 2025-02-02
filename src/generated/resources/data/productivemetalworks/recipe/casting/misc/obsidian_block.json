@@ -1,0 +1,13 @@
+{
+  "type": "productivemetalworks:block_casting",
+  "cast": [],
+  "consume_cast": false,
+  "fluid": {
+    "amount": 1000,
+    "fluid": "productivemetalworks:molten_obsidian"
+  },
+  "result": {
+    "count": 1,
+    "id": "minecraft:obsidian"
+  }
+}

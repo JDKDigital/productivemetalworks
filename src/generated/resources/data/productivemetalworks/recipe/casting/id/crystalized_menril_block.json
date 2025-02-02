@@ -1,0 +1,19 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "integrateddynamics"
+    }
+  ],
+  "type": "productivemetalworks:block_casting",
+  "cast": [],
+  "consume_cast": false,
+  "fluid": {
+    "amount": 1000,
+    "fluid": "integrateddynamics:menril_resin"
+  },
+  "result": {
+    "count": 1,
+    "id": "integrateddynamics:crystalized_menril_block"
+  }
+}

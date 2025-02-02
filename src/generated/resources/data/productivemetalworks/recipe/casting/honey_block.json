@@ -1,0 +1,22 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "productivelib:fluid_tag_empty",
+        "tag": "c:honey"
+      }
+    }
+  ],
+  "type": "productivemetalworks:block_casting",
+  "cast": [],
+  "consume_cast": false,
+  "fluid": {
+    "amount": 1000,
+    "tag": "c:honey"
+  },
+  "result": {
+    "count": 1,
+    "id": "minecraft:honey_block"
+  }
+}

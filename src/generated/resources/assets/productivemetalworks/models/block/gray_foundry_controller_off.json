@@ -1,0 +1,8 @@
+{
+  "parent": "productivemetalworks:block/foundry_controller_base",
+  "textures": {
+    "front": "productivemetalworks:block/foundry_controller_front_off",
+    "side": "productivemetalworks:block/gray_fire_bricks",
+    "top": "productivemetalworks:block/gray_fire_bricks"
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "productivelib:fluid_tag_empty",
+        "tag": "c:molten_glowstone"
+      }
+    },
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "productivelib:fluid_tag_empty",
+        "tag": "c:molten_silver"
+      }
+    },
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "productivelib:fluid_tag_empty",
+        "tag": "c:molten_tin"
+      }
+    }
+  ],
+  "type": "productivemetalworks:fluid_alloying",
+  "fluids": [
+    {
+      "amount": 40,
+      "tag": "c:molten_glowstone"
+    },
+    {
+      "amount": 9,
+      "tag": "c:molten_silver"
+    },
+    {
+      "amount": 27,
+      "tag": "c:molten_tin"
+    }
+  ],
+  "result": {
+    "amount": 36,
+    "id": "productivemetalworks:molten_signalum"
+  },
+  "speed": 1
+}

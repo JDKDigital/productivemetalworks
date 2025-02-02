@@ -1,0 +1,15 @@
+{
+  "type": "productivemetalworks:item_casting",
+  "cast": {
+    "item": "minecraft:carrot"
+  },
+  "consume_cast": true,
+  "fluid": {
+    "amount": 80,
+    "tag": "c:molten_gold"
+  },
+  "result": {
+    "count": 1,
+    "id": "minecraft:golden_carrot"
+  }
+}

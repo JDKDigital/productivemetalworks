@@ -1,0 +1,79 @@
+{
+  "type": "fusion:connecting",
+  "parent": "productivemetalworks:block/foundry_window_base",
+  "connections": {
+    "type": "fusion:or",
+    "predicates": [
+      {
+        "type": "fusion:match_block",
+        "block": "productivemetalworks:white_foundry_window"
+      },
+      {
+        "type": "fusion:match_block",
+        "block": "productivemetalworks:orange_foundry_window"
+      },
+      {
+        "type": "fusion:match_block",
+        "block": "productivemetalworks:magenta_foundry_window"
+      },
+      {
+        "type": "fusion:match_block",
+        "block": "productivemetalworks:light_blue_foundry_window"
+      },
+      {
+        "type": "fusion:match_block",
+        "block": "productivemetalworks:yellow_foundry_window"
+      },
+      {
+        "type": "fusion:match_block",
+        "block": "productivemetalworks:lime_foundry_window"
+      },
+      {
+        "type": "fusion:match_block",
+        "block": "productivemetalworks:pink_foundry_window"
+      },
+      {
+        "type": "fusion:match_block",
+        "block": "productivemetalworks:gray_foundry_window"
+      },
+      {
+        "type": "fusion:match_block",
+        "block": "productivemetalworks:light_gray_foundry_window"
+      },
+      {
+        "type": "fusion:match_block",
+        "block": "productivemetalworks:cyan_foundry_window"
+      },
+      {
+        "type": "fusion:match_block",
+        "block": "productivemetalworks:purple_foundry_window"
+      },
+      {
+        "type": "fusion:match_block",
+        "block": "productivemetalworks:blue_foundry_window"
+      },
+      {
+        "type": "fusion:match_block",
+        "block": "productivemetalworks:brown_foundry_window"
+      },
+      {
+        "type": "fusion:match_block",
+        "block": "productivemetalworks:green_foundry_window"
+      },
+      {
+        "type": "fusion:match_block",
+        "block": "productivemetalworks:red_foundry_window"
+      },
+      {
+        "type": "fusion:match_block",
+        "block": "productivemetalworks:black_foundry_window"
+      }
+    ]
+  },
+  "loader": "fusion:model",
+  "textures": {
+    "front": "productivemetalworks:block/light_gray_foundry_window_front",
+    "side": "productivemetalworks:block/light_gray_fire_bricks",
+    "top": "productivemetalworks:block/light_gray_fire_bricks"
+  }
+}

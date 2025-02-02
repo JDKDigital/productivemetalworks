@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "O": {
+      "tag": "c:sands"
+    },
+    "X": {
+      "item": "minecraft:clay_ball"
+    }
+  },
+  "pattern": [
+    "XOX",
+    "OXO",
+    "XOX"
+  ],
+  "result": {
+    "count": 4,
+    "id": "productivemetalworks:fire_clay"
+  }
+}

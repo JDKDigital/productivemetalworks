@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "productivemetalworks:block/orange_foundry_window",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "productivemetalworks:block/orange_foundry_window"
+    },
+    "facing=south": {
+      "model": "productivemetalworks:block/orange_foundry_window",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "productivemetalworks:block/orange_foundry_window",
+      "y": 270
+    }
+  }
+}

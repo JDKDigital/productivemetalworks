@@ -1,0 +1,7 @@
+{
+  "fusion": {
+    "type": "fusion:connecting",
+    "layout": "vertical",
+    "render_type": "cutout"
+  }
+}
