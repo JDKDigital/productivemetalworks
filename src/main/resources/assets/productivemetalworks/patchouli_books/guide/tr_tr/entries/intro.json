@@ -1,0 +1,71 @@
+{
+  "category": "productivemetalworks:intro",
+  "icon": "productivemetalworks:black_foundry_controller",
+  "name": "Dökümhane",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Productive Metalworks'e hoş geldin. Tinker's Construct Smeltery'den esinlenen bir mod. Bazı farklılıklar ve birçok benzerlik bulacaksın. Unutma, bu mod bir alet yapma modu DEĞİLDİR, sadece dökümhanedir."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Dökümhaneyi inşa etmek için ateş kilini eriterek elde edilen ateş tuğlalarına ihtiyacın var. İşe siyah ateş tuğlaları yaparak başlayacaksın. Bunlar temel olanlardır ve farklı renklerde olanları elde etmek için boyanabilirler."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Dökümhanenize ulaşmak için ihtiyaç duyacağınız bloklar şunlardır:$(br)* Dökümhane Kontrolcüsü$(br)* Dökümhane Tankı$(br) * Sıvı Isıtma Bobini$(br) * Dökümhane Drenajı$(br) * Ateş Tuğlaları veya Dökümhane Camları$(br) * Döküm Kazanı & Masası"
+    },
+    {
+      "type": "patchouli:multiblock",
+      "multiblock": {
+        "mapping": {
+          "A": "productivemetalworks:casting_table",
+          "B": "productivemetalworks:liquid_heating_coil[attached=true]",
+          "C": "productivemetalworks:black_foundry_controller[facing=east,attached=true]",
+          "D": "productivemetalworks:black_foundry_drain[facing=east]",
+          "P": "productivemetalworks:foundry_tap[facing=south]",
+          "Q": "productivemetalworks:foundry_tap[facing=east]",
+          "S": "productivemetalworks:casting_basin",
+          "T": "productivemetalworks:black_foundry_tank[facing=east]",
+          "W": "productivemetalworks:black_fire_bricks"
+        },
+        "pattern": [
+          [
+            " WWW ",
+            "W   W",
+            "W   W",
+            "W   W",
+            " WWW ",
+            "     "
+          ],
+          [
+            " WWW ",
+            "W   W",
+            "W 0 W",
+            "W   W",
+            " TCDP",
+            "   Q "
+          ],
+          [
+            "     ",
+            " BBB ",
+            " BBB ",
+            " BBB ",
+            "    A",
+            "   S "
+          ]
+        ]
+      },
+      "multiblock_id": "foundry",
+      "name": "3x3 Dökümhane"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Önemli bir fark, dökümhanenin alt kısmını sıvı ısıtma bobinleri ile doldurman gerekmesidir. Bunlar dökümhaneyi gerçekten ısıtmanı sağlar. Dökümhane çoklu bloğunun köşeleri isteğe bağlıdır."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(br)Dökümhane varsayılan olarak ham cevheri 1.3x oranında eritecektir ve eritme oranı kullanılan yakıt tarafından belirlenecektir."
+    }
+  ]
+}
