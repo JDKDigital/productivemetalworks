@@ -614,16 +614,16 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
         var menrilResin = BuiltInRegistries.FLUID.get(ResourceLocation.fromNamespaceAndPath("integrateddynamics", "menril_resin"));
         // menril block
         ItemMeltingRecipeBuilder.of(Ingredient.of(menrilBlock), new FluidStack(menrilResin, 1000))
-                .save(recipeOutput.withConditions(new ModLoadedCondition("integrateddynamics")), "melting/id/crystalized_menril_block");
+                .save(recipeOutput.withConditions(new ModLoadedCondition("integrateddynamics")), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/id/crystalized_menril_block"));
         // menril chunk
         ItemMeltingRecipeBuilder.of(Ingredient.of(menrilChunk), new FluidStack(menrilResin, 100))
-                .save(recipeOutput.withConditions(new ModLoadedCondition("integrateddynamics")), "melting/id/crystalized_menril_chunk");
+                .save(recipeOutput.withConditions(new ModLoadedCondition("integrateddynamics")), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/id/crystalized_menril_chunk"));
         // menril logs
         ItemMeltingRecipeBuilder.of(Ingredient.of(ItemTags.create(ResourceLocation.fromNamespaceAndPath("integrateddynamics", "menril_logs"))), new FluidStack(menrilResin, 1300))
-                .save(recipeOutput.withConditions(new ModLoadedCondition("integrateddynamics")), "melting/id/menril_logs");
+                .save(recipeOutput.withConditions(new ModLoadedCondition("integrateddynamics")), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/id/menril_logs"));
         // menril planks
         ItemMeltingRecipeBuilder.of(Ingredient.of(BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("integrateddynamics", "menril_planks"))), new FluidStack(menrilResin, 350))
-                .save(recipeOutput.withConditions(new ModLoadedCondition("integrateddynamics")), "melting/id/menril_planks");
+                .save(recipeOutput.withConditions(new ModLoadedCondition("integrateddynamics")), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/id/menril_planks"));
 
         // menril block
         BlockCastingRecipeBuilder.of(SizedFluidIngredient.of(menrilResin, 1000), menrilBlock.getDefaultInstance())
@@ -637,16 +637,16 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
         var chorusResin = BuiltInRegistries.FLUID.get(ResourceLocation.fromNamespaceAndPath("integrateddynamics", "liquid_chorus"));
         // chorus block
         ItemMeltingRecipeBuilder.of(Ingredient.of(chorusBlock), new FluidStack(chorusResin, 1000))
-                .save(recipeOutput.withConditions(new ModLoadedCondition("integrateddynamics")), "melting/id/crystalized_chorus_block");
+                .save(recipeOutput.withConditions(new ModLoadedCondition("integrateddynamics")), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/id/crystalized_chorus_block"));
         // chorus chunk
         ItemMeltingRecipeBuilder.of(Ingredient.of(chorusChunk), new FluidStack(chorusResin, 100))
-                .save(recipeOutput.withConditions(new ModLoadedCondition("integrateddynamics")), "melting/id/crystalized_chorus_chunk");
+                .save(recipeOutput.withConditions(new ModLoadedCondition("integrateddynamics")), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/id/crystalized_chorus_chunk"));
         // proto chorus
         ItemMeltingRecipeBuilder.of(Ingredient.of(BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("integrateddynamics", "proto_chorus"))), new FluidStack(chorusResin, 250))
-                .save(recipeOutput.withConditions(new ModLoadedCondition("integrateddynamics")), "melting/id/proto_chorus");
+                .save(recipeOutput.withConditions(new ModLoadedCondition("integrateddynamics")), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/id/proto_chorus"));
         // popped chorus
         ItemMeltingRecipeBuilder.of(Ingredient.of(Items.POPPED_CHORUS_FRUIT), new FluidStack(chorusResin, 450))
-                .save(recipeOutput.withConditions(new ModLoadedCondition("integrateddynamics")), "melting/id/popped_chorus");
+                .save(recipeOutput.withConditions(new ModLoadedCondition("integrateddynamics")), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/id/popped_chorus"));
 
         // chorus block
         BlockCastingRecipeBuilder.of(SizedFluidIngredient.of(chorusResin, 1000), chorusBlock.getDefaultInstance())
@@ -661,7 +661,7 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
         var moltenPlastic = BuiltInRegistries.FLUID.get(ResourceLocation.fromNamespaceAndPath("pneumaticcraft", "plastic"));
         // molten plastic
         ItemMeltingRecipeBuilder.of(Ingredient.of(plasticItem), new FluidStack(moltenPlastic, 1000))
-                .save(recipeOutput.withConditions(new ModLoadedCondition("pneumaticcraft")), "melting/pnc/plastic");
+                .save(recipeOutput.withConditions(new ModLoadedCondition("pneumaticcraft")), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/pnc/plastic"));
 
         // plastic
         ItemCastingRecipeBuilder.of(MetalworksRegistrator.CAST_INGOT.get().getDefaultInstance(), SizedFluidIngredient.of(moltenPlastic, 1000), plasticItem.getDefaultInstance())
@@ -683,12 +683,12 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
             ItemMeltingRecipeBuilder.of(
                     Ingredient.of(BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("mysticalagriculture", essence + "_block"))),
                     new FluidStack(essenceFluid, 810)
-            ).save(recipeOutput.withConditions(new ModLoadedCondition("mysticalagradditions")), "melting/ma/" + essence + "_block");
+            ).save(recipeOutput.withConditions(new ModLoadedCondition("mysticalagradditions")), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/ma/" + essence + "_block"));
             // melt essence
             ItemMeltingRecipeBuilder.of(
                     Ingredient.of(BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("mysticalagriculture", essence + "_essence"))),
                     new FluidStack(essenceFluid, 90)
-            ).save(recipeOutput.withConditions(new ModLoadedCondition("mysticalagradditions")), "melting/ma/" + essence + "_essence");
+            ).save(recipeOutput.withConditions(new ModLoadedCondition("mysticalagradditions")), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/ma/" + essence + "_essence"));
 
             // casting essence
             ItemCastingRecipeBuilder.of(SizedFluidIngredient.of(essenceFluid, 90), BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("mysticalagriculture", essence + "_essence")).getDefaultInstance())
@@ -707,7 +707,7 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
         ItemMeltingRecipeBuilder.of(
                 Ingredient.of(ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "ores/inferium"))),
                 new FluidStack(BuiltInRegistries.FLUID.get(ResourceLocation.fromNamespaceAndPath("mysticalagradditions", "molten_inferium")), 360)
-        ).save(recipeOutput.withConditions(new ModLoadedCondition("mysticalagradditions")), "melting/ma/inferium_ores");
+        ).save(recipeOutput.withConditions(new ModLoadedCondition("mysticalagradditions")), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/ma/inferium_ores"));
 
         // cast inferium_seeds
         ItemCastingRecipeBuilder.of(Items.WHEAT_SEEDS.getDefaultInstance(), SizedFluidIngredient.of(BuiltInRegistries.FLUID.get(ResourceLocation.fromNamespaceAndPath("mysticalagradditions", "molten_inferium")), 720), BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("mysticalagriculture", "inferium_seeds")).getDefaultInstance())

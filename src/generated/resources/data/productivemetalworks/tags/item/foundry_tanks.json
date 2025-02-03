@@ -1,20 +1,20 @@
 {
   "values": [
     "productivemetalworks:yellow_foundry_tank",
-    "productivemetalworks:brown_foundry_tank",
-    "productivemetalworks:cyan_foundry_tank",
-    "productivemetalworks:orange_foundry_tank",
-    "productivemetalworks:purple_foundry_tank",
-    "productivemetalworks:blue_foundry_tank",
-    "productivemetalworks:pink_foundry_tank",
-    "productivemetalworks:light_gray_foundry_tank",
-    "productivemetalworks:gray_foundry_tank",
-    "productivemetalworks:green_foundry_tank",
     "productivemetalworks:red_foundry_tank",
+    "productivemetalworks:brown_foundry_tank",
     "productivemetalworks:black_foundry_tank",
-    "productivemetalworks:magenta_foundry_tank",
+    "productivemetalworks:pink_foundry_tank",
     "productivemetalworks:white_foundry_tank",
+    "productivemetalworks:purple_foundry_tank",
+    "productivemetalworks:cyan_foundry_tank",
+    "productivemetalworks:magenta_foundry_tank",
     "productivemetalworks:light_blue_foundry_tank",
+    "productivemetalworks:green_foundry_tank",
+    "productivemetalworks:light_gray_foundry_tank",
+    "productivemetalworks:blue_foundry_tank",
+    "productivemetalworks:orange_foundry_tank",
+    "productivemetalworks:gray_foundry_tank",
     "productivemetalworks:lime_foundry_tank"
   ]
 }

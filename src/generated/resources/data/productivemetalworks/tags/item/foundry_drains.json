@@ -1,20 +1,20 @@
 {
   "values": [
     "productivemetalworks:yellow_foundry_drain",
-    "productivemetalworks:brown_foundry_drain",
-    "productivemetalworks:cyan_foundry_drain",
-    "productivemetalworks:orange_foundry_drain",
-    "productivemetalworks:purple_foundry_drain",
-    "productivemetalworks:blue_foundry_drain",
-    "productivemetalworks:pink_foundry_drain",
-    "productivemetalworks:light_gray_foundry_drain",
-    "productivemetalworks:gray_foundry_drain",
-    "productivemetalworks:green_foundry_drain",
     "productivemetalworks:red_foundry_drain",
+    "productivemetalworks:brown_foundry_drain",
     "productivemetalworks:black_foundry_drain",
-    "productivemetalworks:magenta_foundry_drain",
+    "productivemetalworks:pink_foundry_drain",
     "productivemetalworks:white_foundry_drain",
+    "productivemetalworks:purple_foundry_drain",
+    "productivemetalworks:cyan_foundry_drain",
+    "productivemetalworks:magenta_foundry_drain",
     "productivemetalworks:light_blue_foundry_drain",
+    "productivemetalworks:green_foundry_drain",
+    "productivemetalworks:light_gray_foundry_drain",
+    "productivemetalworks:blue_foundry_drain",
+    "productivemetalworks:orange_foundry_drain",
+    "productivemetalworks:gray_foundry_drain",
     "productivemetalworks:lime_foundry_drain"
   ]
 }

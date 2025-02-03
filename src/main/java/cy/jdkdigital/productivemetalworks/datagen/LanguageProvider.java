@@ -1,7 +1,6 @@
 package cy.jdkdigital.productivemetalworks.datagen;
 
 import cy.jdkdigital.productivemetalworks.ProductiveMetalworks;
-import cy.jdkdigital.productivemetalworks.registry.MetalworksRegistrator;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.BlockItem;
