@@ -1,0 +1,71 @@
+{
+  "category": "productivemetalworks:intro",
+  "icon": "productivemetalworks:black_foundry_controller",
+  "name": "Литейная",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Добро пожаловать в Productive Metalworks - мод, который создан по мотивам плавильни из мода Tinkers Construct. Вы найдёте здесь много схожеств и различий. Учтите, что этот мод не предназначен для производства инструментов, это просто литейная."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Чтобы построить Литейную, вам понадобятся огнеупорные кирпичи, которые можно получить плавкой огнеупорной глины. Вы начнёте с чёрных огнеупорных кирпичей. Это базовые кирпичи, которые по вашему желанию могут быть покрашены в различные цвета."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Блоки, которые вам понадобятся для строительства вашей литейной:$(br)* Контроллер Литейной$(br)* Литейный Бак$(br) * Жидкостная Нагревательная Катушка$(br) * Литейный Дренаж$(br) * Огнеупорные Кирпичи и Литейные Окна$(br) * Литейный резервуар & стол"
+    },
+    {
+      "type": "patchouli:multiblock",
+      "multiblock": {
+        "mapping": {
+          "A": "productivemetalworks:casting_table",
+          "B": "productivemetalworks:liquid_heating_coil[attached=true]",
+          "C": "productivemetalworks:black_foundry_controller[facing=east,attached=true]",
+          "D": "productivemetalworks:black_foundry_drain[facing=east]",
+          "P": "productivemetalworks:foundry_tap[facing=south]",
+          "Q": "productivemetalworks:foundry_tap[facing=east]",
+          "S": "productivemetalworks:casting_basin",
+          "T": "productivemetalworks:black_foundry_tank[facing=east]",
+          "W": "productivemetalworks:black_fire_bricks"
+        },
+        "pattern": [
+          [
+            " WWW ",
+            "W   W",
+            "W   W",
+            "W   W",
+            " WWW ",
+            "     "
+          ],
+          [
+            " WWW ",
+            "W   W",
+            "W 0 W",
+            "W   W",
+            " TCDP",
+            "   Q "
+          ],
+          [
+            "     ",
+            " BBB ",
+            " BBB ",
+            " BBB ",
+            "    A",
+            "   S "
+          ]
+        ]
+      },
+      "multiblock_id": "foundry",
+      "name": "3x3 Литейная"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Основное отличие в том, что вам необходимо будет установить жидкостные нагревательные катушки на дно литейной. Они позволяют нагревать литейную. Углы многоблочной конструкции литейной не являются обязательными."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(br)По умолчанию литейная плавит руду со скоростью, увеличенной в 1.3 раза, скорость плавления же напрямую зависит от используемого топлива."
+    }
+  ]
+}
