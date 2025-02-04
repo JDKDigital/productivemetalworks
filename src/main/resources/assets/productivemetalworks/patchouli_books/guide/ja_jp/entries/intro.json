@@ -1,0 +1,71 @@
+{
+  "category": "productivemetalworks:intro",
+  "icon": "productivemetalworks:black_foundry_controller",
+  "name": "鋳造炉",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Productive Metalworksへようこそ。このModは、Tinker's Constructの乾式製錬炉からインスピレーションを受けており、いくつかの違いと多くの類似点があります。ただし、このModは道具作成Modではなく、鋳造炉のみを追加することに注意してください。"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "鋳造炉を建設するには、耐火粘土を製錬して入手できる耐火レンガが必要です。まず、黒色の耐火レンガを作ることから始めましょう。これが基本のレンガで、染色することで様々な色のレンガを作ることができます。"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "鋳造炉を完成させるために必要なブロックは以下の通りです：$(br)* 鋳造炉コントローラー$(br)* 鋳造炉のタンク$(br) * 液体加熱コイル$(br) * 鋳造炉のドレン$(br) * 耐火レンガまたは鋳造炉の窓$(br) * 鋳造鉢と鋳造台"
+    },
+    {
+      "type": "patchouli:multiblock",
+      "multiblock": {
+        "mapping": {
+          "A": "productivemetalworks:casting_table",
+          "B": "productivemetalworks:liquid_heating_coil[attached=true]",
+          "C": "productivemetalworks:black_foundry_controller[facing=east,attached=true]",
+          "D": "productivemetalworks:black_foundry_drain[facing=east]",
+          "P": "productivemetalworks:foundry_tap[facing=south]",
+          "Q": "productivemetalworks:foundry_tap[facing=east]",
+          "S": "productivemetalworks:casting_basin",
+          "T": "productivemetalworks:black_foundry_tank[facing=east]",
+          "W": "productivemetalworks:black_fire_bricks"
+        },
+        "pattern": [
+          [
+            " WWW ",
+            "W   W",
+            "W   W",
+            "W   W",
+            " WWW ",
+            "     "
+          ],
+          [
+            " WWW ",
+            "W   W",
+            "W 0 W",
+            "W   W",
+            " TCDP",
+            "   Q "
+          ],
+          [
+            "     ",
+            " BBB ",
+            " BBB ",
+            " BBB ",
+            "    A",
+            "   S "
+          ]
+        ]
+      },
+      "multiblock_id": "foundry",
+      "name": "3x3の鋳造炉"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "大きな違いは、鋳造炉の底部に液体加熱コイルを設置する必要があることです。これにより、実際に鋳造炉を加熱することができます。鋳造炉のマルチブロックの角は必須ではありません。"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(br)鋳造所で原石を製錬すると、デフォルトで1.3倍の出力を得られます。溶融速度は使用する燃料によって決まります。"
+    }
+  ]
+}
