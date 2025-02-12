@@ -1,0 +1,13 @@
+{
+  "type": "productivemetalworks:item_casting",
+  "cast": [],
+  "consume_cast": false,
+  "fluid": {
+    "amount": 100,
+    "fluid": "productivemetalworks:molten_magma_cream"
+  },
+  "result": {
+    "count": 1,
+    "id": "minecraft:magma_cream"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "type": "productivemetalworks:item_casting",
+  "cast": {
+    "item": "productivemetalworks:rod_cast"
+  },
+  "consume_cast": false,
+  "fluid": {
+    "amount": 400,
+    "fluid": "productivemetalworks:molten_blaze"
+  },
+  "result": {
+    "count": 1,
+    "id": "minecraft:blaze_rod"
+  }
+}

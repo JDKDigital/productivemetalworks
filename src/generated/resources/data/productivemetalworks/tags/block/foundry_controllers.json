@@ -1,20 +1,20 @@
 {
   "values": [
-    "productivemetalworks:yellow_foundry_controller",
-    "productivemetalworks:red_foundry_controller",
-    "productivemetalworks:brown_foundry_controller",
-    "productivemetalworks:black_foundry_controller",
-    "productivemetalworks:pink_foundry_controller",
-    "productivemetalworks:white_foundry_controller",
-    "productivemetalworks:purple_foundry_controller",
-    "productivemetalworks:cyan_foundry_controller",
-    "productivemetalworks:magenta_foundry_controller",
     "productivemetalworks:light_blue_foundry_controller",
-    "productivemetalworks:green_foundry_controller",
-    "productivemetalworks:light_gray_foundry_controller",
-    "productivemetalworks:blue_foundry_controller",
-    "productivemetalworks:orange_foundry_controller",
+    "productivemetalworks:yellow_foundry_controller",
     "productivemetalworks:gray_foundry_controller",
-    "productivemetalworks:lime_foundry_controller"
+    "productivemetalworks:white_foundry_controller",
+    "productivemetalworks:lime_foundry_controller",
+    "productivemetalworks:magenta_foundry_controller",
+    "productivemetalworks:pink_foundry_controller",
+    "productivemetalworks:cyan_foundry_controller",
+    "productivemetalworks:orange_foundry_controller",
+    "productivemetalworks:blue_foundry_controller",
+    "productivemetalworks:black_foundry_controller",
+    "productivemetalworks:purple_foundry_controller",
+    "productivemetalworks:brown_foundry_controller",
+    "productivemetalworks:red_foundry_controller",
+    "productivemetalworks:light_gray_foundry_controller",
+    "productivemetalworks:green_foundry_controller"
   ]
 }

@@ -24,8 +24,13 @@ public class LanguageProvider extends net.neoforged.neoforge.common.data.Languag
         add("jei." + ProductiveMetalworks.MODID + ".sg_casting", "Silent Gear Casting");
         add("jei." + ProductiveMetalworks.MODID + ".block_casting", "Block Casting");
         add("jei." + ProductiveMetalworks.MODID + ".fluid_alloying", "Fluid Alloying");
-        add(ProductiveMetalworks.MODID + ".tooltip.amount.mb", "%smb");
+        add("jade." + ProductiveMetalworks.MODID + ".cooling", "Cooling");
         add("block." + ProductiveMetalworks.MODID + "foundry_tank.fluid_tooltip", "Contains %smb %s");
+
+        add("productivebees.ingredient.description.soul_lava_bee", "To acquire this bee, look up the crafting recipe for its spawn egg.");
+        add("productivebees.ingredient.description.allthemodium_bee", "To acquire this bee, look up the crafting recipe for its spawn egg.");
+        add("productivebees.ingredient.description.vibranium_bee", "To acquire this bee, look up the crafting recipe for its spawn egg.");
+        add("productivebees.ingredient.description.unobtainium_bee", "To acquire this bee, look up the crafting recipe for its spawn egg.");
 
         ProductiveMetalworks.ITEMS.getEntries().forEach(registryObject -> {
             if (registryObject.get() instanceof BucketItem) {

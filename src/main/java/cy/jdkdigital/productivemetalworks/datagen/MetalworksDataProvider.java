@@ -7,6 +7,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
@@ -47,9 +48,13 @@ public class MetalworksDataProvider
             gen.addProvider(event.includeServer(), new LootModifierProvider(output, provider));
             gen.addProvider(event.includeServer(), new DataMapProvider(output, provider));
 
-            gen.addProvider(true, new GuideBookProvider(output, "en_us", provider));
-            gen.addProvider(event.includeClient(), new FusionBlockModelProvider(output));
-            gen.addProvider(event.includeClient(), new FusionTextureMetadataProvider(output));
+            if (ModList.get().isLoaded("patchouli")) {
+                gen.addProvider(true, new GuideBookProvider(output, "en_us", provider));
+            }
+            if (ModList.get().isLoaded("fusion")) {
+                gen.addProvider(event.includeClient(), new FusionBlockModelProvider(output));
+                gen.addProvider(event.includeClient(), new FusionTextureMetadataProvider(output));
+            }
         }
     }
 }

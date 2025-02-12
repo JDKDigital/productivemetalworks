@@ -217,6 +217,5 @@
   "jei.productivemetalworks.item_melting": "Eşya Eritme",
   "jei.productivemetalworks.sg_casting": "Silent Gear Dökümü",
   "productivemetalworks.message.foundry_formed": "Dökümhane yapısı birleştirildi",
-  "productivemetalworks.message.foundry_invalid": "Dökümhane yapısı geçersiz. %s",
-  "productivemetalworks.tooltip.amount.mb": "%smb"
+  "productivemetalworks.message.foundry_invalid": "Dökümhane yapısı geçersiz. %s"
 }

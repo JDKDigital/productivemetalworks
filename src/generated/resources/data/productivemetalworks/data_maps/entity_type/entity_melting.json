@@ -1,0 +1,10 @@
+{
+  "values": {
+    "minecraft:player": {
+      "fluid": {
+        "amount": 10,
+        "id": "productivemetalworks:meat"
+      }
+    }
+  }
+}

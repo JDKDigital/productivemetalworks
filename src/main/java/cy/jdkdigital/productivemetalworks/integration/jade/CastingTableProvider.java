@@ -3,6 +3,7 @@ package cy.jdkdigital.productivemetalworks.integration.jade;
 import cy.jdkdigital.productivemetalworks.ProductiveMetalworks;
 import cy.jdkdigital.productivemetalworks.common.block.entity.CastingBlockEntity;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
@@ -25,13 +26,15 @@ public class CastingTableProvider implements IBlockComponentProvider, StreamServ
             return;
         }
         IElementHelper helper = IElementHelper.get();
-//        tooltip.append(helper.progress((float) data.progress / data.total).translate(new Vec2(-2, 0))); // buggy
+        if (data.isCooling()) {
+            tooltip.add(Component.translatable("jade." + ProductiveMetalworks.MODID + ".cooling"));
+        }
     }
 
     @Override
     public Data streamData(BlockAccessor accessor) {
         CastingBlockEntity access = (CastingBlockEntity) accessor.getBlockEntity();
-        return new Data(access.maxAmount - access.coolingTime, access.maxAmount);
+        return new Data(access.isCooling());
     }
 
     @Override
@@ -44,12 +47,10 @@ public class CastingTableProvider implements IBlockComponentProvider, StreamServ
         return UID;
     }
 
-    public record Data(int progress, int total) {
+    public record Data(boolean isCooling) {
         public static final StreamCodec<RegistryFriendlyByteBuf, Data> STREAM_CODEC = StreamCodec.composite(
-                ByteBufCodecs.VAR_INT,
-                Data::progress,
-                ByteBufCodecs.VAR_INT,
-                Data::total,
+                ByteBufCodecs.BOOL,
+                Data::isCooling,
                 Data::new);
     }
 }

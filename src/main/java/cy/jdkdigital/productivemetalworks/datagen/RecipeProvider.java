@@ -1,25 +1,32 @@
 package cy.jdkdigital.productivemetalworks.datagen;
 
-import com.mojang.datafixers.util.Pair;
+import cy.jdkdigital.productivelib.common.condition.LazyCondition;
 import cy.jdkdigital.productivelib.crafting.condition.FluidTagEmptyCondition;
 import cy.jdkdigital.productivemetalworks.ProductiveMetalworks;
-import cy.jdkdigital.productivemetalworks.datagen.recipe.*;
+import cy.jdkdigital.productivemetalworks.datagen.recipe.BlockCastingRecipeBuilder;
+import cy.jdkdigital.productivemetalworks.datagen.recipe.FluidAlloyingRecipeBuilder;
+import cy.jdkdigital.productivemetalworks.datagen.recipe.ItemCastingRecipeBuilder;
+import cy.jdkdigital.productivemetalworks.datagen.recipe.ItemMeltingRecipeBuilder;
 import cy.jdkdigital.productivemetalworks.registry.MetalworksRegistrator;
 import cy.jdkdigital.productivemetalworks.registry.ModTags;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
+import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.conditions.IConditionBuilder;
 import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
@@ -28,17 +35,9 @@ import net.neoforged.neoforge.common.conditions.TagEmptyCondition;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 import net.neoforged.neoforge.fluids.crafting.TagFluidIngredient;
-import net.silentchaos512.gear.crafting.ingredient.PartMaterialIngredient;
-import net.silentchaos512.gear.gear.material.MaterialCategories;
-import net.silentchaos512.gear.setup.GearItemSets;
-import net.silentchaos512.gear.setup.SgItems;
-import net.silentchaos512.gear.setup.gear.GearTypes;
-import net.silentchaos512.gear.setup.gear.PartTypes;
 import vazkii.patchouli.api.PatchouliAPI;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider implements IConditionBuilder
@@ -213,9 +212,6 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
                 .unlockedBy(getHasName(MetalworksRegistrator.MEAT_BLOCK.get()), has(MetalworksRegistrator.MEAT_BLOCK.get()))
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "crafting/meat_ingot_from_block"));
 
-        // Alloying
-        alloyRecipe(List.of(SizedFluidIngredient.of(FluidTags.WATER, 1), SizedFluidIngredient.of(FluidTags.LAVA, 2)), 50, new FluidStack(MetalworksRegistrator.MOLTEN_OBSIDIAN.get(), 2), recipeOutput);
-
         // Melting
         ItemMeltingRecipeBuilder.of(Ingredient.of(Tags.Items.FOODS_RAW_MEAT), new FluidStack(MetalworksRegistrator.LIQUID_MEAT.get(), 20), 1000, 0)
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/meat"));
@@ -280,6 +276,8 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/netherite_scrap"));
         ItemMeltingRecipeBuilder.of(Ingredient.of(Items.ANCIENT_DEBRIS), new FluidStack(MetalworksRegistrator.MOLTEN_ANCIENT_DEBRIS.get(), 200))
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/ancient_debris"));
+        ItemMeltingRecipeBuilder.of(Ingredient.of(Items.SHULKER_SHELL), new FluidStack(MetalworksRegistrator.MOLTEN_SHULKER_SHELL.get(), 100))
+                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/shulker_shell"));
         ItemMeltingRecipeBuilder.of(Ingredient.of(MetalworksRegistrator.MEAT_INGOT.get()), new FluidStack(MetalworksRegistrator.LIQUID_MEAT.get(), 100))
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/meat_ingot"));
         ItemMeltingRecipeBuilder.of(Ingredient.of(MetalworksRegistrator.SHINY_MEAT_INGOT.get()), List.of(new FluidStack(MetalworksRegistrator.LIQUID_MEAT.get(), 100), new FluidStack(MetalworksRegistrator.MOLTEN_GOLD.get(), 80)))
@@ -294,12 +292,36 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/golden_horse_armor"));
         ItemMeltingRecipeBuilder.of(Ingredient.of(Items.IRON_HORSE_ARMOR), List.of(new FluidStack(MetalworksRegistrator.MOLTEN_IRON.get(), 540)))
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/iron_horse_armor"));
+        ItemMeltingRecipeBuilder.of(Ingredient.of(Items.BLAZE_POWDER), List.of(new FluidStack(MetalworksRegistrator.MOLTEN_BLAZE.get(), 100)))
+                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/blaze_powder"));
+        ItemMeltingRecipeBuilder.of(Ingredient.of(Items.BLAZE_ROD), List.of(new FluidStack(MetalworksRegistrator.MOLTEN_BLAZE.get(), 400)))
+                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/blaze_rod"));
+        ItemMeltingRecipeBuilder.of(Ingredient.of(Items.SLIME_BALL), List.of(new FluidStack(MetalworksRegistrator.MOLTEN_SLIME.get(), 100)))
+                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/slime_ball"));
+        ItemMeltingRecipeBuilder.of(Ingredient.of(Items.SLIME_BLOCK), List.of(new FluidStack(MetalworksRegistrator.MOLTEN_SLIME.get(), 900)))
+                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/slime_block"));
+        ItemMeltingRecipeBuilder.of(Ingredient.of(Items.MAGMA_CREAM), List.of(new FluidStack(MetalworksRegistrator.MOLTEN_MAGMA_CREAM.get(), 100)))
+                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/magma_cream"));
+        ItemMeltingRecipeBuilder.of(Ingredient.of(Items.MAGMA_BLOCK), List.of(new FluidStack(MetalworksRegistrator.MOLTEN_MAGMA_CREAM.get(), 400)))
+                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/magma_block"));
+        // Melt shulker boxes
+        ItemMeltingRecipeBuilder.of(Ingredient.of(Items.SHULKER_BOX), new FluidStack(MetalworksRegistrator.MOLTEN_SHULKER_SHELL.get(), 200))
+                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/shulker_box"));
+        for (DyeColor dyeColor : DyeColor.values()) {
+            ItemMeltingRecipeBuilder.of(Ingredient.of(BuiltInRegistries.ITEM.get(ResourceLocation.withDefaultNamespace(dyeColor.getSerializedName() + "_shulker_box"))), new FluidStack(MetalworksRegistrator.MOLTEN_SHULKER_SHELL.get(), 200))
+                    .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/" + dyeColor.getSerializedName() + "_shulker_box"));
+        }
+
 
         // Casting
         BlockCastingRecipeBuilder.of(SizedFluidIngredient.of(MetalworksRegistrator.MOLTEN_GLASS.get(), 1000), Items.GLASS.getDefaultInstance())
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/misc/glass_block"));
         BlockCastingRecipeBuilder.of(SizedFluidIngredient.of(MetalworksRegistrator.MOLTEN_OBSIDIAN.get(), 1000), Items.OBSIDIAN.getDefaultInstance())
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/misc/obsidian_block"));
+        BlockCastingRecipeBuilder.of(SizedFluidIngredient.of(MetalworksRegistrator.MOLTEN_SLIME.get(), 900), Items.SLIME_BLOCK.getDefaultInstance())
+                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/misc/slime_block"));
+        BlockCastingRecipeBuilder.of(SizedFluidIngredient.of(MetalworksRegistrator.MOLTEN_MAGMA_CREAM.get(), 400), Items.MAGMA_BLOCK.getDefaultInstance())
+                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/misc/magma_block"));
         ItemCastingRecipeBuilder.of(MetalworksRegistrator.CAST_GEM.get().getDefaultInstance(), SizedFluidIngredient.of(MetalworksRegistrator.MOLTEN_DIAMOND.get(), 100), Items.DIAMOND.getDefaultInstance())
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/gems/diamond"));
         BlockCastingRecipeBuilder.of(SizedFluidIngredient.of(MetalworksRegistrator.MOLTEN_DIAMOND.get(), 900), Items.DIAMOND_BLOCK.getDefaultInstance())
@@ -322,6 +344,12 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/gems/amethyst"));
         ItemCastingRecipeBuilder.of(MetalworksRegistrator.CAST_INGOT.get().getDefaultInstance(), SizedFluidIngredient.of(MetalworksRegistrator.MOLTEN_ANCIENT_DEBRIS.get(), 100), Items.NETHERITE_SCRAP.getDefaultInstance())
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/netherite_scrap"));
+        ItemCastingRecipeBuilder.of(SizedFluidIngredient.of(MetalworksRegistrator.MOLTEN_SLIME.get(), 100), Items.SLIME_BALL.getDefaultInstance())
+                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/slime_ball"));
+        ItemCastingRecipeBuilder.of(SizedFluidIngredient.of(MetalworksRegistrator.MOLTEN_MAGMA_CREAM.get(), 100), Items.MAGMA_CREAM.getDefaultInstance())
+                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/magma_cream"));
+        ItemCastingRecipeBuilder.of(MetalworksRegistrator.CAST_ROD.get().getDefaultInstance(), SizedFluidIngredient.of(MetalworksRegistrator.MOLTEN_BLAZE.get(), 400), Items.BLAZE_ROD.getDefaultInstance())
+                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/blaze_rod"));
 
         // Casts
         ItemCastingRecipeBuilder.of(Tags.Items.INGOTS, SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_STEEL, 360), MetalworksRegistrator.CAST_INGOT.get().getDefaultInstance(), true)
@@ -363,6 +391,8 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/misc/shiny_meat_ingot"));
         BlockCastingRecipeBuilder.of(Items.BONE.getDefaultInstance(), SizedFluidIngredient.of(ModTags.Fluids.MEAT, 800), MetalworksRegistrator.MEAT_BLOCK.get().asItem().getDefaultInstance(), true)
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/misc/meat_block"));
+        BlockCastingRecipeBuilder.of(Items.PISTON.getDefaultInstance(), SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_SLIME, 100), Items.STICKY_PISTON.getDefaultInstance(), true)
+                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/misc/sticky_piston"));
 
 
         // Bee stuff
@@ -380,8 +410,12 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
 
         // Alloying
 
+        // Obsidian
+        alloyRecipe(List.of(SizedFluidIngredient.of(FluidTags.WATER, 1), SizedFluidIngredient.of(FluidTags.LAVA, 2)), 50, new FluidStack(MetalworksRegistrator.MOLTEN_OBSIDIAN.get(), 2), recipeOutput);
         // Netherite
         alloyRecipe(List.of(SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_ANCIENT_DEBRIS, 4), SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_GOLD, 4)), 10, new FluidStack(MetalworksRegistrator.MOLTEN_NETHERITE, 1), recipeOutput);
+        // Magma cream
+        alloyRecipe(List.of(SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_BLAZE, 1), SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_SLIME, 1)), 20, new FluidStack(MetalworksRegistrator.MOLTEN_MAGMA_CREAM, 1), recipeOutput);
         // Steel
         alloyRecipe(List.of(SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_CARBON, 10), SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_IRON, 9)), 4, new FluidStack(MetalworksRegistrator.MOLTEN_STEEL, 9), recipeOutput);
         // Electrum
@@ -403,20 +437,22 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
         // Refined glowstone
         alloyRecipe(List.of(SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_OSMIUM, 9), SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_GLOWSTONE, 5)), 10, new FluidStack(MetalworksRegistrator.MOLTEN_REFINED_GLOWSTONE, 9), recipeOutput);
 
-        metalCompat(PM_METALS, recipeOutput);
+        metalCompat(ProductiveMetalworks.MODID, PM_METALS, recipeOutput);
         modMetalCompat("alltheores", ATO_METALS, recipeOutput);
         modMetalCompat("ftbmaterials", FTB_METALS, recipeOutput);
 
-        // TODO enderio alloy casting recipes
+        if (ModList.get().isLoaded("productivebees")) {
+            pbeesCompat(recipeOutput);
+        }
+        copperCompat(recipeOutput);
         atmCompat(recipeOutput);
         idCompat(recipeOutput);
         pncCompat(recipeOutput);
         maCompat(recipeOutput);
-        sgCompat(recipeOutput);
     }
 
     // Vanilla stuff and tags, whatever is not mod specific
-    private void metalCompat(String[] metals, RecipeOutput recipeOutput) {
+    public static void metalCompat(String fluidModId, String[] metals, RecipeOutput recipeOutput) {
         for (String id: metals) {
             var rLoc = ResourceLocation.parse(id);
             String name = rLoc.getPath();
@@ -433,7 +469,7 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
             var rodTag = ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "rods/" + name));
             var plateTag = ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "plates/" + name));
 
-            var fluid = BuiltInRegistries.FLUID.get(ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "molten_" + name));
+            var fluid = BuiltInRegistries.FLUID.get(ResourceLocation.fromNamespaceAndPath(fluidModId, "molten_" + name));
             var blockItem = BuiltInRegistries.ITEM.get(rLoc.withPath(p -> p + "_block"));
             var ingotItem = BuiltInRegistries.ITEM.get(rLoc.withPath(p -> p + "_ingot"));
             var nuggetItem = BuiltInRegistries.ITEM.get(rLoc.withPath(p -> p + "_nugget"));
@@ -474,14 +510,14 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
             // Melt Gear
             itemMeltingRecipe(gearTag, new FluidStack(fluid, 360), recipeOutput);
             // Melt Rod
-            itemMeltingRecipe(rodTag, new FluidStack(fluid, 180), recipeOutput);
+            itemMeltingRecipe(rodTag, new FluidStack(fluid, 45), recipeOutput);
             // Melt Plate
-            itemMeltingRecipe(plateTag, new FluidStack(fluid, 180), recipeOutput);
+            itemMeltingRecipe(plateTag, new FluidStack(fluid, 90), recipeOutput);
         }
     }
 
     // Mod specific compat recipes
-    private void modMetalCompat(String modId, String[] metals, RecipeOutput recipeOutput) {
+    public static void modMetalCompat(String modId, String[] metals, RecipeOutput recipeOutput) {
         var compatRecipeOutput = recipeOutput.withConditions(new ModLoadedCondition(modId));
         
         // vanilla gear, rod, plate melting and casting
@@ -524,18 +560,92 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
             }
             if (!rodItem.equals(Items.AIR)) {
                 // Cast rod
-                ItemCastingRecipeBuilder.of(MetalworksRegistrator.CAST_ROD.get().getDefaultInstance(), SizedFluidIngredient.of(fluidTag, 180), rodItem.getDefaultInstance())
+                ItemCastingRecipeBuilder.of(MetalworksRegistrator.CAST_ROD.get().getDefaultInstance(), SizedFluidIngredient.of(fluidTag, 45), rodItem.getDefaultInstance())
                         .save(compatRecipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/rods/" + modId + "/" + name));
             }
             if (!plateItem.equals(Items.AIR)) {
                 // Cast Plate
-                ItemCastingRecipeBuilder.of(MetalworksRegistrator.CAST_PLATE.get().getDefaultInstance(), SizedFluidIngredient.of(fluidTag, 180), plateItem.getDefaultInstance())
+                ItemCastingRecipeBuilder.of(MetalworksRegistrator.CAST_PLATE.get().getDefaultInstance(), SizedFluidIngredient.of(fluidTag, 90), plateItem.getDefaultInstance())
                         .save(compatRecipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/plates/" + modId + "/" + name));
             }
         }
     }
 
-    private void atmCompat(RecipeOutput recipeOutput) {
+    private static ItemStack makeBeeEgg(String name) {
+        var egg = new ItemStack(BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("productivebees", "spawn_egg_configurable_bee")));
+        var tag = new CompoundTag() ;
+        tag.putString("type", "productivebees:" + name);
+        tag.putString("id", "productivebees:configurable_bee");
+        egg.set(DataComponents.ENTITY_DATA, CustomData.of(tag));
+        return egg;
+    }
+
+    private static void pbeesCompat(RecipeOutput recipeOutput) {
+        ItemCastingRecipeBuilder.of(cy.jdkdigital.productivebees.common.crafting.ingredient.ComponentIngredient.of(makeBeeEgg("ghostly")), SizedFluidIngredient.of(BuiltInRegistries.FLUID.get(ResourceLocation.parse("allthemodium:soul_lava")), 1000), makeBeeEgg("soul_lava"), true)
+                .save(recipeOutput
+                                .withConditions(new ModLoadedCondition("allthemodium"))
+                                .withConditions(new ModLoadedCondition("productivebees"))
+                                .withConditions(new LazyCondition(new cy.jdkdigital.productivebees.common.crafting.conditions.BeeExistsCondition(ResourceLocation.parse("productivebees:ghostly"))))
+                                .withConditions(new LazyCondition(new cy.jdkdigital.productivebees.common.crafting.conditions.BeeExistsCondition(ResourceLocation.parse("productivebees:soul_lava"))))
+                        , ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/pbees/soul_lava_bee"));
+
+        ItemCastingRecipeBuilder.of(cy.jdkdigital.productivebees.common.crafting.ingredient.ComponentIngredient.of(makeBeeEgg("netherite")), SizedFluidIngredient.of(BuiltInRegistries.FLUID.get(ResourceLocation.parse("allthemodium:molten_allthemodium")), 360), makeBeeEgg("allthemodium"), true)
+                .save(recipeOutput
+                                .withConditions(new ModLoadedCondition("allthemodium"))
+                                .withConditions(new ModLoadedCondition("productivebees"))
+                                .withConditions(new LazyCondition(new cy.jdkdigital.productivebees.common.crafting.conditions.BeeExistsCondition(ResourceLocation.parse("productivebees:netherite"))))
+                                .withConditions(new LazyCondition(new cy.jdkdigital.productivebees.common.crafting.conditions.BeeExistsCondition(ResourceLocation.parse("productivebees:allthemodium"))))
+                        , ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/pbees/allthemodium_bee"));
+
+        ItemCastingRecipeBuilder.of(cy.jdkdigital.productivebees.common.crafting.ingredient.ComponentIngredient.of(makeBeeEgg("allthemodium")), SizedFluidIngredient.of(BuiltInRegistries.FLUID.get(ResourceLocation.parse("allthemodium:molten_vibranium")), 360), makeBeeEgg("vibranium"), true)
+                .save(recipeOutput
+                                .withConditions(new ModLoadedCondition("allthemodium"))
+                                .withConditions(new ModLoadedCondition("productivebees"))
+                                .withConditions(new LazyCondition(new cy.jdkdigital.productivebees.common.crafting.conditions.BeeExistsCondition(ResourceLocation.parse("productivebees:allthemodium"))))
+                                .withConditions(new LazyCondition(new cy.jdkdigital.productivebees.common.crafting.conditions.BeeExistsCondition(ResourceLocation.parse("productivebees:vibranium"))))
+                        , ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/pbees/vibranium_bee"));
+
+        ItemCastingRecipeBuilder.of(cy.jdkdigital.productivebees.common.crafting.ingredient.ComponentIngredient.of(makeBeeEgg("vibranium")), SizedFluidIngredient.of(BuiltInRegistries.FLUID.get(ResourceLocation.parse("allthemodium:molten_unobtainium")), 360), makeBeeEgg("unobtainium"), true)
+                .save(recipeOutput
+                                .withConditions(new ModLoadedCondition("allthemodium"))
+                                .withConditions(new ModLoadedCondition("productivebees"))
+                                .withConditions(new LazyCondition(new cy.jdkdigital.productivebees.common.crafting.conditions.BeeExistsCondition(ResourceLocation.parse("productivebees:vibranium"))))
+                                .withConditions(new LazyCondition(new cy.jdkdigital.productivebees.common.crafting.conditions.BeeExistsCondition(ResourceLocation.parse("productivebees:unobtainium"))))
+                        , ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/pbees/unobtainium_bee"));
+
+        // melt combs
+
+        // casting recipes for bees that produce the alloy fluids
+
+        // cast wax block
+        BlockCastingRecipeBuilder.of(SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_WAX, 450), BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("productivebees", "wax_block")).getDefaultInstance())
+                .save(recipeOutput.withConditions(new ModLoadedCondition("productivebees")), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/pbees/wax_block"));
+        // cast wax item
+        ItemCastingRecipeBuilder.of(SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_WAX, 50), BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("productivebees", "wax")).getDefaultInstance())
+                .save(recipeOutput.withConditions(new ModLoadedCondition("productivebees")), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/pbees/wax"));
+
+    }
+
+    private static void copperCompat(RecipeOutput recipeOutput) {
+        // item waxing recipes
+//        BuiltInRegistries.ITEM.entrySet().forEach(item -> {
+//            if (item.getValue() instanceof ICopperItem copperItem) {
+//                var waxedOutput = item.getValue().getDefaultInstance();
+//                ICopperItem.setWaxed(waxedOutput, true);
+//                ItemCastingRecipeBuilder.of(cy.jdkdigital.productivebees.common.crafting.ingredient.ComponentIngredient.of(item.getValue().getDefaultInstance()), SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_WAX, 50), waxedOutput, true)
+//                        .save(recipeOutput.withConditions(new ModLoadedCondition("everythingcopper")), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/everythingcopper/wax_" + item.getKey().location().getPath()));
+//            }
+//        });
+
+        // maybe copper nugget
+        // lantern casting
+        ItemCastingRecipeBuilder.of(Items.TORCH.getDefaultInstance(), SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_COPPER, 80), BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("everythingcopper", "copper_lantern")).getDefaultInstance(), true)
+                .save(recipeOutput.withConditions(new ModLoadedCondition("everythingcopper")), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/everythingcopper/lantern"));
+        ItemCastingRecipeBuilder.of(Items.SOUL_TORCH.getDefaultInstance(), SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_COPPER, 80), BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("everythingcopper", "copper_soul_lantern")).getDefaultInstance(), true)
+                .save(recipeOutput.withConditions(new ModLoadedCondition("everythingcopper")), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/everythingcopper/soul_lantern"));
+    }
+
+    private static void atmCompat(RecipeOutput recipeOutput) {
         for (String resource: new String[] {"allthemodium", "vibranium", "unobtainium"}) {
             var fluid = BuiltInRegistries.FLUID.get(ResourceLocation.fromNamespaceAndPath("allthemodium", "molten_" + resource));
 
@@ -574,9 +684,9 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
             // Melt Gear
             itemMeltingRecipe(gearTag, new FluidStack(fluid, 720), 3000, 0, recipeOutput);
             // Melt Rod
-            itemMeltingRecipe(rodTag, new FluidStack(fluid, 270), 3000, 0, recipeOutput);
+            itemMeltingRecipe(rodTag, new FluidStack(fluid, 135), 3000, 0, recipeOutput);
             // Melt Plate
-            itemMeltingRecipe(plateTag, new FluidStack(fluid, 360), 3000, 0, recipeOutput);
+            itemMeltingRecipe(plateTag, new FluidStack(fluid, 270), 3000, 0, recipeOutput);
 
             // Cast block
             BlockCastingRecipeBuilder.of(SizedFluidIngredient.of(fluid, 810), blockItem.getDefaultInstance())
@@ -591,10 +701,10 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
             ItemCastingRecipeBuilder.of(MetalworksRegistrator.CAST_GEAR.get().getDefaultInstance(), SizedFluidIngredient.of(fluid, 720), gearItem.getDefaultInstance())
                     .save(recipeOutput.withConditions(new ModLoadedCondition("allthemodium")), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/atm/" + resource + "_gear"));
             // Cast rod
-            ItemCastingRecipeBuilder.of(MetalworksRegistrator.CAST_ROD.get().getDefaultInstance(), SizedFluidIngredient.of(fluid, 270), rodItem.getDefaultInstance())
+            ItemCastingRecipeBuilder.of(MetalworksRegistrator.CAST_ROD.get().getDefaultInstance(), SizedFluidIngredient.of(fluid, 135), rodItem.getDefaultInstance())
                     .save(recipeOutput.withConditions(new ModLoadedCondition("allthemodium")), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/atm/" + resource + "_rod"));
             // Cast Plate
-            ItemCastingRecipeBuilder.of(MetalworksRegistrator.CAST_PLATE.get().getDefaultInstance(), SizedFluidIngredient.of(fluid, 360), plateItem.getDefaultInstance())
+            ItemCastingRecipeBuilder.of(MetalworksRegistrator.CAST_PLATE.get().getDefaultInstance(), SizedFluidIngredient.of(fluid, 270), plateItem.getDefaultInstance())
                     .save(recipeOutput.withConditions(new ModLoadedCondition("allthemodium")), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/atm/" + resource + "_plate"));
         }
 
@@ -608,7 +718,7 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
 
     }
 
-    private void idCompat(RecipeOutput recipeOutput) {
+    private static void idCompat(RecipeOutput recipeOutput) {
         var menrilBlock = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("integrateddynamics", "crystalized_menril_block"));
         var menrilChunk = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("integrateddynamics", "crystalized_menril_chunk"));
         var menrilResin = BuiltInRegistries.FLUID.get(ResourceLocation.fromNamespaceAndPath("integrateddynamics", "menril_resin"));
@@ -656,7 +766,7 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
                 .save(recipeOutput.withConditions(new ModLoadedCondition("integrateddynamics")), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/id/crystalized_chorus_chunk"));
     }
 
-    private void pncCompat(RecipeOutput recipeOutput) {
+    private static void pncCompat(RecipeOutput recipeOutput) {
         var plasticItem = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("pneumaticcraft", "plastic"));
         var moltenPlastic = BuiltInRegistries.FLUID.get(ResourceLocation.fromNamespaceAndPath("pneumaticcraft", "plastic"));
         // molten plastic
@@ -675,7 +785,7 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
                 .save(recipeOutput.withConditions(new ModLoadedCondition("pneumaticcraft")), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "alloying/pnc/plastic_from_lpg"));
     }
 
-    private void maCompat(RecipeOutput recipeOutput) {
+    private static void maCompat(RecipeOutput recipeOutput) {
         for (String essence: new String[]{"inferium", "prudentium", "tertium", "imperium", "supremium"}) {
             var essenceFluid = BuiltInRegistries.FLUID.get(ResourceLocation.fromNamespaceAndPath("mysticalagradditions", "molten_" + essence));
             ProductiveMetalworks.LOGGER.info("essence fluid for " + essence + " " + essenceFluid);
@@ -714,78 +824,15 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
                 .save(recipeOutput.withConditions(new ModLoadedCondition("mysticalagradditions")), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/ma/inferium_seeds"));
     }
 
-    private void sgCompat(RecipeOutput recipeOutput) {
-        var compatRecipeOutput = recipeOutput.withConditions(new ModLoadedCondition("silentgear"));
-
-        Map<String, Pair<PartMaterialIngredient, Integer>> materialCost = new HashMap<>() {{
-            put("sword", Pair.of(PartMaterialIngredient.of(PartTypes.MAIN.get(), GearTypes.TOOL.get()), 2));
-            put("katana", Pair.of(PartMaterialIngredient.of(PartTypes.MAIN.get(), GearTypes.TOOL.get()), 3));
-            put("machete", Pair.of(PartMaterialIngredient.of(PartTypes.MAIN.get(), GearTypes.TOOL.get()), 3));
-            put("spear", Pair.of(PartMaterialIngredient.of(PartTypes.MAIN.get(), GearTypes.TOOL.get()), 1));
-            put("trident", Pair.of(PartMaterialIngredient.of(PartTypes.MAIN.get(), GearTypes.TOOL.get()), 3));
-            put("mace", Pair.of(PartMaterialIngredient.of(PartTypes.MAIN.get(), GearTypes.TOOL.get()), 3));
-            put("knife", Pair.of(PartMaterialIngredient.of(PartTypes.MAIN.get(), GearTypes.TOOL.get()), 1));
-            put("dagger", Pair.of(PartMaterialIngredient.of(PartTypes.MAIN.get(), GearTypes.TOOL.get()), 1));
-            put("pickaxe", Pair.of(PartMaterialIngredient.of(PartTypes.MAIN.get(), GearTypes.TOOL.get()), 3));
-            put("shovel", Pair.of(PartMaterialIngredient.of(PartTypes.MAIN.get(), GearTypes.TOOL.get()), 1));
-            put("axe", Pair.of(PartMaterialIngredient.of(PartTypes.MAIN.get(), GearTypes.TOOL.get()), 3));
-            put("paxel", Pair.of(PartMaterialIngredient.of(PartTypes.MAIN.get(), GearTypes.TOOL.get()), 5));
-            put("hammer", Pair.of(PartMaterialIngredient.of(PartTypes.MAIN.get(), GearTypes.TOOL.get()), 6));
-            put("excavator", Pair.of(PartMaterialIngredient.of(PartTypes.MAIN.get(), GearTypes.TOOL.get()), 5));
-            put("hoe", Pair.of(PartMaterialIngredient.of(PartTypes.MAIN.get(), GearTypes.TOOL.get()), 2));
-            put("mattock", Pair.of(PartMaterialIngredient.of(PartTypes.MAIN.get(), GearTypes.TOOL.get()), 4));
-            put("prospector_hammer", Pair.of(PartMaterialIngredient.of(PartTypes.MAIN.get(), GearTypes.TOOL.get()), 2));
-            put("saw", Pair.of(PartMaterialIngredient.of(PartTypes.MAIN.get(), GearTypes.TOOL.get()), 5));
-            put("sickle", Pair.of(PartMaterialIngredient.of(PartTypes.MAIN.get(), GearTypes.TOOL.get()), 3));
-            put("shears", Pair.of(PartMaterialIngredient.of(PartTypes.MAIN.get(), GearTypes.TOOL.get()), 2));
-            put("fishing_rod", Pair.of(PartMaterialIngredient.of(PartTypes.MAIN.get(), GearTypes.TOOL.get()), 2));
-            put("bow", Pair.of(PartMaterialIngredient.of(PartTypes.MAIN.get(), GearTypes.TOOL.get()), 3));
-            put("crossbow", Pair.of(PartMaterialIngredient.of(PartTypes.MAIN.get(), GearTypes.TOOL.get()), 3));
-            put("slingshot", Pair.of(PartMaterialIngredient.of(PartTypes.MAIN.get(), GearTypes.TOOL.get()), 2));
-            put("arrow", Pair.of(PartMaterialIngredient.of(PartTypes.MAIN.get(), GearTypes.PROJECTILE.get()), 1));
-
-            put("ring", Pair.of(PartMaterialIngredient.of(PartTypes.MAIN.get(), GearTypes.CURIO.get(), MaterialCategories.METAL), 2));
-            put("bracelet", Pair.of(PartMaterialIngredient.of(PartTypes.MAIN.get(), GearTypes.CURIO.get(), MaterialCategories.METAL), 3));
-            put("necklace", Pair.of(PartMaterialIngredient.of(PartTypes.MAIN.get(), GearTypes.CURIO.get(), MaterialCategories.METAL), 3));
-            put("helmet", Pair.of(PartMaterialIngredient.of(PartTypes.MAIN.get(), GearTypes.HELMET.get()), 5));
-            put("chestplate", Pair.of(PartMaterialIngredient.of(PartTypes.MAIN.get(), GearTypes.CHESTPLATE.get()), 8));
-            put("leggings", Pair.of(PartMaterialIngredient.of(PartTypes.MAIN.get(), GearTypes.LEGGINGS.get()), 7));
-            put("boots", Pair.of(PartMaterialIngredient.of(PartTypes.MAIN.get(), GearTypes.BOOTS.get()), 4));
-            put("shield", Pair.of(PartMaterialIngredient.of(PartTypes.MAIN.get(), GearTypes.ARMOR.get()), 2));
-            put("elytra", Pair.of(PartMaterialIngredient.of(PartTypes.MAIN.get(), GearTypes.ELYTRA.get(), MaterialCategories.CLOTH, MaterialCategories.SHEET), 6));
-        }};
-
-        // Iterate blueprints and use them as the cast
-        GearItemSets.getIterator().forEachRemaining(gearItemSet -> {
-            var amount = materialCost.get(gearItemSet.name());
-            if (gearItemSet.partName().equals("mace_core")) {
-                SilentGearCastingRecipeBuilder.of(Items.HEAVY_CORE.getDefaultInstance(), amount.getFirst(), amount.getSecond(), gearItemSet.mainPart().getDefaultInstance(), true)
-                    .save(compatRecipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/silentgear/" + gearItemSet.partName()));
-            } else if (!gearItemSet.partName().equals("elytra_wings")) {
-                SilentGearCastingRecipeBuilder.of(gearItemSet.blueprint().getDefaultInstance(), amount.getFirst(), amount.getSecond(), gearItemSet.mainPart().getDefaultInstance(), false)
-                    .save(compatRecipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/silentgear/" + gearItemSet.partName()));
-            }
-        });
-        SilentGearCastingRecipeBuilder.of(SgItems.ROD_BLUEPRINT.get().getDefaultInstance(), PartMaterialIngredient.of(PartTypes.ROD.get()), 2, SgItems.ROD.get().getDefaultInstance(), false)
-                .save(compatRecipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/silentgear/tool_rod"));
-        SilentGearCastingRecipeBuilder.of(SgItems.TIP_BLUEPRINT.get().getDefaultInstance(), PartMaterialIngredient.of(PartTypes.TIP.get()), 2, SgItems.TIP.get().getDefaultInstance(), false)
-                .save(compatRecipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/silentgear/tip"));
-
-        ItemCastingRecipeBuilder.of(SgItems.NETHER_BANANA.get().getDefaultInstance(), SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_GOLD, 720), SgItems.GOLDEN_NETHER_BANANA.get().getDefaultInstance(), true)
-                .save(compatRecipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/silentgear/golden_nether_banana"));
-
-        // TODO Overwrite /data/silentgear/recipe/gear/* recipes to only take simple material categories and not metal or gems that we have fluids for
-    }
-
-    private void itemMeltingRecipe(TagKey<Item> tag, FluidStack output, RecipeOutput recipeOutput) {
+    private static void itemMeltingRecipe(TagKey<Item> tag, FluidStack output, RecipeOutput recipeOutput) {
         itemMeltingRecipe(tag, output, 1000, 0, recipeOutput);
     }
 
-    private void itemMeltingRecipe(TagKey<Item> tag, FluidStack output, int min, int max, RecipeOutput recipeOutput) {
+    private static void itemMeltingRecipe(TagKey<Item> tag, FluidStack output, int min, int max, RecipeOutput recipeOutput) {
         ItemMeltingRecipeBuilder.of(Ingredient.of(tag), output, min, max).save(recipeOutput.withConditions(new NotCondition(new TagEmptyCondition(tag))), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/" + tag.location().getPath()));
     }
 
-    private void alloyRecipe(List<SizedFluidIngredient> inputs, int speed, FluidStack output, RecipeOutput recipeOutput) {
+    private static void alloyRecipe(List<SizedFluidIngredient> inputs, int speed, FluidStack output, RecipeOutput recipeOutput) {
         var conditionalRecipeOutput = recipeOutput;
         for (SizedFluidIngredient sizedFluidIngredient : inputs) {
             if (sizedFluidIngredient.ingredient() instanceof TagFluidIngredient tagFluidIngredient) {

@@ -19,9 +19,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.neoforged.fml.ModList;
-import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
-import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import net.neoforged.neoforge.registries.datamaps.builtin.NeoForgeDataMaps;
 
 import java.util.ArrayList;
@@ -36,7 +34,6 @@ public class JeiPlugin implements IModPlugin
     public static final RecipeType<RecipeHolder<ItemCastingRecipe>> ITEM_CASTING = RecipeType.createRecipeHolderType(MetalworksRegistrator.ITEM_CASTING_TYPE.getId());
     public static final RecipeType<RecipeHolder<BlockCastingRecipe>> BLOCK_CASTING = RecipeType.createRecipeHolderType(MetalworksRegistrator.BLOCK_CASTING_TYPE.getId());
     public static final RecipeType<RecipeHolder<FluidAlloyingRecipe>> FLUID_ALLOYING = RecipeType.createRecipeHolderType(MetalworksRegistrator.FLUID_ALLOYING_TYPE.getId());
-    public static final RecipeType<RecipeHolder<SilentGearCastingRecipe>> SG_CASTING = RecipeType.createRecipeHolderType(MetalworksRegistrator.SG_GEAR_CASTING_TYPE.getId());
 
     @Override
     public ResourceLocation getPluginUid() {
@@ -52,9 +49,6 @@ public class JeiPlugin implements IModPlugin
         registration.addRecipeCategories(new ItemCastingRecipeCategory(guiHelper));
         registration.addRecipeCategories(new BlockCastingRecipeCategory(guiHelper));
         registration.addRecipeCategories(new FluidAlloyingRecipeCategory(guiHelper));
-        if (ModList.get().isLoaded("silentgear")) {
-            registration.addRecipeCategories(new SilentGearCastingRecipeCategory(guiHelper));
-        }
     }
 
     @Override
@@ -63,9 +57,6 @@ public class JeiPlugin implements IModPlugin
         registration.addRecipeCatalyst(MetalworksRegistrator.FOUNDRY_CONTROLLERS.get(DyeColor.BLACK).get(), FLUID_ALLOYING);
         registration.addRecipeCatalyst(MetalworksRegistrator.CASTING_TABLE.get(), ITEM_CASTING);
         registration.addRecipeCatalyst(MetalworksRegistrator.CASTING_BASIN.get(), BLOCK_CASTING);
-        if (ModList.get().isLoaded("silentgear")) {
-            registration.addRecipeCatalyst(MetalworksRegistrator.CASTING_TABLE.get(), SG_CASTING);
-        }
     }
 
     @Override
@@ -76,9 +67,6 @@ public class JeiPlugin implements IModPlugin
         registration.addRecipes(ITEM_CASTING, recipeManager.getAllRecipesFor(MetalworksRegistrator.ITEM_CASTING_TYPE.get()));
         registration.addRecipes(BLOCK_CASTING, recipeManager.getAllRecipesFor(MetalworksRegistrator.BLOCK_CASTING_TYPE.get()));
         registration.addRecipes(FLUID_ALLOYING, recipeManager.getAllRecipesFor(MetalworksRegistrator.FLUID_ALLOYING_TYPE.get()));
-        if (ModList.get().isLoaded("silentgear")) {
-            registration.addRecipes(SG_CASTING, recipeManager.getAllRecipesFor(MetalworksRegistrator.SG_GEAR_CASTING_TYPE.get()));
-        }
 
         // Waxing recipes
         List<RecipeHolder<BlockCastingRecipe>> WAXING_RECIPES = new ArrayList<>();

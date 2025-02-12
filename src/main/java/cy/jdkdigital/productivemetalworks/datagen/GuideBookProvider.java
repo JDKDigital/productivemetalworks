@@ -8,7 +8,6 @@ import net.minecraft.world.item.DyeColor;
 import xyz.brassgoggledcoders.patchouliprovider.BookBuilder;
 import xyz.brassgoggledcoders.patchouliprovider.PatchouliBookProvider;
 import xyz.brassgoggledcoders.patchouliprovider.page.MultiblockPageBuilder;
-import xyz.brassgoggledcoders.patchouliprovider.page.TextPageBuilder;
 
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;

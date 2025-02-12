@@ -5,7 +5,6 @@ import cy.jdkdigital.productivelib.util.FluidContainerUtil;
 import cy.jdkdigital.productivemetalworks.ProductiveMetalworks;
 import cy.jdkdigital.productivemetalworks.common.menu.FoundryControllerContainer;
 import cy.jdkdigital.productivemetalworks.network.MoveFoundryFluidData;
-import cy.jdkdigital.productivemetalworks.registry.MetalworksRegistrator;
 import cy.jdkdigital.productivemetalworks.registry.ModTags;
 import cy.jdkdigital.productivemetalworks.util.TickingSlotInventoryHandler;
 import net.minecraft.client.gui.GuiGraphics;
@@ -52,7 +51,6 @@ public class FoundryControllerScreen extends AbstractContainerScreen<FoundryCont
 
     @Override
     public void render(@Nonnull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(guiGraphics, mouseX, mouseY, partialTicks);
         super.render(guiGraphics, mouseX, mouseY, partialTicks);
         this.renderTooltip(guiGraphics, mouseX, mouseY);
     }
@@ -145,7 +143,6 @@ public class FoundryControllerScreen extends AbstractContainerScreen<FoundryCont
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (insideTank(mouseX, mouseY)) {
             int tank = getHoveredTank(mouseX, mouseY);
-            ProductiveMetalworks.LOGGER.info("clicked fluid in tank " + tank);
             PacketDistributor.sendToServer(new MoveFoundryFluidData(this.menu.blockEntity.getBlockPos(), tank));
             return true;
         }

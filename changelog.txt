@@ -1,3 +1,20 @@
+
+- Added Molten Slime
+- Added Molten Shulker Shell
+- Added Molten Magma Cream
+- Added Molten Blaze
+- Fixed fluid duping in casting basins
+- Removed Silent Gear casting (moved to separate mod)
+
+
+1.21.1-1.0.3
+
+- Added Turkish translation (RuyaSavascisi)
+- Added Russian translation (rfin0)
+- Added Japanese translation (Abbage230)
+- Adjusted plate and rod recipes to match resource amount used by other mods
+
+
 1.21.1-1.0.2
 
 - Moved recipes away from minecraft namespace

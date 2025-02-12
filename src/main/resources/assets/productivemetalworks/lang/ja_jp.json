@@ -217,6 +217,5 @@
   "jei.productivemetalworks.item_melting": "アイテムの溶融",
   "jei.productivemetalworks.sg_casting": "Silent Gearの鋳造",
   "productivemetalworks.message.foundry_formed": "鋳造炉の構造が完成しました",
-  "productivemetalworks.message.foundry_invalid": "鋳造炉の構造が無効です：%s",
-  "productivemetalworks.tooltip.amount.mb": "%smb"
+  "productivemetalworks.message.foundry_invalid": "鋳造炉の構造が無効です：%s"
 }

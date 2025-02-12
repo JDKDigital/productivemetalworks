@@ -60,19 +60,6 @@ public class RecipeHelper
         return blockCastingRecipeCache.getOrDefault(cacheKey, null);
     }
 
-    static Map<String, RecipeHolder<SilentGearCastingRecipe>> gearCastingRecipeCache = new HashMap<>();
-    public static RecipeHolder<SilentGearCastingRecipe> getSilentGearCastingRecipe(Level level, ItemStack cast, FluidStack fluid) {
-        String cacheKey = itemCacheKey(cast) + fluidCacheKey(fluid);
-        if (!gearCastingRecipeCache.containsKey(cacheKey)) {
-            for (RecipeHolder<SilentGearCastingRecipe> recipeHolder : level.getRecipeManager().getAllRecipesFor(MetalworksRegistrator.SG_GEAR_CASTING_TYPE.get())) {
-                if (recipeHolder.value().matches(cast, fluid, level)) {
-                    gearCastingRecipeCache.put(cacheKey, recipeHolder);
-                }
-            }
-        }
-        return gearCastingRecipeCache.getOrDefault(cacheKey, null);
-    }
-
     static List<RecipeHolder<FluidAlloyingRecipe>> alloyRecipes = new ArrayList<>();
     public static List<RecipeHolder<FluidAlloyingRecipe>> getAlloyRecipes(Level level, MultiFluidTank fluidHandler) {
         // Iterate fluid tanks and try to alloy fluids from 2 tanks
@@ -96,10 +83,11 @@ public class RecipeHelper
         return recipeProcessList;
     }
 
-    private static String itemCacheKey(ItemStack stack) {
+    // TODO move to lib
+    public static String itemCacheKey(ItemStack stack) {
         return BuiltInRegistries.ITEM.getKey(stack.getItem()).toString() + (!stack.getComponents().isEmpty() ? stack.getComponents().stream().map(TypedDataComponent::toString).reduce((s, s2) -> s + s2) : "");
     }
-    private static String fluidCacheKey(FluidStack stack) {
+    public static String fluidCacheKey(FluidStack stack) {
         return BuiltInRegistries.FLUID.getKey(stack.getFluid()).toString() + (!stack.getComponents().isEmpty() ? stack.getComponents().stream().map(TypedDataComponent::toString).reduce((s, s2) -> s + s2) : "");
     }
 }

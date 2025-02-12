@@ -4,6 +4,7 @@ import cy.jdkdigital.productivelib.util.ImmutableFluidStack;
 import cy.jdkdigital.productivemetalworks.ProductiveMetalworks;
 import cy.jdkdigital.productivemetalworks.common.block.*;
 import cy.jdkdigital.productivemetalworks.common.block.entity.*;
+import cy.jdkdigital.productivemetalworks.common.datamap.EntityMeltingMap;
 import cy.jdkdigital.productivemetalworks.common.datamap.FuelMap;
 import cy.jdkdigital.productivemetalworks.common.menu.FoundryControllerContainer;
 import cy.jdkdigital.productivemetalworks.recipe.*;
@@ -13,6 +14,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.food.Foods;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.*;
@@ -41,6 +43,7 @@ public class MetalworksRegistrator
     public static void register() {}
 
     public static final DataMapType<Fluid, FuelMap> FUEL_MAP = DataMapType.builder(ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "fuel_map"), Registries.FLUID, FuelMap.CODEC).synced(FuelMap.CODEC, false).build();
+    public static final DataMapType<EntityType<?>, EntityMeltingMap> ENTITY_MELTING_MAP = DataMapType.builder(ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "entity_melting"), Registries.ENTITY_TYPE, EntityMeltingMap.CODEC).synced(EntityMeltingMap.CODEC, false).build();
     public static final Supplier<DataComponentType<ImmutableFluidStack>> FLUID_STACK = ProductiveMetalworks.DATA_COMPONENTS.register("fluid_stack", () -> DataComponentType.<ImmutableFluidStack>builder().persistent(ImmutableFluidStack.CODEC).networkSynchronized(ImmutableFluidStack.STREAM_CODEC).build());
 
     public static Map<String, Integer> FLUID_COLORS = new HashMap<>();
@@ -104,6 +107,10 @@ public class MetalworksRegistrator
     public static DeferredHolder<Fluid, BaseFlowingFluid.Source> MOLTEN_CARBON = registerFluid("molten_carbon", 0xff0c0001);
     public static DeferredHolder<Fluid, BaseFlowingFluid.Source> MOLTEN_ENDER = registerFluid("molten_ender", 0xff105e51);
     public static DeferredHolder<Fluid, BaseFlowingFluid.Source> MOLTEN_ANCIENT_DEBRIS = registerFluid("molten_ancient_debris", 0xff4a2c23);
+    public static DeferredHolder<Fluid, BaseFlowingFluid.Source> MOLTEN_SHULKER_SHELL = registerFluid("molten_shulker_shell", 0xff956895);
+    public static DeferredHolder<Fluid, BaseFlowingFluid.Source> MOLTEN_BLAZE = registerFluid("molten_blaze", 0xfffcc900);
+    public static DeferredHolder<Fluid, BaseFlowingFluid.Source> MOLTEN_SLIME = registerFluid("molten_slime", 0xff568f4e);
+    public static DeferredHolder<Fluid, BaseFlowingFluid.Source> MOLTEN_MAGMA_CREAM = registerFluid("molten_magma_cream", 0xffe97823);
     public static DeferredHolder<Fluid, BaseFlowingFluid.Source> MOLTEN_WAX = registerFluid("molten_wax", 0xffffb808);
     public static DeferredHolder<Fluid, BaseFlowingFluid.Source> LIQUID_MEAT = registerFluid("meat", 0xfffd4e67);
 
@@ -144,8 +151,6 @@ public class MetalworksRegistrator
     public static final DeferredHolder<RecipeType<?>, RecipeType<BlockCastingRecipe>> BLOCK_CASTING_TYPE = ProductiveMetalworks.RECIPE_TYPES.register("block_casting", () -> new RecipeType<>() {});
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<?>> ITEM_CASTING = ProductiveMetalworks.RECIPE_SERIALIZERS.register("item_casting", ItemCastingRecipe.Serializer::new);
     public static final DeferredHolder<RecipeType<?>, RecipeType<ItemCastingRecipe>> ITEM_CASTING_TYPE = ProductiveMetalworks.RECIPE_TYPES.register("item_casting", () -> new RecipeType<>() {});
-    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<?>> SG_GEAR_CASTING = ProductiveMetalworks.RECIPE_SERIALIZERS.register("sg_gear_casting", ModList.get().isLoaded("silentgear") ? SilentGearCastingRecipe.Serializer::new : DummyRecipe.DummySerializer::new);
-    public static final DeferredHolder<RecipeType<?>, RecipeType<SilentGearCastingRecipe>> SG_GEAR_CASTING_TYPE = ProductiveMetalworks.RECIPE_TYPES.register("sg_gear_casting", () -> new RecipeType<>() {});
 
     public static final ResourceKey<CreativeModeTab> TAB_KEY = ResourceKey.create(Registries.CREATIVE_MODE_TAB, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, ProductiveMetalworks.MODID));
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> TAB = ProductiveMetalworks.CREATIVE_MODE_TABS.register(ProductiveMetalworks.MODID, () -> CreativeModeTab.builder()

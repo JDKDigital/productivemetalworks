@@ -1,0 +1,5 @@
+{
+  "parent": "neoforge:item/bucket_drip",
+  "fluid": "productivemetalworks:molten_magma_cream",
+  "loader": "neoforge:fluid_container"
+}

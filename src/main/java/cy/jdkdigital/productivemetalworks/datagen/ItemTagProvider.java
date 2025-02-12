@@ -50,6 +50,6 @@ public class ItemTagProvider extends ItemTagsProvider
 
     @Override
     public String getName() {
-        return "Productive Foundry Item Tags Provider";
+        return "Productive Metalworks Item Tags Provider";
     }
 }

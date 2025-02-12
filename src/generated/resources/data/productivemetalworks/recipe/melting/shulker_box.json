@@ -1,0 +1,14 @@
+{
+  "type": "productivemetalworks:item_melting",
+  "ingredient": {
+    "item": "minecraft:shulker_box"
+  },
+  "maximum_temperature": 0,
+  "minimum_temperature": 1000,
+  "result": [
+    {
+      "amount": 200,
+      "id": "productivemetalworks:molten_shulker_shell"
+    }
+  ]
+}

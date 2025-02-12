@@ -60,6 +60,10 @@ public class ModTags
         public static final TagKey<Fluid> MOLTEN_CARBON = FluidTags.create(ResourceLocation.fromNamespaceAndPath("c", "molten_carbon"));
         public static final TagKey<Fluid> MOLTEN_ENDER = FluidTags.create(ResourceLocation.fromNamespaceAndPath("c", "molten_ender"));
         public static final TagKey<Fluid> MOLTEN_ANCIENT_DEBRIS = FluidTags.create(ResourceLocation.fromNamespaceAndPath("c", "molten_ancient_debris"));
+        public static final TagKey<Fluid> MOLTEN_SHULKER_SHELL = FluidTags.create(ResourceLocation.fromNamespaceAndPath("c", "molten_shulker_shell"));
+        public static final TagKey<Fluid> MOLTEN_BLAZE = FluidTags.create(ResourceLocation.fromNamespaceAndPath("c", "molten_blaze"));
+        public static final TagKey<Fluid> MOLTEN_SLIME = FluidTags.create(ResourceLocation.fromNamespaceAndPath("c", "molten_slime"));
+        public static final TagKey<Fluid> MOLTEN_MAGMA_CREAM = FluidTags.create(ResourceLocation.fromNamespaceAndPath("c", "molten_magma_cream"));
 
         public static final TagKey<Fluid> MOLTEN_IRON = FluidTags.create(ResourceLocation.fromNamespaceAndPath("c", "molten_iron"));
         public static final TagKey<Fluid> MOLTEN_COPPER = FluidTags.create(ResourceLocation.fromNamespaceAndPath("c", "molten_copper"));

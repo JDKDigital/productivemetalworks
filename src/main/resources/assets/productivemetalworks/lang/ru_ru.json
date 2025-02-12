@@ -217,6 +217,5 @@
   "jei.productivemetalworks.item_melting": "Плавление Предметов",
   "jei.productivemetalworks.sg_casting": "Литьё для Silent Gear",
   "productivemetalworks.message.foundry_formed": "Литейная конструкция собрана",
-  "productivemetalworks.message.foundry_invalid": "Литейная конструкция некорректна. %s",
-  "productivemetalworks.tooltip.amount.mb": "%sмБ"
+  "productivemetalworks.message.foundry_invalid": "Литейная конструкция некорректна. %s"
 }

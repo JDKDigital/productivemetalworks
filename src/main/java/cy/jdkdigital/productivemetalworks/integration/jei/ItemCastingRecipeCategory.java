@@ -2,7 +2,6 @@ package cy.jdkdigital.productivemetalworks.integration.jei;
 
 import cy.jdkdigital.productivemetalworks.ProductiveMetalworks;
 import cy.jdkdigital.productivemetalworks.recipe.ItemCastingRecipe;
-import cy.jdkdigital.productivemetalworks.recipe.ItemMeltingRecipe;
 import cy.jdkdigital.productivemetalworks.registry.MetalworksRegistrator;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -18,8 +17,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.level.material.Fluid;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class ItemCastingRecipeCategory extends AbstractRecipeCategory<RecipeHolder<ItemCastingRecipe>>
 {
@@ -49,13 +51,17 @@ public class ItemCastingRecipeCategory extends AbstractRecipeCategory<RecipeHold
                     .setSlotName("cast");
         }
 
+        List<Fluid> fluidFocuses = focuses.getFocuses(NeoForgeTypes.FLUID_STACK).map(focus -> focus.getTypedValue().getIngredient()).map(FluidStack::getFluid).toList();
+
+        var fluidStacks = Arrays.stream(recipe.value().fluid.getFluids()).filter(fluidStack -> fluidFocuses.isEmpty() || fluidFocuses.contains(fluidStack.getFluid())).filter(fluidStack -> fluidStack.getFluid().defaultFluidState().isSource()).toList();
+
         builder.addSlot(RecipeIngredientRole.INPUT, 26, 26)
-                .addIngredients(NeoForgeTypes.FLUID_STACK, Arrays.stream(recipe.value().fluid.getFluids()).filter(fluidStack -> fluidStack.getFluid().defaultFluidState().isSource()).toList())
+                .addIngredients(NeoForgeTypes.FLUID_STACK, fluidStacks)
                 .setFluidRenderer(recipe.value().fluid.amount(), false, 16, 16)
-                .setSlotName("fluids");
+                .setSlotName("fluids_tank");
 
         builder.addSlot(RecipeIngredientRole.INPUT, 68, 16)
-                .addIngredients(NeoForgeTypes.FLUID_STACK, Arrays.stream(recipe.value().fluid.getFluids()).filter(fluidStack -> fluidStack.getFluid().defaultFluidState().isSource()).toList())
+                .addIngredients(NeoForgeTypes.FLUID_STACK, fluidStacks)
                 .setFluidRenderer(recipe.value().fluid.amount(), false, 6,hasCast ? 10 : 26)
                 .setSlotName("fluids");
 

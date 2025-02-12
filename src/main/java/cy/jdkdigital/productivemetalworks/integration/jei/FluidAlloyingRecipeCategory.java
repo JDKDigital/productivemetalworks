@@ -2,7 +2,6 @@ package cy.jdkdigital.productivemetalworks.integration.jei;
 
 import cy.jdkdigital.productivemetalworks.ProductiveMetalworks;
 import cy.jdkdigital.productivemetalworks.recipe.FluidAlloyingRecipe;
-import cy.jdkdigital.productivemetalworks.recipe.ItemMeltingRecipe;
 import cy.jdkdigital.productivemetalworks.registry.MetalworksRegistrator;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -19,11 +18,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 
 import java.util.Arrays;
-import java.util.Comparator;
 
 public class FluidAlloyingRecipeCategory extends AbstractRecipeCategory<RecipeHolder<FluidAlloyingRecipe>>
 {
@@ -49,12 +46,14 @@ public class FluidAlloyingRecipeCategory extends AbstractRecipeCategory<RecipeHo
         int maxAmount = Math.max(recipe.value().result.getAmount(), recipe.value().fluids.stream().map(SizedFluidIngredient::amount).max(Integer::compareTo).get());
 
         int fWidth = 42/recipe.value().fluids.size();
+        int leftover = 42 - fWidth;
         for (int i = 0, fluidsSize = recipe.value().fluids.size(); i < fluidsSize; i++) {
             SizedFluidIngredient sizedFluidIngredient = recipe.value().fluids.get(i);
             builder.addSlot(RecipeIngredientRole.INPUT, 12 + (i*fWidth), 8)
                     .addIngredients(NeoForgeTypes.FLUID_STACK, Arrays.stream(sizedFluidIngredient.getFluids()).filter(fluidStack -> fluidStack.getFluid().defaultFluidState().isSource()).toList())
-                    .setFluidRenderer(maxAmount, false, fWidth,52)
+                    .setFluidRenderer(maxAmount, false, fWidth + (leftover > 0 ? 1 : 0),52)
                     .setSlotName("fluid" + i);
+            leftover--;
         }
 
         builder.addSlot(RecipeIngredientRole.OUTPUT, 112, 8)

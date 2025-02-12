@@ -1,0 +1,15 @@
+{
+  "type": "productivemetalworks:block_casting",
+  "cast": {
+    "item": "minecraft:piston"
+  },
+  "consume_cast": true,
+  "fluid": {
+    "amount": 100,
+    "tag": "c:molten_slime"
+  },
+  "result": {
+    "count": 1,
+    "id": "minecraft:sticky_piston"
+  }
+}

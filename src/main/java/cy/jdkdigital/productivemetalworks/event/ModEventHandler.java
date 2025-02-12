@@ -47,7 +47,7 @@ public class ModEventHandler
         event.registerBlockEntity(
                 Capabilities.FluidHandler.BLOCK,
                 MetalworksRegistrator.CASTING_BLOCK_ENTITY.get(),
-                (myBlockEntity, side) -> myBlockEntity.getFluidHandler()
+                (myBlockEntity, side) -> myBlockEntity.isCooling() ? null : myBlockEntity.getFluidHandler()
         );
         event.registerBlockEntity(
                 Capabilities.ItemHandler.BLOCK,
@@ -70,6 +70,7 @@ public class ModEventHandler
     @SubscribeEvent
     private static void registerDataMapTypes(RegisterDataMapTypesEvent event) {
         event.register(MetalworksRegistrator.FUEL_MAP);
+        event.register(MetalworksRegistrator.ENTITY_MELTING_MAP);
     }
 
     @SubscribeEvent

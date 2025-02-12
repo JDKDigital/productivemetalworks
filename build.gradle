@@ -157,6 +157,7 @@ dependencies {
     implementation "curse.maven:mystical-agriculture-246640:6128551"
     implementation "curse.maven:cucumber-272335:6128600"
     implementation "curse.maven:pneumaticcraft-repressurized-281849:6042033"
+    implementation "curse.maven:everythingcopper-579545:6155643"
 }
 
 tasks.withType(ProcessResources).configureEach {

@@ -32,7 +32,6 @@ public record MoveFoundryFluidData(BlockPos pos, int tank) implements CustomPack
     }
     public static void serverHandle(final MoveFoundryFluidData data, final IPayloadContext context) {
         if (context.player().level().getBlockEntity(data.pos()) instanceof FoundryControllerBlockEntity blockEntity) {
-            ProductiveMetalworks.LOGGER.info("move fluid in tank " + data.tank);
             blockEntity.moveTankFirst(data.tank);
         }
     }

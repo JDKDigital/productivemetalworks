@@ -1,0 +1,21 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "everythingcopper"
+    }
+  ],
+  "type": "productivemetalworks:item_casting",
+  "cast": {
+    "item": "minecraft:soul_torch"
+  },
+  "consume_cast": true,
+  "fluid": {
+    "amount": 80,
+    "tag": "c:molten_copper"
+  },
+  "result": {
+    "count": 1,
+    "id": "everythingcopper:copper_soul_lantern"
+  }
+}

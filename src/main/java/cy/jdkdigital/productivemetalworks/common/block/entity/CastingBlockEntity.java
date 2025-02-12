@@ -2,6 +2,7 @@ package cy.jdkdigital.productivemetalworks.common.block.entity;
 
 import cy.jdkdigital.productivelib.common.block.entity.CapabilityBlockEntity;
 import cy.jdkdigital.productivemetalworks.Config;
+import cy.jdkdigital.productivemetalworks.event.CastingRecipeEvent;
 import cy.jdkdigital.productivemetalworks.recipe.BlockCastingRecipe;
 import cy.jdkdigital.productivemetalworks.recipe.ItemCastingRecipe;
 import cy.jdkdigital.productivemetalworks.registry.MetalworksRegistrator;
@@ -21,6 +22,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.fml.ModList;
+import net.neoforged.fml.ModLoader;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
@@ -128,6 +130,11 @@ public class CastingBlockEntity extends CapabilityBlockEntity
                 onContentsChanged();
             }
             return filled;
+        }
+
+        @Override
+        public FluidStack drain(int maxDrain, FluidAction action) {
+            return super.drain(maxDrain, action);
         }
 
         @Override
@@ -259,13 +266,16 @@ public class CastingBlockEntity extends CapabilityBlockEntity
                 return new BlockCastingRecipe(Ingredient.of(cast), new SizedFluidIngredient(FluidIngredient.single(fluid), 50), waxData.waxed().asItem().getDefaultInstance(), true);
             }
         }
+
+        // event for getting recipe
+        var event = new CastingRecipeEvent(level, cast, fluid, isTable);
+        ModLoader.postEvent(event);
+        if (event.hasRecipe()) {
+            return event.getRecipe();
+        }
+
+        // regular item and block casting recipes
         if (isTable) {
-            if (ModList.get().isLoaded("silentgear") && (cast.is(ModTags.Items.SG_BLUEPRINTS) || cast.is(Items.HEAVY_CORE))) {
-                var recipe = RecipeHelper.getSilentGearCastingRecipe(level, cast, fluid);
-                if (recipe != null) {
-                    return recipe.value();
-                }
-            }
             var recipe = RecipeHelper.getItemCastingRecipe(level, cast, fluid);
             return recipe == null ? null : recipe.value();
         }
