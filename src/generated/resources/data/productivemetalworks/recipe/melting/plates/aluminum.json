@@ -16,7 +16,7 @@
   "minimum_temperature": 1000,
   "result": [
     {
-      "amount": 180,
+      "amount": 90,
       "id": "productivemetalworks:molten_aluminum"
     }
   ]

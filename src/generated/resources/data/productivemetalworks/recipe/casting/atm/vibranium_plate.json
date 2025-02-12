@@ -11,7 +11,7 @@
   },
   "consume_cast": false,
   "fluid": {
-    "amount": 360,
+    "amount": 270,
     "fluid": "allthemodium:molten_vibranium"
   },
   "result": {

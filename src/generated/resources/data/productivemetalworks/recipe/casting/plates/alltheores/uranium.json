@@ -11,7 +11,7 @@
   },
   "consume_cast": false,
   "fluid": {
-    "amount": 180,
+    "amount": 90,
     "tag": "c:molten_uranium"
   },
   "result": {

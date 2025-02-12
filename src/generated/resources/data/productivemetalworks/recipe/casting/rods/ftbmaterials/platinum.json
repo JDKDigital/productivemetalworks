@@ -11,7 +11,7 @@
   },
   "consume_cast": false,
   "fluid": {
-    "amount": 180,
+    "amount": 45,
     "tag": "c:molten_platinum"
   },
   "result": {
