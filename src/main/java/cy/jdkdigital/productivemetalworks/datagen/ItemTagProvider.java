@@ -41,9 +41,12 @@ public class ItemTagProvider extends ItemTagsProvider
             tag(color.getDyedTag()).add(MetalworksRegistrator.FOUNDRY_CONTROLLERS.get(color).get().asItem());
         }
 
+        tag(ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "nuggets")))
+                .addTag(ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "nuggets/meat")));
         tag(ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "ingots")))
                 .addTag(ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "ingots/meat")))
                 .addTag(ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "ingots/shiny_meat")));
+        tag(ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "nuggets/meat"))).add(MetalworksRegistrator.MEAT_NUGGET.get());
         tag(ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "ingots/meat"))).add(MetalworksRegistrator.MEAT_INGOT.get());
         tag(ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "ingots/shiny_meat"))).add(MetalworksRegistrator.SHINY_MEAT_INGOT.get());
     }

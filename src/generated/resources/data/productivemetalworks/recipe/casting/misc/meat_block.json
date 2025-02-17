@@ -5,7 +5,7 @@
   },
   "consume_cast": true,
   "fluid": {
-    "amount": 800,
+    "amount": 720,
     "tag": "c:meat"
   },
   "result": {

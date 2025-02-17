@@ -84,7 +84,7 @@ public class LootDataProvider implements DataProvider
             MetalworksRegistrator.FOUNDRY_DRAINS.forEach((dyeColor, holder) -> {
                 dropSelf(holder.get());
             });
-            MetalworksRegistrator.FOUNDRY_DRAINS.forEach((dyeColor, holder) -> {
+            MetalworksRegistrator.FOUNDRY_TANKS.forEach((dyeColor, holder) -> {
                 dropFluidContainer(holder.get());
             });
             MetalworksRegistrator.FOUNDRY_WINDOWS.forEach((dyeColor, holder) -> {

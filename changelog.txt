@@ -1,10 +1,18 @@
+1.21.1-1.1.1
+
+- Fixed Foundry Tanks not dropping when broken
+- Fixed some recipes
+
+
+1.21.1-1.1.0
 
 - Added Molten Slime
 - Added Molten Shulker Shell
 - Added Molten Magma Cream
 - Added Molten Blaze
+- Added fluid buckets as hidden ingredients in JEI for recipes using fluids
 - Fixed fluid duping in casting basins
-- Removed Silent Gear casting (moved to separate mod)
+- Removed Silent Gear casting recipes (moved to separate mod)
 
 
 1.21.1-1.0.3

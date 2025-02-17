@@ -7,7 +7,7 @@
   "minimum_temperature": 1000,
   "result": [
     {
-      "amount": 100,
+      "amount": 90,
       "id": "productivemetalworks:meat"
     },
     {

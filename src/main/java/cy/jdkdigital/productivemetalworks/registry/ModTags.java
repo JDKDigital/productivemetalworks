@@ -37,7 +37,8 @@ public class ModTags
         public static final TagKey<Item> PLATES = ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "plates"));
         public static final TagKey<Item> WAXES = ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "waxes"));
         public static final TagKey<Item> STORAGE_BLOCK_WAXES = ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "storage_blocks/wax"));
-        public static final TagKey<Item> SG_BLUEPRINTS = ItemTags.create(ResourceLocation.fromNamespaceAndPath("silentgear", "blueprints"));
+        public static final TagKey<Item> MEAT_NUGGETS = ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "nuggets/meat"));
+        public static final TagKey<Item> MEAT_INGOTS = ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "ingots/meat"));
     }
 
     // Molten metals and stuff

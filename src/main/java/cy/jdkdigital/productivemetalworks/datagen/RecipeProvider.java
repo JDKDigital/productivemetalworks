@@ -212,8 +212,20 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
                 .unlockedBy(getHasName(MetalworksRegistrator.MEAT_BLOCK.get()), has(MetalworksRegistrator.MEAT_BLOCK.get()))
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "crafting/meat_ingot_from_block"));
 
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, MetalworksRegistrator.MEAT_NUGGET.get(), 9)
+                .requires(MetalworksRegistrator.MEAT_INGOT.get())
+                .unlockedBy(getHasName(MetalworksRegistrator.MEAT_INGOT.get()), has(MetalworksRegistrator.MEAT_INGOT.get()))
+                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "crafting/meat_nugget_from_ingot"));
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MetalworksRegistrator.MEAT_INGOT.get(), 1)
+                .pattern("TTT").pattern("TMT").pattern("TTT")
+                .define('T', ModTags.Items.MEAT_NUGGETS)
+                .define('M', MetalworksRegistrator.MEAT_NUGGET.get())
+                .unlockedBy(getHasName(MetalworksRegistrator.MEAT_NUGGET.get()), has(MetalworksRegistrator.MEAT_NUGGET.get()))
+                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "crafting/meat_ingots_from_nugget"));
+
         // Melting
-        ItemMeltingRecipeBuilder.of(Ingredient.of(Tags.Items.FOODS_RAW_MEAT), new FluidStack(MetalworksRegistrator.LIQUID_MEAT.get(), 20), 1000, 0)
+        ItemMeltingRecipeBuilder.of(Ingredient.of(Tags.Items.FOODS_RAW_MEAT), new FluidStack(MetalworksRegistrator.LIQUID_MEAT.get(), 30), 1000, 0)
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/meat"));
         ItemMeltingRecipeBuilder.of(Ingredient.of(Tags.Items.GLASS_BLOCKS_CHEAP), new FluidStack(MetalworksRegistrator.MOLTEN_GLASS.get(), 1000), 1400, 0)
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/glass"));
@@ -278,9 +290,11 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/ancient_debris"));
         ItemMeltingRecipeBuilder.of(Ingredient.of(Items.SHULKER_SHELL), new FluidStack(MetalworksRegistrator.MOLTEN_SHULKER_SHELL.get(), 100))
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/shulker_shell"));
-        ItemMeltingRecipeBuilder.of(Ingredient.of(MetalworksRegistrator.MEAT_INGOT.get()), new FluidStack(MetalworksRegistrator.LIQUID_MEAT.get(), 100))
+        ItemMeltingRecipeBuilder.of(Ingredient.of(ModTags.Items.MEAT_NUGGETS), new FluidStack(MetalworksRegistrator.LIQUID_MEAT.get(), 10))
+                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/meat_nugget"));
+        ItemMeltingRecipeBuilder.of(Ingredient.of(ModTags.Items.MEAT_INGOTS), new FluidStack(MetalworksRegistrator.LIQUID_MEAT.get(), 90))
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/meat_ingot"));
-        ItemMeltingRecipeBuilder.of(Ingredient.of(MetalworksRegistrator.SHINY_MEAT_INGOT.get()), List.of(new FluidStack(MetalworksRegistrator.LIQUID_MEAT.get(), 100), new FluidStack(MetalworksRegistrator.MOLTEN_GOLD.get(), 80)))
+        ItemMeltingRecipeBuilder.of(Ingredient.of(MetalworksRegistrator.SHINY_MEAT_INGOT.get()), List.of(new FluidStack(MetalworksRegistrator.LIQUID_MEAT.get(), 90), new FluidStack(MetalworksRegistrator.MOLTEN_GOLD.get(), 80)))
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/shiny_meat_ingot"));
         ItemMeltingRecipeBuilder.of(Ingredient.of(Items.COMPASS), List.of(new FluidStack(MetalworksRegistrator.MOLTEN_IRON.get(), 360), new FluidStack(MetalworksRegistrator.MOLTEN_REDSTONE.get(), 100)))
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/compass"));
@@ -340,8 +354,10 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/storage_blocks/glowstone"));
         ItemCastingRecipeBuilder.of(MetalworksRegistrator.CAST_GEM.get().getDefaultInstance(), SizedFluidIngredient.of(MetalworksRegistrator.MOLTEN_QUARTZ.get(), 100), Items.QUARTZ.getDefaultInstance())
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/gems/quartz"));
-        ItemCastingRecipeBuilder.of(MetalworksRegistrator.CAST_GEM.get().getDefaultInstance(), SizedFluidIngredient.of(MetalworksRegistrator.MOLTEN_LAPIS.get(), 100), Items.AMETHYST_SHARD.getDefaultInstance())
+        ItemCastingRecipeBuilder.of(MetalworksRegistrator.CAST_GEM.get().getDefaultInstance(), SizedFluidIngredient.of(MetalworksRegistrator.MOLTEN_AMETHYST.get(), 100), Items.AMETHYST_SHARD.getDefaultInstance())
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/gems/amethyst"));
+        BlockCastingRecipeBuilder.of(SizedFluidIngredient.of(MetalworksRegistrator.MOLTEN_AMETHYST.get(), 400), Items.AMETHYST_BLOCK.getDefaultInstance())
+                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/gems/amethyst_block"));
         ItemCastingRecipeBuilder.of(MetalworksRegistrator.CAST_INGOT.get().getDefaultInstance(), SizedFluidIngredient.of(MetalworksRegistrator.MOLTEN_ANCIENT_DEBRIS.get(), 100), Items.NETHERITE_SCRAP.getDefaultInstance())
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/netherite_scrap"));
         ItemCastingRecipeBuilder.of(SizedFluidIngredient.of(MetalworksRegistrator.MOLTEN_SLIME.get(), 100), Items.SLIME_BALL.getDefaultInstance())
@@ -350,6 +366,10 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/magma_cream"));
         ItemCastingRecipeBuilder.of(MetalworksRegistrator.CAST_ROD.get().getDefaultInstance(), SizedFluidIngredient.of(MetalworksRegistrator.MOLTEN_BLAZE.get(), 400), Items.BLAZE_ROD.getDefaultInstance())
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/blaze_rod"));
+        ItemCastingRecipeBuilder.of(MetalworksRegistrator.CAST_GEM.get().getDefaultInstance(), SizedFluidIngredient.of(MetalworksRegistrator.MOLTEN_ENDER.get(), 100), Items.ENDER_PEARL.getDefaultInstance())
+                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/ender_pearl"));
+        ItemCastingRecipeBuilder.of(Items.ENDER_PEARL.getDefaultInstance(), SizedFluidIngredient.of(MetalworksRegistrator.MOLTEN_BLAZE.get(), 100), Items.ENDER_EYE.getDefaultInstance())
+                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/ender_eye"));
 
         // Casts
         ItemCastingRecipeBuilder.of(Tags.Items.INGOTS, SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_STEEL, 360), MetalworksRegistrator.CAST_INGOT.get().getDefaultInstance(), true)
@@ -385,11 +405,13 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/misc/lantern"));
         ItemCastingRecipeBuilder.of(Items.SOUL_TORCH.getDefaultInstance(), SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_IRON, 80), Items.SOUL_LANTERN.getDefaultInstance(), true)
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/misc/soul_lantern"));
-        ItemCastingRecipeBuilder.of(MetalworksRegistrator.CAST_INGOT.get().getDefaultInstance(), SizedFluidIngredient.of(ModTags.Fluids.MEAT, 100), MetalworksRegistrator.MEAT_INGOT.get().getDefaultInstance(), false)
+        ItemCastingRecipeBuilder.of(MetalworksRegistrator.CAST_NUGGET.get().getDefaultInstance(), SizedFluidIngredient.of(ModTags.Fluids.MEAT, 10), MetalworksRegistrator.MEAT_NUGGET.get().getDefaultInstance(), false)
+                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/misc/meat_nugget"));
+        ItemCastingRecipeBuilder.of(MetalworksRegistrator.CAST_INGOT.get().getDefaultInstance(), SizedFluidIngredient.of(ModTags.Fluids.MEAT, 90), MetalworksRegistrator.MEAT_INGOT.get().getDefaultInstance(), false)
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/misc/meat_ingot"));
         ItemCastingRecipeBuilder.of(MetalworksRegistrator.MEAT_INGOT.get().getDefaultInstance(), SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_GOLD, 80), MetalworksRegistrator.SHINY_MEAT_INGOT.get().getDefaultInstance(), true)
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/misc/shiny_meat_ingot"));
-        BlockCastingRecipeBuilder.of(Items.BONE.getDefaultInstance(), SizedFluidIngredient.of(ModTags.Fluids.MEAT, 800), MetalworksRegistrator.MEAT_BLOCK.get().asItem().getDefaultInstance(), true)
+        BlockCastingRecipeBuilder.of(Items.BONE.getDefaultInstance(), SizedFluidIngredient.of(ModTags.Fluids.MEAT, 720), MetalworksRegistrator.MEAT_BLOCK.get().asItem().getDefaultInstance(), true)
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/misc/meat_block"));
         BlockCastingRecipeBuilder.of(Items.PISTON.getDefaultInstance(), SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_SLIME, 100), Items.STICKY_PISTON.getDefaultInstance(), true)
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/misc/sticky_piston"));
@@ -428,10 +450,10 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
         alloyRecipe(List.of(SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_IRON, 2), SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_NICKEL, 1)), 10, new FluidStack(MetalworksRegistrator.MOLTEN_INVAR, 3), recipeOutput);
         // Constantan
         alloyRecipe(List.of(SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_COPPER, 1), SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_NICKEL, 1)), 10, new FluidStack(MetalworksRegistrator.MOLTEN_CONSTANTAN, 2), recipeOutput);
-        // Lumium
-        alloyRecipe(List.of(SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_REDSTONE, 40), SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_SILVER, 9), SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_COPPER, 27)), 1, new FluidStack(MetalworksRegistrator.MOLTEN_LUMIUM, 36), recipeOutput);
         // Signalum
-        alloyRecipe(List.of(SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_GLOWSTONE, 40), SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_SILVER, 9), SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_TIN, 27)), 1, new FluidStack(MetalworksRegistrator.MOLTEN_SIGNALUM, 36), recipeOutput);
+        alloyRecipe(List.of(SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_REDSTONE, 40), SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_SILVER, 9), SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_COPPER, 27)), 1, new FluidStack(MetalworksRegistrator.MOLTEN_SIGNALUM, 36), recipeOutput);
+        // Lumium
+        alloyRecipe(List.of(SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_GLOWSTONE, 40), SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_SILVER, 9), SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_TIN, 27)), 1, new FluidStack(MetalworksRegistrator.MOLTEN_LUMIUM, 36), recipeOutput);
         // Enderium
         alloyRecipe(List.of(SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_LEAD, 27), SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_PLATINUM, 9), SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_ENDER, 20)), 1, new FluidStack(MetalworksRegistrator.MOLTEN_ENDERIUM, 36), recipeOutput);
         // Refined glowstone
@@ -788,7 +810,6 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
     private static void maCompat(RecipeOutput recipeOutput) {
         for (String essence: new String[]{"inferium", "prudentium", "tertium", "imperium", "supremium"}) {
             var essenceFluid = BuiltInRegistries.FLUID.get(ResourceLocation.fromNamespaceAndPath("mysticalagradditions", "molten_" + essence));
-            ProductiveMetalworks.LOGGER.info("essence fluid for " + essence + " " + essenceFluid);
             // melt block
             ItemMeltingRecipeBuilder.of(
                     Ingredient.of(BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("mysticalagriculture", essence + "_block"))),

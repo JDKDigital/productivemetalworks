@@ -17,6 +17,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 
@@ -46,14 +47,17 @@ public class FluidAlloyingRecipeCategory extends AbstractRecipeCategory<RecipeHo
         int maxAmount = Math.max(recipe.value().result.getAmount(), recipe.value().fluids.stream().map(SizedFluidIngredient::amount).max(Integer::compareTo).get());
 
         int fWidth = 42/recipe.value().fluids.size();
-        int leftover = 42 - fWidth;
+        int leftover = 42 - (fWidth * recipe.value().fluids.size());
         for (int i = 0, fluidsSize = recipe.value().fluids.size(); i < fluidsSize; i++) {
             SizedFluidIngredient sizedFluidIngredient = recipe.value().fluids.get(i);
+            var fluidStacks = Arrays.stream(sizedFluidIngredient.getFluids()).filter(fluidStack -> fluidStack.getFluid().defaultFluidState().isSource()).toList();
             builder.addSlot(RecipeIngredientRole.INPUT, 12 + (i*fWidth), 8)
-                    .addIngredients(NeoForgeTypes.FLUID_STACK, Arrays.stream(sizedFluidIngredient.getFluids()).filter(fluidStack -> fluidStack.getFluid().defaultFluidState().isSource()).toList())
+                    .addIngredients(NeoForgeTypes.FLUID_STACK, fluidStacks)
                     .setFluidRenderer(maxAmount, false, fWidth + (leftover > 0 ? 1 : 0),52)
                     .setSlotName("fluid" + i);
             leftover--;
+            // Add bucket as hidden ingredient
+            builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).addIngredients(Ingredient.of(fluidStacks.stream().map(f -> new ItemStack(f.getFluid().getBucket()))));
         }
 
         builder.addSlot(RecipeIngredientRole.OUTPUT, 112, 8)

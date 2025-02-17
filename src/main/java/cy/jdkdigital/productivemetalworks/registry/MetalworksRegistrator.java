@@ -83,6 +83,7 @@ public class MetalworksRegistrator
 
     // Items
     public static DeferredHolder<Item, Item> FIRE_BRICK = registerItem("fire_brick");
+    public static DeferredHolder<Item, Item> MEAT_NUGGET = registerItem("meat_nugget", () -> new Item(new Item.Properties().food(Foods.DRIED_KELP)));
     public static DeferredHolder<Item, Item> MEAT_INGOT = registerItem("meat_ingot", () -> new Item(new Item.Properties().food(Foods.RABBIT_STEW)));
     public static DeferredHolder<Item, Item> SHINY_MEAT_INGOT = registerItem("shiny_meat_ingot", () -> new Item(new Item.Properties().food(Foods.GOLDEN_CARROT)));
 

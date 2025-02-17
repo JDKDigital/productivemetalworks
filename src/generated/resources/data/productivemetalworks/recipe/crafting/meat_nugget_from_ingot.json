@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "productivemetalworks:meat_ingot"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "id": "productivemetalworks:meat_nugget"
+  }
+}

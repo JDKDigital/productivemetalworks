@@ -16,6 +16,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -69,5 +70,8 @@ public class ItemCastingRecipeCategory extends AbstractRecipeCategory<RecipeHold
                 .addItemStack(recipe.value().result)
                 .setStandardSlotBackground()
                 .setSlotName("result");
+
+        // Add buckets as hidden ingredient
+        builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).addIngredients(Ingredient.of(fluidStacks.stream().map(f -> new ItemStack(f.getFluid().getBucket()))));
     }
 }

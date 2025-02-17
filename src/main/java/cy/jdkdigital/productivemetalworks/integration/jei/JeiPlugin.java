@@ -82,7 +82,7 @@ public class JeiPlugin implements IModPlugin
         List<RecipeHolder<ItemCastingRecipe>> BUCKET_RECIPES = new ArrayList<>();
         BuiltInRegistries.FLUID.entrySet().forEach(fluidHolder -> {
             var fluid = fluidHolder.getValue();
-            if (fluid.getBucket() != Items.AIR) {
+            if (fluid.defaultFluidState().isSource() && fluid.getBucket() != Items.AIR) {
                 BUCKET_RECIPES.add(new RecipeHolder<>(ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, fluidHolder.getKey().location().getPath()), new BlockCastingRecipe(Ingredient.of(Items.BUCKET), SizedFluidIngredient.of(fluid, 1000), fluid.getBucket().getDefaultInstance(), true)));
             }
         });

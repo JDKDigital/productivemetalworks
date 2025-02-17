@@ -11,15 +11,6 @@
               "condition": "minecraft:survives_explosion"
             }
           ],
-          "functions": [
-            {
-              "function": "minecraft:copy_components",
-              "include": [
-                "productivemetalworks:fluid_stack"
-              ],
-              "source": "block_entity"
-            }
-          ],
           "name": "productivemetalworks:pink_foundry_drain"
         }
       ],

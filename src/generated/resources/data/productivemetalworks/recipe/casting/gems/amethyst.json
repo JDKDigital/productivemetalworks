@@ -6,7 +6,7 @@
   "consume_cast": false,
   "fluid": {
     "amount": 100,
-    "fluid": "productivemetalworks:molten_lapis"
+    "fluid": "productivemetalworks:molten_amethyst"
   },
   "result": {
     "count": 1,

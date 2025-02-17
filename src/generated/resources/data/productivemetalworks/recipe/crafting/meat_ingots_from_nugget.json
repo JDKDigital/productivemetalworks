@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "M": {
+      "item": "productivemetalworks:meat_nugget"
+    },
+    "T": {
+      "tag": "c:nuggets/meat"
+    }
+  },
+  "pattern": [
+    "TTT",
+    "TMT",
+    "TTT"
+  ],
+  "result": {
+    "count": 1,
+    "id": "productivemetalworks:meat_ingot"
+  }
+}

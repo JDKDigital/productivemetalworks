@@ -4,7 +4,7 @@
       "type": "neoforge:not",
       "value": {
         "type": "productivelib:fluid_tag_empty",
-        "tag": "c:molten_redstone"
+        "tag": "c:molten_glowstone"
       }
     },
     {
@@ -18,7 +18,7 @@
       "type": "neoforge:not",
       "value": {
         "type": "productivelib:fluid_tag_empty",
-        "tag": "c:molten_copper"
+        "tag": "c:molten_tin"
       }
     }
   ],
@@ -26,7 +26,7 @@
   "fluids": [
     {
       "amount": 40,
-      "tag": "c:molten_redstone"
+      "tag": "c:molten_glowstone"
     },
     {
       "amount": 9,
@@ -34,7 +34,7 @@
     },
     {
       "amount": 27,
-      "tag": "c:molten_copper"
+      "tag": "c:molten_tin"
     }
   ],
   "result": {

@@ -32,6 +32,7 @@ public class ItemModelProvider extends net.neoforged.neoforge.client.model.gener
         basicItem(MetalworksRegistrator.CAST_ROD.get());
         basicItem(MetalworksRegistrator.CAST_PLATE.get());
         basicItem(MetalworksRegistrator.FIRE_BRICK.get());
+        basicItem(MetalworksRegistrator.MEAT_NUGGET.get());
         basicItem(MetalworksRegistrator.MEAT_INGOT.get());
         basicItem(MetalworksRegistrator.SHINY_MEAT_INGOT.get());
     }
