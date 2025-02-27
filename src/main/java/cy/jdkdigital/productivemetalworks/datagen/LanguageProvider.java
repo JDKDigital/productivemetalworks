@@ -61,6 +61,9 @@ public class LanguageProvider extends net.neoforged.neoforge.common.data.Languag
         add("productivebees.ingredient.description.vibranium_bee", "To acquire this bee, look up the crafting recipe for its spawn egg.");
         add("productivebees.ingredient.description.unobtainium_bee", "To acquire this bee, look up the crafting recipe for its spawn egg.");
 
+        add("book.productivemetalworks.name", "Big Book of Metallurgy");
+        add("book.productivemetalworks.landing_text", "A shallow look into the world of metalworking.$(br2)Put on your gloves 'cause it's gonna get hot.");
+
         ProductiveMetalworks.ITEMS.getEntries().forEach(registryObject -> {
             if (registryObject.get() instanceof BucketItem) {
                 add(registryObject.get(), "Bucket of " + capName(BuiltInRegistries.ITEM.getKey(registryObject.get()).getPath().replace("_bucket", "")));

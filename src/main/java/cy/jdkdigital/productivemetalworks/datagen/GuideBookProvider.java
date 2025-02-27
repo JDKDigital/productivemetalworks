@@ -21,7 +21,7 @@ public class GuideBookProvider extends PatchouliBookProvider
 
     @Override
     protected void addBooks(Consumer<BookBuilder> consumer, HolderLookup.Provider provider) {
-        var bookBuilder = createBookBuilder("guide", "Big Book of Metallurgy", "A shallow look into the world of metalworking.$(br2)Put on your gloves 'cause it's gonna get hot.", provider);
+        var bookBuilder = createBookBuilder("guide", "book.productivemetalworks.name", "book.productivemetalworks.landing_text", provider);
         bookBuilder
                 .setVersion("1")
                 .setNameplateColor("444444")
