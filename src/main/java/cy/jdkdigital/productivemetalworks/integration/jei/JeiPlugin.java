@@ -1,7 +1,10 @@
 package cy.jdkdigital.productivemetalworks.integration.jei;
 
 import cy.jdkdigital.productivemetalworks.ProductiveMetalworks;
-import cy.jdkdigital.productivemetalworks.recipe.*;
+import cy.jdkdigital.productivemetalworks.recipe.BlockCastingRecipe;
+import cy.jdkdigital.productivemetalworks.recipe.FluidAlloyingRecipe;
+import cy.jdkdigital.productivemetalworks.recipe.ItemCastingRecipe;
+import cy.jdkdigital.productivemetalworks.recipe.ItemMeltingRecipe;
 import cy.jdkdigital.productivemetalworks.registry.MetalworksRegistrator;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.helpers.IGuiHelper;
@@ -18,7 +21,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
-import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 import net.neoforged.neoforge.registries.datamaps.builtin.NeoForgeDataMaps;
 

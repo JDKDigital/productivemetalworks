@@ -1,14 +1,20 @@
 package cy.jdkdigital.productivemetalworks.util;
 
 import com.mojang.datafixers.util.Pair;
+import cy.jdkdigital.productivemetalworks.ProductiveMetalworks;
+import cy.jdkdigital.productivemetalworks.registry.MetalworksRegistrator;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -44,5 +50,30 @@ public class FluidHelper
             }
         });
         return fluids;
+    }
+
+    public static List<Component> formatTooltip(SizedFluidIngredient fluidIngredient) {
+        var firstFluid = fluidIngredient.getFluids()[0];
+        return formatTooltip(new FluidStack(firstFluid.getFluid(), fluidIngredient.amount()));
+    }
+    public static List<Component> formatTooltip(FluidStack fluidStack) {
+        List<Component> tooltips = new ArrayList<>();
+        if (!fluidStack.isEmpty()) {
+            var units = fluidStack.getFluid().builtInRegistryHolder().getData(MetalworksRegistrator.UNIT_MAP);
+            if (units != null) {
+                final int[] amountLeft = {fluidStack.getAmount()};
+                units.units().reversed().forEach(unit -> {
+                    var numberOfThisUnit = Math.floor((double) amountLeft[0] / unit.amount());
+                    if (numberOfThisUnit > 0) {
+                        tooltips.add(Component.translatable(ProductiveMetalworks.MODID + ".unit." + unit.unit() + "." + (numberOfThisUnit == 1 ? "single" : "multiple"), (int)numberOfThisUnit));
+                        amountLeft[0] = amountLeft[0] - (int)numberOfThisUnit * unit.amount();
+                    }
+                });
+                if (amountLeft[0] > 0) {
+                    tooltips.add(Component.translatable(ProductiveMetalworks.MODID + ".unit.leftover", amountLeft[0]));
+                }
+            }
+        }
+        return tooltips;
     }
 }

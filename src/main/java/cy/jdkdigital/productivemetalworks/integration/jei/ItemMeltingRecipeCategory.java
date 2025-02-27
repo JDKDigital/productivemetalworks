@@ -3,6 +3,7 @@ package cy.jdkdigital.productivemetalworks.integration.jei;
 import cy.jdkdigital.productivemetalworks.ProductiveMetalworks;
 import cy.jdkdigital.productivemetalworks.recipe.ItemMeltingRecipe;
 import cy.jdkdigital.productivemetalworks.registry.MetalworksRegistrator;
+import cy.jdkdigital.productivemetalworks.util.FluidHelper;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -66,6 +67,9 @@ public class ItemMeltingRecipeCategory extends AbstractRecipeCategory<RecipeHold
             FluidStack fluid = recipe.value().result.get(i);
             builder.addSlot(RecipeIngredientRole.OUTPUT, 112 + (i*fWidth), 8)
                     .addFluidStack(fluid.getFluid(), fluid.getAmount())
+                    .addRichTooltipCallback((recipeSlotView, tooltip) -> {
+                        tooltip.addAll(FluidHelper.formatTooltip(fluid));
+                    })
                     .setFluidRenderer(maxAmount, false, fWidth,52)
                     .setSlotName("fluid" + i);
         }

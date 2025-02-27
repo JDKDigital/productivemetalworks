@@ -1,13 +1,18 @@
 package cy.jdkdigital.productivemetalworks.util;
 
 import cy.jdkdigital.productivelib.util.MultiFluidTank;
-import cy.jdkdigital.productivemetalworks.recipe.*;
+import cy.jdkdigital.productivemetalworks.event.CastingRecipeEvent;
+import cy.jdkdigital.productivemetalworks.recipe.BlockCastingRecipe;
+import cy.jdkdigital.productivemetalworks.recipe.FluidAlloyingRecipe;
+import cy.jdkdigital.productivemetalworks.recipe.ItemCastingRecipe;
+import cy.jdkdigital.productivemetalworks.recipe.ItemMeltingRecipe;
 import cy.jdkdigital.productivemetalworks.registry.MetalworksRegistrator;
 import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
+import net.neoforged.fml.ModLoader;
 import net.neoforged.neoforge.fluids.FluidStack;
 
 import javax.annotation.Nullable;
@@ -81,6 +86,17 @@ public class RecipeHelper
             }
         }
         return recipeProcessList;
+    }
+
+    static Map<String, ItemCastingRecipe> compatCastingRecipeCache = new HashMap<>();
+    public static ItemCastingRecipe getCompatRecipe(Level level, ItemStack cast, FluidStack fluid, boolean isTable) {
+        String cacheKey = itemCacheKey(cast) + fluidCacheKey(fluid) + (isTable ? "table" : "basin");
+        if (!compatCastingRecipeCache.containsKey(cacheKey)) {
+            var event = new CastingRecipeEvent(level, cast, fluid, isTable);
+            ModLoader.postEvent(event);
+            compatCastingRecipeCache.put(cacheKey, event.hasRecipe() ? event.getRecipe() : null);
+        }
+        return compatCastingRecipeCache.getOrDefault(cacheKey, null);
     }
 
     // TODO move to lib

@@ -2,7 +2,6 @@ package cy.jdkdigital.productivemetalworks.event;
 
 import cy.jdkdigital.productivemetalworks.recipe.ItemCastingRecipe;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.Event;
 import net.neoforged.fml.event.IModBusEvent;

@@ -19,6 +19,35 @@ public class LanguageProvider extends net.neoforged.neoforge.common.data.Languag
         add(ProductiveMetalworks.MODID + ".message.foundry_formed", "Foundry structure assembled");
         add(ProductiveMetalworks.MODID + ".message.foundry_invalid", "Foundry structure invalid. %s");
 
+        // Units
+        add(ProductiveMetalworks.MODID + ".unit.leftover", "%s mb");
+        add(ProductiveMetalworks.MODID + ".unit.hunk.single", "%s Hunk");
+        add(ProductiveMetalworks.MODID + ".unit.hunk.multiple", "%s Hunks");
+        add(ProductiveMetalworks.MODID + ".unit.chunk.single", "%s Chunk");
+        add(ProductiveMetalworks.MODID + ".unit.chunk.multiple", "%s Chunks");
+        add(ProductiveMetalworks.MODID + ".unit.nugget.single", "%s Nugget");
+        add(ProductiveMetalworks.MODID + ".unit.nugget.multiple", "%s Nuggets");
+        add(ProductiveMetalworks.MODID + ".unit.ingot.single", "%s Ingot");
+        add(ProductiveMetalworks.MODID + ".unit.ingot.multiple", "%s Ingots");
+        add(ProductiveMetalworks.MODID + ".unit.block.single", "%s Block");
+        add(ProductiveMetalworks.MODID + ".unit.block.multiple", "%s Blocks");
+        add(ProductiveMetalworks.MODID + ".unit.gem.single", "%s Gem");
+        add(ProductiveMetalworks.MODID + ".unit.gem.multiple", "%s Gems");
+        add(ProductiveMetalworks.MODID + ".unit.pile.single", "%s Pile");
+        add(ProductiveMetalworks.MODID + ".unit.pile.multiple", "%s Piles");
+        add(ProductiveMetalworks.MODID + ".unit.pane.single", "%s Pane");
+        add(ProductiveMetalworks.MODID + ".unit.pane.multiple", "%s Panes");
+        add(ProductiveMetalworks.MODID + ".unit.pearl.single", "%s Pearl");
+        add(ProductiveMetalworks.MODID + ".unit.pearl.multiple", "%s Pearls");
+        add(ProductiveMetalworks.MODID + ".unit.ball.single", "%s Ball");
+        add(ProductiveMetalworks.MODID + ".unit.ball.multiple", "%s Balls");
+        add(ProductiveMetalworks.MODID + ".unit.shell.single", "%s Shell");
+        add(ProductiveMetalworks.MODID + ".unit.shell.multiple", "%s Shells");
+        add(ProductiveMetalworks.MODID + ".unit.rod.single", "%s Rod");
+        add(ProductiveMetalworks.MODID + ".unit.rod.multiple", "%s Rods");
+        add(ProductiveMetalworks.MODID + ".unit.scrap.single", "%s Scrap");
+        add(ProductiveMetalworks.MODID + ".unit.scrap.multiple", "%s Scraps");
+
         add("jei." + ProductiveMetalworks.MODID + ".item_melting", "Item Melting");
         add("jei." + ProductiveMetalworks.MODID + ".item_casting", "Item Casting");
         add("jei." + ProductiveMetalworks.MODID + ".sg_casting", "Silent Gear Casting");

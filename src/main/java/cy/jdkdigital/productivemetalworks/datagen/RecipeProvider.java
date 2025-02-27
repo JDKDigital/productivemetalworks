@@ -73,8 +73,6 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
 
     @Override
     protected void buildRecipes(RecipeOutput recipeOutput) {
-//        BlockCastingRecipeBuilder.of(Items.GLASS.getDefaultInstance(), SizedFluidIngredient.of(MetalworksRegistrator.MOLTEN_QUARTZ.get(),  400), BuiltInRegistries.ITEM.get(ResourceLocation.parse("enderio:fused_quartz")).getDefaultInstance()).save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "test"));
-
         var guideBook = PatchouliAPI.get().getBookStack(ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "guide"));
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, guideBook)
                 .pattern(" X ").pattern("XBX").pattern(" X ")
@@ -229,6 +227,8 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/meat"));
         ItemMeltingRecipeBuilder.of(Ingredient.of(Tags.Items.GLASS_BLOCKS_CHEAP), new FluidStack(MetalworksRegistrator.MOLTEN_GLASS.get(), 1000), 1400, 0)
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/glass"));
+        ItemMeltingRecipeBuilder.of(Ingredient.of(Tags.Items.GLASS_PANES), new FluidStack(MetalworksRegistrator.MOLTEN_GLASS.get(), 375), 1400, 0)
+                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/glass_pane"));
         ItemMeltingRecipeBuilder.of(Ingredient.of(Tags.Items.SANDS), new FluidStack(MetalworksRegistrator.MOLTEN_GLASS.get(), 1000), 1400, 0)
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/sand"));
         ItemMeltingRecipeBuilder.of(Ingredient.of(Tags.Items.OBSIDIANS), new FluidStack(MetalworksRegistrator.MOLTEN_OBSIDIAN.get(), 1000), 1300, 0)
@@ -263,6 +263,8 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/coals"));
         ItemMeltingRecipeBuilder.of(Ingredient.of(Tags.Items.STORAGE_BLOCKS_COAL), new FluidStack(MetalworksRegistrator.MOLTEN_CARBON.get(), 900))
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/storage_blocks/coals"));
+        ItemMeltingRecipeBuilder.of(Ingredient.of(ModTags.Items.STORAGE_BLOCKS_CHARCOAL), new FluidStack(MetalworksRegistrator.MOLTEN_CARBON.get(), 900))
+                .save(recipeOutput.withConditions(new NotCondition(new TagEmptyCondition(ModTags.Items.STORAGE_BLOCKS_CHARCOAL))), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/storage_blocks/charcoals"));
         ItemMeltingRecipeBuilder.of(Ingredient.of(Tags.Items.ORES_COAL), new FluidStack(MetalworksRegistrator.MOLTEN_CARBON.get(), 200))
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/ores/coals"));
         ItemMeltingRecipeBuilder.of(Ingredient.of(Tags.Items.DUSTS_GLOWSTONE), new FluidStack(MetalworksRegistrator.MOLTEN_GLOWSTONE.get(), 100))
@@ -318,18 +320,14 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/magma_cream"));
         ItemMeltingRecipeBuilder.of(Ingredient.of(Items.MAGMA_BLOCK), List.of(new FluidStack(MetalworksRegistrator.MOLTEN_MAGMA_CREAM.get(), 400)))
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/magma_block"));
-        // Melt shulker boxes
-        ItemMeltingRecipeBuilder.of(Ingredient.of(Items.SHULKER_BOX), new FluidStack(MetalworksRegistrator.MOLTEN_SHULKER_SHELL.get(), 200))
+        ItemMeltingRecipeBuilder.of(Ingredient.of(Tags.Items.SHULKER_BOXES), new FluidStack(MetalworksRegistrator.MOLTEN_SHULKER_SHELL.get(), 200))
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/shulker_box"));
-        for (DyeColor dyeColor : DyeColor.values()) {
-            ItemMeltingRecipeBuilder.of(Ingredient.of(BuiltInRegistries.ITEM.get(ResourceLocation.withDefaultNamespace(dyeColor.getSerializedName() + "_shulker_box"))), new FluidStack(MetalworksRegistrator.MOLTEN_SHULKER_SHELL.get(), 200))
-                    .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/" + dyeColor.getSerializedName() + "_shulker_box"));
-        }
-
 
         // Casting
         BlockCastingRecipeBuilder.of(SizedFluidIngredient.of(MetalworksRegistrator.MOLTEN_GLASS.get(), 1000), Items.GLASS.getDefaultInstance())
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/misc/glass_block"));
+        ItemCastingRecipeBuilder.of(SizedFluidIngredient.of(MetalworksRegistrator.MOLTEN_GLASS.get(), 375), Items.GLASS_PANE.getDefaultInstance())
+                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/misc/glass_pane"));
         BlockCastingRecipeBuilder.of(SizedFluidIngredient.of(MetalworksRegistrator.MOLTEN_OBSIDIAN.get(), 1000), Items.OBSIDIAN.getDefaultInstance())
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/misc/obsidian_block"));
         BlockCastingRecipeBuilder.of(SizedFluidIngredient.of(MetalworksRegistrator.MOLTEN_SLIME.get(), 900), Items.SLIME_BLOCK.getDefaultInstance())
@@ -379,11 +377,11 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
         ItemCastingRecipeBuilder.of(Tags.Items.GEMS, SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_STEEL, 360), MetalworksRegistrator.CAST_GEM.get().getDefaultInstance(), true)
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/cast/gem"));
         ItemCastingRecipeBuilder.of(ModTags.Items.GEARS, SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_STEEL, 360), MetalworksRegistrator.CAST_GEAR.get().getDefaultInstance(), true)
-                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/cast/gear"));
+                .save(recipeOutput.withConditions(new NotCondition(new TagEmptyCondition(ModTags.Items.GEARS))), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/cast/gear"));
         ItemCastingRecipeBuilder.of(ModTags.Items.RODS, SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_STEEL, 360), MetalworksRegistrator.CAST_ROD.get().getDefaultInstance(), true)
-                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/cast/rod"));
+                .save(recipeOutput.withConditions(new NotCondition(new TagEmptyCondition(ModTags.Items.RODS))), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/cast/rod"));
         ItemCastingRecipeBuilder.of(ModTags.Items.PLATES, SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_STEEL, 360), MetalworksRegistrator.CAST_PLATE.get().getDefaultInstance(), true)
-                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/cast/plates"));
+                .save(recipeOutput.withConditions(new NotCondition(new TagEmptyCondition(ModTags.Items.PLATES))), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/cast/plates"));
 
 
         // Misc items
@@ -471,6 +469,8 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
         idCompat(recipeOutput);
         pncCompat(recipeOutput);
         maCompat(recipeOutput);
+        mekanismCompat(recipeOutput);
+        immersiveCompat(recipeOutput);
     }
 
     // Vanilla stuff and tags, whatever is not mod specific
@@ -843,6 +843,44 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
         // cast inferium_seeds
         ItemCastingRecipeBuilder.of(Items.WHEAT_SEEDS.getDefaultInstance(), SizedFluidIngredient.of(BuiltInRegistries.FLUID.get(ResourceLocation.fromNamespaceAndPath("mysticalagradditions", "molten_inferium")), 720), BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("mysticalagriculture", "inferium_seeds")).getDefaultInstance())
                 .save(recipeOutput.withConditions(new ModLoadedCondition("mysticalagradditions")), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/ma/inferium_seeds"));
+    }
+
+    private void mekanismCompat(RecipeOutput recipeOutput) {
+        for (String resource: new String[]{"steel", "bronze", "refined_glowstone", "osmium", "tin", "lead", "uranium"}) {
+            var fluid = BuiltInRegistries.FLUID.get(ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "molten_" + resource));
+            var blockItem = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("mekanism", "block_" + resource));
+            var ingotItem = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("mekanism", "ingot_" + resource));
+            var nuggetItem = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("mekanism", "nugget_" + resource));
+
+            // Cast block
+            BlockCastingRecipeBuilder.of(SizedFluidIngredient.of(fluid, 810), blockItem.getDefaultInstance())
+                    .save(recipeOutput.withConditions(new ModLoadedCondition("mekanism")), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/mekanism/" + resource + "_block"));
+            // Cast ingot
+            ItemCastingRecipeBuilder.of(MetalworksRegistrator.CAST_INGOT.get().getDefaultInstance(), SizedFluidIngredient.of(fluid, 90), ingotItem.getDefaultInstance())
+                    .save(recipeOutput.withConditions(new ModLoadedCondition("mekanism")), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/mekanism/" + resource + "_ingot"));
+            // Cast nugget
+            ItemCastingRecipeBuilder.of(MetalworksRegistrator.CAST_NUGGET.get().getDefaultInstance(), SizedFluidIngredient.of(fluid, 10), nuggetItem.getDefaultInstance())
+                    .save(recipeOutput.withConditions(new ModLoadedCondition("mekanism")), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/mekanism/" + resource + "_nugget"));
+        }
+    }
+
+    private void immersiveCompat(RecipeOutput recipeOutput) {
+        for (String resource: new String[]{"steel", "aluminum", "silver", "nickel", "constantan", "electrum"}) {
+            var fluid = BuiltInRegistries.FLUID.get(ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "molten_" + resource));
+            var blockItem = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("immersiveengineering", "storage_" + resource));
+            var ingotItem = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("immersiveengineering", "ingot_" + resource));
+            var nuggetItem = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("immersiveengineering", "nugget_" + resource));
+
+            // Cast block
+            BlockCastingRecipeBuilder.of(SizedFluidIngredient.of(fluid, 810), blockItem.getDefaultInstance())
+                    .save(recipeOutput.withConditions(new ModLoadedCondition("immersiveengineering")), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/immersiveengineering/" + resource + "_block"));
+            // Cast ingot
+            ItemCastingRecipeBuilder.of(MetalworksRegistrator.CAST_INGOT.get().getDefaultInstance(), SizedFluidIngredient.of(fluid, 90), ingotItem.getDefaultInstance())
+                    .save(recipeOutput.withConditions(new ModLoadedCondition("immersiveengineering")), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/immersiveengineering/" + resource + "_ingot"));
+            // Cast nugget
+            ItemCastingRecipeBuilder.of(MetalworksRegistrator.CAST_NUGGET.get().getDefaultInstance(), SizedFluidIngredient.of(fluid, 10), nuggetItem.getDefaultInstance())
+                    .save(recipeOutput.withConditions(new ModLoadedCondition("immersiveengineering")), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/immersiveengineering/" + resource + "_nugget"));
+        }
     }
 
     private static void itemMeltingRecipe(TagKey<Item> tag, FluidStack output, RecipeOutput recipeOutput) {

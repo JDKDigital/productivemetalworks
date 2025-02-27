@@ -3,6 +3,7 @@ package cy.jdkdigital.productivemetalworks.integration.jei;
 import cy.jdkdigital.productivemetalworks.ProductiveMetalworks;
 import cy.jdkdigital.productivemetalworks.recipe.FluidAlloyingRecipe;
 import cy.jdkdigital.productivemetalworks.registry.MetalworksRegistrator;
+import cy.jdkdigital.productivemetalworks.util.FluidHelper;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -53,6 +54,9 @@ public class FluidAlloyingRecipeCategory extends AbstractRecipeCategory<RecipeHo
             var fluidStacks = Arrays.stream(sizedFluidIngredient.getFluids()).filter(fluidStack -> fluidStack.getFluid().defaultFluidState().isSource()).toList();
             builder.addSlot(RecipeIngredientRole.INPUT, 12 + (i*fWidth), 8)
                     .addIngredients(NeoForgeTypes.FLUID_STACK, fluidStacks)
+                    .addRichTooltipCallback((recipeSlotView, tooltip) -> {
+                        tooltip.addAll(FluidHelper.formatTooltip(fluidStacks.getFirst()));
+                    })
                     .setFluidRenderer(maxAmount, false, fWidth + (leftover > 0 ? 1 : 0),52)
                     .setSlotName("fluid" + i);
             leftover--;
@@ -62,6 +66,9 @@ public class FluidAlloyingRecipeCategory extends AbstractRecipeCategory<RecipeHo
 
         builder.addSlot(RecipeIngredientRole.OUTPUT, 112, 8)
                 .addFluidStack(recipe.value().result.getFluid(), recipe.value().result.getAmount())
+                .addRichTooltipCallback((recipeSlotView, tooltip) -> {
+                    tooltip.addAll(FluidHelper.formatTooltip(recipe.value().result));
+                })
                 .setFluidRenderer(maxAmount, false, 42,52)
                 .setSlotName("result");
 

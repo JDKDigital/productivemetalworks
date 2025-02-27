@@ -6,6 +6,7 @@ import cy.jdkdigital.productivemetalworks.ProductiveMetalworks;
 import cy.jdkdigital.productivemetalworks.common.menu.FoundryControllerContainer;
 import cy.jdkdigital.productivemetalworks.network.MoveFoundryFluidData;
 import cy.jdkdigital.productivemetalworks.registry.ModTags;
+import cy.jdkdigital.productivemetalworks.util.FluidHelper;
 import cy.jdkdigital.productivemetalworks.util.TickingSlotInventoryHandler;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -129,9 +130,9 @@ public class FoundryControllerScreen extends AbstractContainerScreen<FoundryCont
         if (insideTank(mouseX, mouseY)) {
             int tank = getHoveredTank(mouseX, mouseY);
             if (tank >= 0) {
-                // TODO formatted amount to make big numbers readable
                 FluidStack fluidStack = this.menu.blockEntity.fluidHandler.getFluidInTank(tank);
                 tooltipList.add(Component.literal(fluidStack.getAmount() + "mb " + Component.translatable(fluidStack.getFluid().getFluidType().getDescriptionId()).getString()).getVisualOrderText());
+                tooltipList.addAll(FluidHelper.formatTooltip(fluidStack).stream().map(Component::getVisualOrderText).toList());
             }
         }
         if (!tooltipList.isEmpty()) {

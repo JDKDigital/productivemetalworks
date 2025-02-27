@@ -1,0 +1,13 @@
+{
+  "type": "productivemetalworks:item_casting",
+  "cast": [],
+  "consume_cast": false,
+  "fluid": {
+    "amount": 375,
+    "fluid": "productivemetalworks:molten_glass"
+  },
+  "result": {
+    "count": 1,
+    "id": "minecraft:glass_pane"
+  }
+}

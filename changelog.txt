@@ -1,3 +1,17 @@
+1.21.1-1.2.1
+
+- Prevent over-stacking items when taking stuff out of casting tables and basins
+- Exposed the cast inventory capability to allow insertion of cast items in casting tables and basins
+- More improvements to recipe cache
+
+
+1.21.1-1.2.0
+
+- Added friendly tooltips for fluids showing how many items it is. This is controlled by a datamap
+- Added caching for casting recipe collection event
+- Changed shulker box melting recipe to use a tag
+
+
 1.21.1-1.1.1
 
 - Fixed Foundry Tanks not dropping when broken

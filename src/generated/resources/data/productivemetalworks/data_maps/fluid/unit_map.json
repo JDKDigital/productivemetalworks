@@ -1,0 +1,680 @@
+{
+  "values": {
+    "allthemodium:molten_allthemodium": {
+      "neoforge:conditions": [
+        {
+          "type": "neoforge:mod_loaded",
+          "modid": "allthemodium"
+        }
+      ],
+      "units": [
+        {
+          "amount": 10,
+          "unit": "nugget"
+        },
+        {
+          "amount": 90,
+          "unit": "ingot"
+        },
+        {
+          "amount": 810,
+          "unit": "block"
+        }
+      ]
+    },
+    "allthemodium:molten_unobtainium": {
+      "neoforge:conditions": [
+        {
+          "type": "neoforge:mod_loaded",
+          "modid": "allthemodium"
+        }
+      ],
+      "units": [
+        {
+          "amount": 10,
+          "unit": "nugget"
+        },
+        {
+          "amount": 90,
+          "unit": "ingot"
+        },
+        {
+          "amount": 810,
+          "unit": "block"
+        }
+      ]
+    },
+    "allthemodium:molten_vibranium": {
+      "neoforge:conditions": [
+        {
+          "type": "neoforge:mod_loaded",
+          "modid": "allthemodium"
+        }
+      ],
+      "units": [
+        {
+          "amount": 10,
+          "unit": "nugget"
+        },
+        {
+          "amount": 90,
+          "unit": "ingot"
+        },
+        {
+          "amount": 810,
+          "unit": "block"
+        }
+      ]
+    },
+    "integrateddynamics:menril_resin": {
+      "neoforge:conditions": [
+        {
+          "type": "neoforge:mod_loaded",
+          "modid": "integrateddynamics"
+        }
+      ],
+      "units": [
+        {
+          "amount": 100,
+          "unit": "chunk"
+        },
+        {
+          "amount": 1000,
+          "unit": "block"
+        }
+      ]
+    },
+    "productivemetalworks:meat": {
+      "units": [
+        {
+          "amount": 10,
+          "unit": "nugget"
+        },
+        {
+          "amount": 90,
+          "unit": "hunk"
+        },
+        {
+          "amount": 720,
+          "unit": "block"
+        }
+      ]
+    },
+    "productivemetalworks:molten_aluminum": {
+      "units": [
+        {
+          "amount": 10,
+          "unit": "nugget"
+        },
+        {
+          "amount": 90,
+          "unit": "ingot"
+        },
+        {
+          "amount": 810,
+          "unit": "block"
+        }
+      ]
+    },
+    "productivemetalworks:molten_amethyst": {
+      "units": [
+        {
+          "amount": 100,
+          "unit": "gem"
+        },
+        {
+          "amount": 400,
+          "unit": "block"
+        }
+      ]
+    },
+    "productivemetalworks:molten_ancient_debris": {
+      "units": [
+        {
+          "amount": 100,
+          "unit": "scrap"
+        }
+      ]
+    },
+    "productivemetalworks:molten_blaze": {
+      "units": [
+        {
+          "amount": 100,
+          "unit": "pile"
+        },
+        {
+          "amount": 400,
+          "unit": "rod"
+        }
+      ]
+    },
+    "productivemetalworks:molten_brass": {
+      "units": [
+        {
+          "amount": 10,
+          "unit": "nugget"
+        },
+        {
+          "amount": 90,
+          "unit": "ingot"
+        },
+        {
+          "amount": 810,
+          "unit": "block"
+        }
+      ]
+    },
+    "productivemetalworks:molten_bronze": {
+      "units": [
+        {
+          "amount": 10,
+          "unit": "nugget"
+        },
+        {
+          "amount": 90,
+          "unit": "ingot"
+        },
+        {
+          "amount": 810,
+          "unit": "block"
+        }
+      ]
+    },
+    "productivemetalworks:molten_carbon": {
+      "units": [
+        {
+          "amount": 100,
+          "unit": "chunk"
+        },
+        {
+          "amount": 900,
+          "unit": "block"
+        }
+      ]
+    },
+    "productivemetalworks:molten_constantan": {
+      "units": [
+        {
+          "amount": 10,
+          "unit": "nugget"
+        },
+        {
+          "amount": 90,
+          "unit": "ingot"
+        },
+        {
+          "amount": 810,
+          "unit": "block"
+        }
+      ]
+    },
+    "productivemetalworks:molten_copper": {
+      "units": [
+        {
+          "amount": 10,
+          "unit": "nugget"
+        },
+        {
+          "amount": 90,
+          "unit": "ingot"
+        },
+        {
+          "amount": 810,
+          "unit": "block"
+        }
+      ]
+    },
+    "productivemetalworks:molten_diamond": {
+      "units": [
+        {
+          "amount": 100,
+          "unit": "gem"
+        },
+        {
+          "amount": 900,
+          "unit": "block"
+        }
+      ]
+    },
+    "productivemetalworks:molten_electrum": {
+      "units": [
+        {
+          "amount": 10,
+          "unit": "nugget"
+        },
+        {
+          "amount": 90,
+          "unit": "ingot"
+        },
+        {
+          "amount": 810,
+          "unit": "block"
+        }
+      ]
+    },
+    "productivemetalworks:molten_emerald": {
+      "units": [
+        {
+          "amount": 100,
+          "unit": "gem"
+        },
+        {
+          "amount": 900,
+          "unit": "block"
+        }
+      ]
+    },
+    "productivemetalworks:molten_ender": {
+      "units": [
+        {
+          "amount": 100,
+          "unit": "pearl"
+        },
+        {
+          "amount": 900,
+          "unit": "block"
+        }
+      ]
+    },
+    "productivemetalworks:molten_enderium": {
+      "units": [
+        {
+          "amount": 10,
+          "unit": "nugget"
+        },
+        {
+          "amount": 90,
+          "unit": "ingot"
+        },
+        {
+          "amount": 810,
+          "unit": "block"
+        }
+      ]
+    },
+    "productivemetalworks:molten_glass": {
+      "units": [
+        {
+          "amount": 375,
+          "unit": "pane"
+        },
+        {
+          "amount": 1000,
+          "unit": "block"
+        }
+      ]
+    },
+    "productivemetalworks:molten_glowstone": {
+      "units": [
+        {
+          "amount": 100,
+          "unit": "pile"
+        },
+        {
+          "amount": 400,
+          "unit": "block"
+        }
+      ]
+    },
+    "productivemetalworks:molten_gold": {
+      "units": [
+        {
+          "amount": 10,
+          "unit": "nugget"
+        },
+        {
+          "amount": 90,
+          "unit": "ingot"
+        },
+        {
+          "amount": 810,
+          "unit": "block"
+        }
+      ]
+    },
+    "productivemetalworks:molten_invar": {
+      "units": [
+        {
+          "amount": 10,
+          "unit": "nugget"
+        },
+        {
+          "amount": 90,
+          "unit": "ingot"
+        },
+        {
+          "amount": 810,
+          "unit": "block"
+        }
+      ]
+    },
+    "productivemetalworks:molten_iridium": {
+      "units": [
+        {
+          "amount": 10,
+          "unit": "nugget"
+        },
+        {
+          "amount": 90,
+          "unit": "ingot"
+        },
+        {
+          "amount": 810,
+          "unit": "block"
+        }
+      ]
+    },
+    "productivemetalworks:molten_iron": {
+      "units": [
+        {
+          "amount": 10,
+          "unit": "nugget"
+        },
+        {
+          "amount": 90,
+          "unit": "ingot"
+        },
+        {
+          "amount": 810,
+          "unit": "block"
+        }
+      ]
+    },
+    "productivemetalworks:molten_lapis": {
+      "units": [
+        {
+          "amount": 100,
+          "unit": "gem"
+        },
+        {
+          "amount": 900,
+          "unit": "block"
+        }
+      ]
+    },
+    "productivemetalworks:molten_lead": {
+      "units": [
+        {
+          "amount": 10,
+          "unit": "nugget"
+        },
+        {
+          "amount": 90,
+          "unit": "ingot"
+        },
+        {
+          "amount": 810,
+          "unit": "block"
+        }
+      ]
+    },
+    "productivemetalworks:molten_lumium": {
+      "units": [
+        {
+          "amount": 10,
+          "unit": "nugget"
+        },
+        {
+          "amount": 90,
+          "unit": "ingot"
+        },
+        {
+          "amount": 810,
+          "unit": "block"
+        }
+      ]
+    },
+    "productivemetalworks:molten_magma_cream": {
+      "units": [
+        {
+          "amount": 100,
+          "unit": "ball"
+        },
+        {
+          "amount": 400,
+          "unit": "block"
+        }
+      ]
+    },
+    "productivemetalworks:molten_netherite": {
+      "units": [
+        {
+          "amount": 10,
+          "unit": "nugget"
+        },
+        {
+          "amount": 90,
+          "unit": "ingot"
+        },
+        {
+          "amount": 810,
+          "unit": "block"
+        }
+      ]
+    },
+    "productivemetalworks:molten_nickel": {
+      "units": [
+        {
+          "amount": 10,
+          "unit": "nugget"
+        },
+        {
+          "amount": 90,
+          "unit": "ingot"
+        },
+        {
+          "amount": 810,
+          "unit": "block"
+        }
+      ]
+    },
+    "productivemetalworks:molten_obsidian": {
+      "units": [
+        {
+          "amount": 1000,
+          "unit": "block"
+        }
+      ]
+    },
+    "productivemetalworks:molten_osmium": {
+      "units": [
+        {
+          "amount": 10,
+          "unit": "nugget"
+        },
+        {
+          "amount": 90,
+          "unit": "ingot"
+        },
+        {
+          "amount": 810,
+          "unit": "block"
+        }
+      ]
+    },
+    "productivemetalworks:molten_platinum": {
+      "units": [
+        {
+          "amount": 10,
+          "unit": "nugget"
+        },
+        {
+          "amount": 90,
+          "unit": "ingot"
+        },
+        {
+          "amount": 810,
+          "unit": "block"
+        }
+      ]
+    },
+    "productivemetalworks:molten_quartz": {
+      "units": [
+        {
+          "amount": 100,
+          "unit": "gem"
+        },
+        {
+          "amount": 400,
+          "unit": "block"
+        }
+      ]
+    },
+    "productivemetalworks:molten_redstone": {
+      "units": [
+        {
+          "amount": 100,
+          "unit": "pile"
+        },
+        {
+          "amount": 900,
+          "unit": "block"
+        }
+      ]
+    },
+    "productivemetalworks:molten_refined_glowstone": {
+      "units": [
+        {
+          "amount": 10,
+          "unit": "nugget"
+        },
+        {
+          "amount": 90,
+          "unit": "ingot"
+        },
+        {
+          "amount": 810,
+          "unit": "block"
+        }
+      ]
+    },
+    "productivemetalworks:molten_shulker_shell": {
+      "units": [
+        {
+          "amount": 100,
+          "unit": "shell"
+        }
+      ]
+    },
+    "productivemetalworks:molten_signalum": {
+      "units": [
+        {
+          "amount": 10,
+          "unit": "nugget"
+        },
+        {
+          "amount": 90,
+          "unit": "ingot"
+        },
+        {
+          "amount": 810,
+          "unit": "block"
+        }
+      ]
+    },
+    "productivemetalworks:molten_silver": {
+      "units": [
+        {
+          "amount": 10,
+          "unit": "nugget"
+        },
+        {
+          "amount": 90,
+          "unit": "ingot"
+        },
+        {
+          "amount": 810,
+          "unit": "block"
+        }
+      ]
+    },
+    "productivemetalworks:molten_slime": {
+      "units": [
+        {
+          "amount": 100,
+          "unit": "ball"
+        },
+        {
+          "amount": 900,
+          "unit": "block"
+        }
+      ]
+    },
+    "productivemetalworks:molten_steel": {
+      "units": [
+        {
+          "amount": 10,
+          "unit": "nugget"
+        },
+        {
+          "amount": 90,
+          "unit": "ingot"
+        },
+        {
+          "amount": 810,
+          "unit": "block"
+        }
+      ]
+    },
+    "productivemetalworks:molten_tin": {
+      "units": [
+        {
+          "amount": 10,
+          "unit": "nugget"
+        },
+        {
+          "amount": 90,
+          "unit": "ingot"
+        },
+        {
+          "amount": 810,
+          "unit": "block"
+        }
+      ]
+    },
+    "productivemetalworks:molten_uranium": {
+      "units": [
+        {
+          "amount": 10,
+          "unit": "nugget"
+        },
+        {
+          "amount": 90,
+          "unit": "ingot"
+        },
+        {
+          "amount": 810,
+          "unit": "block"
+        }
+      ]
+    },
+    "productivemetalworks:molten_wax": {
+      "units": [
+        {
+          "amount": 50,
+          "unit": "pile"
+        },
+        {
+          "amount": 450,
+          "unit": "block"
+        }
+      ]
+    },
+    "productivemetalworks:molten_zinc": {
+      "units": [
+        {
+          "amount": 10,
+          "unit": "nugget"
+        },
+        {
+          "amount": 90,
+          "unit": "ingot"
+        },
+        {
+          "amount": 810,
+          "unit": "block"
+        }
+      ]
+    }
+  }
+}

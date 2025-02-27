@@ -2,7 +2,6 @@ package cy.jdkdigital.productivemetalworks.common.block.entity;
 
 import cy.jdkdigital.productivelib.common.block.entity.CapabilityBlockEntity;
 import cy.jdkdigital.productivemetalworks.Config;
-import cy.jdkdigital.productivemetalworks.event.CastingRecipeEvent;
 import cy.jdkdigital.productivemetalworks.recipe.BlockCastingRecipe;
 import cy.jdkdigital.productivemetalworks.recipe.ItemCastingRecipe;
 import cy.jdkdigital.productivemetalworks.registry.MetalworksRegistrator;
@@ -21,8 +20,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.fml.ModList;
-import net.neoforged.fml.ModLoader;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
@@ -41,21 +38,22 @@ public class CastingBlockEntity extends CapabilityBlockEntity
     public int maxAmount = 1000;
 
     // cast inventory, no cap
-    public ItemStackHandler castInv = new ItemStackHandler(1);
+    public ItemStackHandler castInv = new ItemStackHandler(1) {
+        @Override
+        protected void onContentsChanged(int slot) {
+            if (CastingBlockEntity.this.level instanceof ServerLevel serverLevel) {
+                CastingBlockEntity.this.sync(serverLevel);
+            }
+            CastingBlockEntity.this.setChanged();
+        }
+    };
 
     // result item inventory, with cap
-    IItemHandler itemHandler = new ItemStackHandler(1) {
+    ItemStackHandler itemHandler = new ItemStackHandler(1) {
         @Override
         public boolean isItemValid(int slot, ItemStack stack) {
-            if (CastingBlockEntity.this.level == null || CastingBlockEntity.this.isCooling()) {
-                return false;
-            }
-            if (stack.getCapability(Capabilities.FluidHandler.ITEM) != null) {
-                return true;
-            }
-
-            var recipe = CastingBlockEntity.this.findRecipe(CastingBlockEntity.this.level, CastingBlockEntity.this.castInv.getStackInSlot(0), CastingBlockEntity.this.fluidHandler.getFluid());
-            return recipe != null && ItemStack.isSameItemSameComponents(recipe.getResultItem(CastingBlockEntity.this.level, CastingBlockEntity.this.fluidHandler.getFluid()), stack); // only insert items matching the current recipe
+            // Insertion is only allowed from recipe processing
+            return false;
         }
 
         @Override
@@ -187,7 +185,7 @@ public class CastingBlockEntity extends CapabilityBlockEntity
                 if (cast.is(Items.BUCKET)) {
                     var fillResult = FluidUtil.tryFillContainer(cast, castingTableBlock.getFluidHandler(), fluid.getAmount(), null, true);
                     if (fillResult.isSuccess()) {
-                        castingTableBlock.getItemHandler().insertItem(0, fillResult.getResult(), false);
+                        castingTableBlock.itemHandler.setStackInSlot(0, fillResult.getResult());
                         castingTableBlock.castInv.setStackInSlot(0, ItemStack.EMPTY);
                         castingTableBlock.sync(serverLevel);
                         hasFilledContainer = true;
@@ -199,7 +197,7 @@ public class CastingBlockEntity extends CapabilityBlockEntity
                     if (recipe != null && fluid.getAmount() >= recipe.getFluidAmount(level, fluid)) {
                         // insert item but disable pulling and picking the item when coolingTime > 0
                         var resultItem = recipe.getResultItem(level, fluid);
-                        castingTableBlock.getItemHandler().insertItem(0, resultItem, false);
+                        castingTableBlock.itemHandler.setStackInSlot(0, resultItem);
                         castingTableBlock.coolingTime = (int) (recipe.getFluidAmount(level, fluid) / Config.foundryCoolingModifier);
                         castingTableBlock.maxAmount = recipe.getFluidAmount(level, fluid);
                         castingTableBlock.sync(serverLevel);
@@ -239,6 +237,12 @@ public class CastingBlockEntity extends CapabilityBlockEntity
         }
     }
 
+    public boolean canAcceptCast() {
+        return getItemHandler().getStackInSlot(0).isEmpty() && // no crafted output
+               castInv.getStackInSlot(0).isEmpty() && // no cast
+               getFluidHandler().getFluidAmount() == 0; // no fluid
+    }
+
     @Override
     public IItemHandler getItemHandler() {
         return itemHandler;
@@ -268,10 +272,9 @@ public class CastingBlockEntity extends CapabilityBlockEntity
         }
 
         // event for getting recipe
-        var event = new CastingRecipeEvent(level, cast, fluid, isTable);
-        ModLoader.postEvent(event);
-        if (event.hasRecipe()) {
-            return event.getRecipe();
+        ItemCastingRecipe compatRecipe = RecipeHelper.getCompatRecipe(level, cast, fluid, isTable);
+        if (compatRecipe != null) {
+            return compatRecipe;
         }
 
         // regular item and block casting recipes

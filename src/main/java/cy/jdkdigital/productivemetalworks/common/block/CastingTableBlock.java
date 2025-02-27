@@ -94,9 +94,10 @@ public class CastingTableBlock extends BaseEntityBlock
                 outputItem = blockEntity.castInv.getStackInSlot(0);
             }
             if (
+                    !outputItem.isEmpty() &&
                     (
                             itemInHand.isEmpty() ||
-                            ItemStack.isSameItemSameComponents(itemInHand, outputItem)
+                            (ItemStack.isSameItemSameComponents(itemInHand, outputItem) && itemInHand.getCount() < itemInHand.getMaxStackSize())
                     ) &&
                     blockEntity.getFluidHandler().getFluidAmount() == 0 &&
                     !blockEntity.isCooling()
@@ -119,9 +120,7 @@ public class CastingTableBlock extends BaseEntityBlock
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (
                 level.getBlockEntity(pos) instanceof CastingBlockEntity blockEntity &&
-                blockEntity.getItemHandler().getStackInSlot(0).isEmpty() && // no crafted output
-                blockEntity.castInv.getStackInSlot(0).isEmpty() && // no cast
-                blockEntity.getFluidHandler().getFluidAmount() == 0 // no fluid
+                blockEntity.canAcceptCast() // no fluid
         ) {
             boolean isTable = state.is(MetalworksRegistrator.CASTING_TABLE);
             if (level instanceof ServerLevel serverLevel && (!isTable || !(stack.getItem() instanceof BlockItem))) {

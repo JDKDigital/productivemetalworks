@@ -6,8 +6,12 @@ import cy.jdkdigital.productivemetalworks.common.block.*;
 import cy.jdkdigital.productivemetalworks.common.block.entity.*;
 import cy.jdkdigital.productivemetalworks.common.datamap.EntityMeltingMap;
 import cy.jdkdigital.productivemetalworks.common.datamap.FuelMap;
+import cy.jdkdigital.productivemetalworks.common.datamap.UnitMap;
 import cy.jdkdigital.productivemetalworks.common.menu.FoundryControllerContainer;
-import cy.jdkdigital.productivemetalworks.recipe.*;
+import cy.jdkdigital.productivemetalworks.recipe.BlockCastingRecipe;
+import cy.jdkdigital.productivemetalworks.recipe.FluidAlloyingRecipe;
+import cy.jdkdigital.productivemetalworks.recipe.ItemCastingRecipe;
+import cy.jdkdigital.productivemetalworks.recipe.ItemMeltingRecipe;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -26,7 +30,6 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Fluid;
-import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.common.SoundActions;
 import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
 import net.neoforged.neoforge.fluids.BaseFlowingFluid;
@@ -44,6 +47,7 @@ public class MetalworksRegistrator
 
     public static final DataMapType<Fluid, FuelMap> FUEL_MAP = DataMapType.builder(ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "fuel_map"), Registries.FLUID, FuelMap.CODEC).synced(FuelMap.CODEC, false).build();
     public static final DataMapType<EntityType<?>, EntityMeltingMap> ENTITY_MELTING_MAP = DataMapType.builder(ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "entity_melting"), Registries.ENTITY_TYPE, EntityMeltingMap.CODEC).synced(EntityMeltingMap.CODEC, false).build();
+    public static final DataMapType<Fluid, UnitMap> UNIT_MAP = DataMapType.builder(ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "unit_map"), Registries.FLUID, UnitMap.CODEC).synced(UnitMap.CODEC, false).build();
     public static final Supplier<DataComponentType<ImmutableFluidStack>> FLUID_STACK = ProductiveMetalworks.DATA_COMPONENTS.register("fluid_stack", () -> DataComponentType.<ImmutableFluidStack>builder().persistent(ImmutableFluidStack.CODEC).networkSynchronized(ImmutableFluidStack.STREAM_CODEC).build());
 
     public static Map<String, Integer> FLUID_COLORS = new HashMap<>();

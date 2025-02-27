@@ -3,6 +3,7 @@ package cy.jdkdigital.productivemetalworks.integration.jei;
 import cy.jdkdigital.productivemetalworks.ProductiveMetalworks;
 import cy.jdkdigital.productivemetalworks.recipe.BlockCastingRecipe;
 import cy.jdkdigital.productivemetalworks.registry.MetalworksRegistrator;
+import cy.jdkdigital.productivemetalworks.util.FluidHelper;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -58,11 +59,17 @@ public class BlockCastingRecipeCategory extends AbstractRecipeCategory<RecipeHol
 
         builder.addSlot(RecipeIngredientRole.INPUT, 26, 26)
                 .addIngredients(NeoForgeTypes.FLUID_STACK, fluidStacks)
+                .addRichTooltipCallback((recipeSlotView, tooltip) -> {
+                    tooltip.addAll(FluidHelper.formatTooltip(fluidStacks.getFirst()));
+                })
                 .setFluidRenderer(recipe.value().fluid.amount(), false, 16, 16)
                 .setSlotName("fluids");
 
         builder.addSlot(RecipeIngredientRole.INPUT, 68, 16)
                 .addIngredients(NeoForgeTypes.FLUID_STACK, fluidStacks)
+                .addRichTooltipCallback((recipeSlotView, tooltip) -> {
+                    tooltip.addAll(FluidHelper.formatTooltip(fluidStacks.getFirst()));
+                })
                 .setFluidRenderer(recipe.value().fluid.amount(), false, 6,hasCast ? 10 : 26)
                 .setSlotName("fluids");
 
