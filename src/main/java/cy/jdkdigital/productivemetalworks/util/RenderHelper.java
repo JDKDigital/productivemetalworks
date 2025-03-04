@@ -64,7 +64,7 @@ public class RenderHelper
         IClientFluidTypeExtensions renderProperties = IClientFluidTypeExtensions.of(fluidStack.getFluid());
         int fluidTintColour = renderProperties.getTintColor(fluidStack);
         float[] color = ColorUtil.getCacheColor(fluidTintColour);
-        TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(renderProperties.getStillTexture(fluidStack));
+        TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(renderProperties.getFlowingTexture(fluidStack));
 
         // Adjust opacity of fluid for casting
         color[3] = opacity;

@@ -36,6 +36,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 public class FoundryControllerBlock extends CapabilityContainerBlock implements IMultiBlockController
 {
@@ -116,7 +117,6 @@ public class FoundryControllerBlock extends CapabilityContainerBlock implements 
             try {
                 var foundryData = MultiBlockDetector.detectStructure(level, pos, ModTags.Blocks.FOUNDRY_WALL_BLOCKS, ModTags.Blocks.FOUNDRY_BOTTOM_BLOCKS, true, true, Config.foundryMaxVolume, Config.foundryMaxCircumference, Config.foundryMaxHeight);
                 blockEntity.setMultiBlockData(foundryData);
-//                    player.sendSystemMessage(Component.translatable(ProductiveMetalworks.MODID + ".message.foundry_formed"));
                 if (!level.isClientSide) {
                     player.openMenu(blockEntity, pos);
                 }
@@ -136,6 +136,15 @@ public class FoundryControllerBlock extends CapabilityContainerBlock implements 
                 for (int slot = 0; slot < blockEntity.getItemHandler().getSlots(); ++slot) {
                     Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), blockEntity.getItemHandler().getStackInSlot(slot));
                 }
+                // Mark heating coils as inactive
+                var mb = blockEntity.getMultiblockData();
+                var controllerFacing = oldState.getValue(BlockStateProperties.HORIZONTAL_FACING);
+                BlockPos.betweenClosedStream(mb.topCorners().getFirst().relative(controllerFacing.getOpposite()).relative(controllerFacing.getCounterClockWise()).below(mb.height()), mb.topCorners().getSecond().relative(controllerFacing).relative(controllerFacing.getClockWise()).below(mb.height())).forEach(blockPos -> {
+                    var state = level.getBlockState(blockPos);
+                    if (state.hasProperty(BlockStateProperties.ATTACHED)) {
+                        level.setBlockAndUpdate(blockPos, state.setValue(BlockStateProperties.ATTACHED, false));
+                    }
+                });
             }
         }
         super.onRemove(oldState, level, pos, newState, isMoving);

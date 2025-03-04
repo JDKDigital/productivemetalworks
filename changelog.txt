@@ -1,3 +1,12 @@
+1.21.1-1.2.2
+
+- Added recipes for Mekanism and Immersive Engineering metals
+- Added light level to active controllers and heating coils
+- Switched to using flowing fluid textures when pouring
+- Foundry will now damage entities when it has fuel, not only when there's fluids inside
+- Heating coils will now turn off when controller is broken
+
+
 1.21.1-1.2.1
 
 - Prevent over-stacking items when taking stuff out of casting tables and basins
