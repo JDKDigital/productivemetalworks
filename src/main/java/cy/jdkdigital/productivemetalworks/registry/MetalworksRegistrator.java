@@ -66,11 +66,11 @@ public class MetalworksRegistrator
             .sound(SoundActions.FLUID_VAPORIZE, SoundEvents.LAVA_EXTINGUISH);
 
     // Blocks
-    public static final Map<DyeColor, DeferredHolder<Block, Block>> FOUNDRY_CONTROLLERS = registerDyedBlocks("foundry_controller", () -> new FoundryControllerBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.STONE_BRICKS).noOcclusion().lightLevel(state -> state.getValue(BlockStateProperties.ATTACHED) ? 8 : 0)));
-    public static final Map<DyeColor, DeferredHolder<Block, Block>> FOUNDRY_DRAINS = registerDyedBlocks("foundry_drain", () -> new FoundryDrainBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.STONE_BRICKS)));
-    public static final Map<DyeColor, DeferredHolder<Block, Block>> FOUNDRY_TANKS = registerDyedBlocks("foundry_tank", () -> new FoundryTankBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.STONE_BRICKS).noOcclusion()));
+    public static final Map<DyeColor, DeferredHolder<Block, Block>> FOUNDRY_CONTROLLERS = registerDyedBlocks("foundry_controller", () -> new FoundryControllerBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.STONE_BRICKS).noOcclusion().lightLevel(state -> state.getValue(BlockStateProperties.ATTACHED) ? 8 : 0).sound(SoundType.NETHER_BRICKS)));
+    public static final Map<DyeColor, DeferredHolder<Block, Block>> FOUNDRY_DRAINS = registerDyedBlocks("foundry_drain", () -> new FoundryDrainBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.STONE_BRICKS).sound(SoundType.NETHER_BRICKS)));
+    public static final Map<DyeColor, DeferredHolder<Block, Block>> FOUNDRY_TANKS = registerDyedBlocks("foundry_tank", () -> new FoundryTankBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.STONE_BRICKS).noOcclusion().sound(SoundType.NETHER_BRICKS)));
     public static final Map<DyeColor, DeferredHolder<Block, Block>> FOUNDRY_WINDOWS = registerDyedBlocks("foundry_window", () -> new FoundryWindowBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.GLASS)));
-    public static final Map<DyeColor, DeferredHolder<Block, Block>> FIRE_BRICKS = registerDyedBlocks("fire_bricks", () -> new FireBricksBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.STONE_BRICKS)));
+    public static final Map<DyeColor, DeferredHolder<Block, Block>> FIRE_BRICKS = registerDyedBlocks("fire_bricks", () -> new FireBricksBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.STONE_BRICKS).sound(SoundType.NETHER_BRICKS)));
 
     public static final DeferredHolder<Block, Block> FOUNDRY_TAP = registerBlock("foundry_tap", () -> new FoundryTapBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.STONE_BRICKS)), true);
     public static final DeferredHolder<Block, Block> CASTING_BASIN = registerBlock("casting_basin", () -> new CastingBasinBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CAULDRON)), true);
