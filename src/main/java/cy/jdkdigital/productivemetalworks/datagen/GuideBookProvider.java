@@ -5,6 +5,7 @@ import cy.jdkdigital.productivemetalworks.registry.MetalworksRegistrator;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Items;
 import xyz.brassgoggledcoders.patchouliprovider.BookBuilder;
 import xyz.brassgoggledcoders.patchouliprovider.PatchouliBookProvider;
 import xyz.brassgoggledcoders.patchouliprovider.page.MultiblockPageBuilder;
@@ -63,6 +64,15 @@ public class GuideBookProvider extends PatchouliBookProvider
             introEntry.addTextPage("A major difference is you will need to make the bottom of your foundry liquid heating coils. These enable you to actually heat up the foundry. The corners of the foundry multiblock are optional.");
             introEntry.addTextPage("$(br)The foundry by default will smelt raw ore at a 1.3x rate and the melting rate is determined by the fuel used.");
             introEntry.build();
+
+//        var sgearCategory = bookBuilder.addCategory("sgear", "Silent Gear Metalworks", "Silent Gear casting with the Foundry.", Items.DIAMOND_SWORD.getDefaultInstance()).setFlag("mod:silentgear");
+//
+//        var sgearMissingEntry = sgearCategory.addEntry("sgear_missing", "Gear Casting", MetalworksRegistrator.CASTING_TABLE.get().asItem().getDefaultInstance()).setFlag("mod:silentgear,!mod:sgearmetalworks");
+//            sgearMissingEntry.addTextPage("").setFlag("mod:silentgear,!mod:sgearmetalworks");
+//
+//        var sgearEntry = sgearCategory.addEntry("sgear", "Gear Casting", MetalworksRegistrator.CASTING_TABLE.get().asItem().getDefaultInstance()).setFlag("mod:silentgear,mod:sgearmetalworks");
+//            sgearEntry.addTextPage("").setFlag("mod:silentgear,mod:sgearmetalworks");
+
 
         bookBuilder.build(consumer);
     }

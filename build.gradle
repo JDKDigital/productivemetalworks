@@ -159,6 +159,7 @@ dependencies {
     implementation "curse.maven:pneumaticcraft-repressurized-281849:6042033"
     implementation "curse.maven:everythingcopper-579545:6155643"
     implementation "curse.maven:immersive-engineering-231951:5828000"
+    implementation "curse.maven:create-328085:6271847"
 }
 
 tasks.withType(ProcessResources).configureEach {

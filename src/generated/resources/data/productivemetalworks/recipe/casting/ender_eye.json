@@ -3,7 +3,7 @@
   "cast": {
     "item": "minecraft:ender_pearl"
   },
-  "consume_cast": false,
+  "consume_cast": true,
   "fluid": {
     "amount": 100,
     "fluid": "productivemetalworks:molten_blaze"

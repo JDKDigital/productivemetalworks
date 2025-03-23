@@ -124,7 +124,9 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
                             var groundStack = item.getItem();
                             for (int slot = 0; slot < blockEntity.itemHandler.getSlots(); slot++) {
                                 if (blockEntity.itemHandler.getItem(slot).isEmpty()) {
-                                    blockEntity.itemHandler.setStackInSlot(slot, new ItemStack(groundStack.getItem(), 1));
+                                    var clonedStack = groundStack.copy();
+                                    clonedStack.setCount(1);
+                                    blockEntity.itemHandler.setStackInSlot(slot, clonedStack);
                                     groundStack.shrink(1);
                                 }
                             }

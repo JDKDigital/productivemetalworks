@@ -1,3 +1,21 @@
+1.21.1-1.2.5
+
+- Fixed items picked up by the foundry losing data
+
+
+1.21.1-1.2.4
+
+- Added Create support
+- Fixed controllers not being breakable when foundry is not formed
+
+
+1.21.1-1.2.3
+
+- Fixed ender eye casting recipe not using up the ender pearl
+- Added support for FTB Materials constantan
+- Added some missing copper and netherite recipes
+
+
 1.21.1-1.2.2
 
 - Added recipes for Mekanism and Immersive Engineering metals

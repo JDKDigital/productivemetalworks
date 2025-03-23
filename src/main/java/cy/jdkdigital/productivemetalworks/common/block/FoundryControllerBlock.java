@@ -138,13 +138,15 @@ public class FoundryControllerBlock extends CapabilityContainerBlock implements 
                 }
                 // Mark heating coils as inactive
                 var mb = blockEntity.getMultiblockData();
-                var controllerFacing = oldState.getValue(BlockStateProperties.HORIZONTAL_FACING);
-                BlockPos.betweenClosedStream(mb.topCorners().getFirst().relative(controllerFacing.getOpposite()).relative(controllerFacing.getCounterClockWise()).below(mb.height()), mb.topCorners().getSecond().relative(controllerFacing).relative(controllerFacing.getClockWise()).below(mb.height())).forEach(blockPos -> {
-                    var state = level.getBlockState(blockPos);
-                    if (state.hasProperty(BlockStateProperties.ATTACHED)) {
-                        level.setBlockAndUpdate(blockPos, state.setValue(BlockStateProperties.ATTACHED, false));
-                    }
-                });
+                if (mb != null) {
+                    var controllerFacing = oldState.getValue(BlockStateProperties.HORIZONTAL_FACING);
+                    BlockPos.betweenClosedStream(mb.topCorners().getFirst().relative(controllerFacing.getOpposite()).relative(controllerFacing.getCounterClockWise()).below(mb.height()), mb.topCorners().getSecond().relative(controllerFacing).relative(controllerFacing.getClockWise()).below(mb.height())).forEach(blockPos -> {
+                        var state = level.getBlockState(blockPos);
+                        if (state.hasProperty(BlockStateProperties.ATTACHED)) {
+                            level.setBlockAndUpdate(blockPos, state.setValue(BlockStateProperties.ATTACHED, false));
+                        }
+                    });
+                }
             }
         }
         super.onRemove(oldState, level, pos, newState, isMoving);
