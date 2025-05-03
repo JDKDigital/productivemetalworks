@@ -12,7 +12,9 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.InterModComms;
 import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.common.NeoForgeMod;
@@ -62,5 +64,9 @@ public class ProductiveMetalworks
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
 
         NeoForgeMod.enableMilkFluid();
+
+        if (ModList.get().isLoaded("invtweaks")) {
+            InterModComms.sendTo("invtweaks", "blacklist-screen", () -> "cy.jdkdigital.productivemetalworks.client.screen.*");
+        }
     }
 }

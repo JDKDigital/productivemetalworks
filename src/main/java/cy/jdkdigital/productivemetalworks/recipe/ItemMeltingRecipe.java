@@ -19,8 +19,8 @@ public class ItemMeltingRecipe implements Recipe<RecipeInput>
 {
     public final Ingredient item;
     public final List<FluidStack> result;
-    private final int minTemperature;
-    private final int maxTemperature;
+    public final int minTemperature;
+    public final int maxTemperature;
 
     public ItemMeltingRecipe(Ingredient item, List<FluidStack> result, int minTemperature, int maxTemperature) {
         this.item = item;
@@ -64,8 +64,8 @@ public class ItemMeltingRecipe implements Recipe<RecipeInput>
         return MetalworksRegistrator.ITEM_MELTING_TYPE.get();
     }
 
-    public boolean matches(ItemStack input) {
-        return this.item.test(input);
+    public boolean matches(ItemStack input, int fuelTemperature) {
+        return this.item.test(input) && minTemperature <= fuelTemperature;
     }
 
     public static class Serializer implements RecipeSerializer<ItemMeltingRecipe>

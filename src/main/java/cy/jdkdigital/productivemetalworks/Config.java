@@ -36,6 +36,10 @@ public class Config
             .comment("Should an active foundry collect items dropped inside it")
             .define("foundryCollectItems", true);
 
+    private static final ModConfigSpec.BooleanValue FOUNDRY_RENDER_INVENTORY = BUILDER
+            .comment("Should an active foundry render its inventory inside the multiblock")
+            .define("foundryRenderInventory", true);
+
     private static final ModConfigSpec.DoubleValue FOUNDRY_COOLING_MODIFIER = BUILDER
             .comment("The cooling time of cast items is the number of mb used in the recipe divided by this number")
             .defineInRange("foundryCoolingModifier", 4f, 1, Integer.MAX_VALUE);
@@ -49,6 +53,7 @@ public class Config
     public static int foundryFluidCapacityPerBlockVolume;
     public static boolean foundryDamageEntities;
     public static boolean foundryCollectItems;
+    public static boolean foundryRenderInventory;
     public static double foundryCoolingModifier;
 
     @SubscribeEvent
@@ -60,6 +65,7 @@ public class Config
         foundryFluidCapacityPerBlockVolume = FOUNDRY_FLUID_CAPACITY_PER_BLOCK_VOLUME.get();
         foundryDamageEntities = FOUNDRY_DAMAGE_ENTITIES.get();
         foundryCollectItems = FOUNDRY_COLLECT_ITEMS.get();
+        foundryRenderInventory = FOUNDRY_RENDER_INVENTORY.get();
         foundryCoolingModifier = FOUNDRY_COOLING_MODIFIER.get();
     }
 }

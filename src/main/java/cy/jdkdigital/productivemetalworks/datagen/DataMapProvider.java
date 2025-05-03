@@ -28,8 +28,8 @@ public class DataMapProvider extends net.neoforged.neoforge.common.data.DataMapP
         final var entityMelting = builder(MetalworksRegistrator.ENTITY_MELTING_MAP);
         final var units = builder(MetalworksRegistrator.UNIT_MAP);
 
-        fuels.add(Fluids.LAVA.builtInRegistryHolder(), new FuelMap(1500, 0.2f, 1.0f), false);
-        fuels.add(ResourceLocation.fromNamespaceAndPath("allthemodium", "soul_lava"), new FuelMap(3000, 0.1f, 2.0f), false, new ModLoadedCondition("allthemodium"));
+        fuels.add(Fluids.LAVA.builtInRegistryHolder(), new FuelMap(1500, 0.2f, 0.5f), false);
+        fuels.add(ResourceLocation.fromNamespaceAndPath("allthemodium", "soul_lava"), new FuelMap(3000, 0.1f, 1.0f), false, new ModLoadedCondition("allthemodium"));
 
         entityMelting.add(EntityType.PLAYER.builtInRegistryHolder(), new EntityMeltingMap(new FluidStack(MetalworksRegistrator.LIQUID_MEAT.get(), 10)), false);
 

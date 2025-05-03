@@ -5,6 +5,7 @@ import cy.jdkdigital.productivelib.util.FluidContainerUtil;
 import cy.jdkdigital.productivemetalworks.ProductiveMetalworks;
 import cy.jdkdigital.productivemetalworks.common.menu.FoundryControllerContainer;
 import cy.jdkdigital.productivemetalworks.network.MoveFoundryFluidData;
+import cy.jdkdigital.productivemetalworks.registry.MetalworksRegistrator;
 import cy.jdkdigital.productivemetalworks.registry.ModTags;
 import cy.jdkdigital.productivemetalworks.util.FluidHelper;
 import cy.jdkdigital.productivemetalworks.util.TickingSlotInventoryHandler;
@@ -38,7 +39,7 @@ public class FoundryControllerScreen extends AbstractContainerScreen<FoundryCont
 
     public FoundryControllerScreen(FoundryControllerContainer container, Inventory inv, Component titleIn) {
         super(container, inv, titleIn);
-        this.imageWidth = 195;
+        this.imageWidth = 202;
     }
 
     @Override
@@ -73,16 +74,16 @@ public class FoundryControllerScreen extends AbstractContainerScreen<FoundryCont
                     if (row * FoundryControllerContainer.COLUMNS + i < slotsAfterScroll && slot < itemHandler.getSlots() && this.menu.slots.get(slot).isActive()) {
                         int slotX = this.getGuiLeft() + 79 + (i * 18);
                         int slotY = this.getGuiTop() + 16 + (row * 18);
-                        guiGraphics.blit(GUI, slotX, slotY, 195, 0, 18, 18);
+                        guiGraphics.blit(GUI, slotX, slotY, 202, 0, 18, 18);
 
                         var stack = itemHandler.getStackInSlot(slot);
                         if (!stack.isEmpty()) {
                             var ticker = itemHandler.getTicker(slot);
                             if (ticker.getSecond() != 0 && !ticker.getFirst().equals(ticker.getSecond())) {
                                 int progress = (int) (18f - ((float)ticker.getFirst() / (float)ticker.getSecond()) * 18f);
-                                guiGraphics.blit(GUI, slotX, slotY + (18-progress), 195, 36 - progress, 18, progress);
+                                guiGraphics.blit(GUI, slotX, slotY + (18-progress), 202, 36 - progress, 18, progress);
                             } else {
-                                guiGraphics.blit(GUI, slotX, slotY, 195, 36, 18, 18);
+                                guiGraphics.blit(GUI, slotX, slotY, 202, 36, 18, 18);
                             }
                         }
                     }
@@ -91,7 +92,7 @@ public class FoundryControllerScreen extends AbstractContainerScreen<FoundryCont
         }
 
         // Draw scrollbar
-        guiGraphics.blitSprite(SCROLLER_SPRITE, this.getGuiLeft() + 175, this.getGuiTop() + 17 + (int)(37f * this.scrollOffs), 12, 15);
+        guiGraphics.blitSprite(SCROLLER_SPRITE, this.getGuiLeft() + 156, this.getGuiTop() + 17 + (int)(37f * this.scrollOffs), 12, 15);
 
         // Draw fuel tank
         if (!this.menu.blockEntity.fuel.isEmpty()) {
@@ -123,7 +124,11 @@ public class FoundryControllerScreen extends AbstractContainerScreen<FoundryCont
         List<FormattedCharSequence> tooltipList = new ArrayList<>();
         if (insideFuelTank(mouseX, mouseY)) {
             if (!this.menu.blockEntity.fuel.isEmpty()) {
+                var fuelData = this.menu.blockEntity.fuel.getFluidHolder().getData(MetalworksRegistrator.FUEL_MAP);
                 tooltipList.add(Component.literal(this.menu.blockEntity.fuel.getAmount() + "mb " + Component.translatable(this.menu.blockEntity.fuel.getFluid().getFluidType().getDescriptionId()).getString()).getVisualOrderText());
+                if (fuelData != null) {
+                    tooltipList.add(Component.translatable("gui.productivemetalworks.temperature", fuelData.temperature()).getVisualOrderText());
+                }
             }
         }
 
@@ -208,6 +213,6 @@ public class FoundryControllerScreen extends AbstractContainerScreen<FoundryCont
     }
 
     protected boolean insideScrollbar(double mouseX, double mouseY) {
-        return isHovering(175, 17, 12, 52, mouseX, mouseY);
+        return isHovering(156, 17, 12, 52, mouseX, mouseY);
     }
 }

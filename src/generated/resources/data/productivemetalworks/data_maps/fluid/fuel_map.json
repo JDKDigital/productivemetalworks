@@ -8,12 +8,12 @@
         }
       ],
       "consumption": 0.1,
-      "speed": 2.0,
+      "speed": 1.0,
       "temperature": 3000
     },
     "minecraft:lava": {
       "consumption": 0.2,
-      "speed": 1.0,
+      "speed": 0.5,
       "temperature": 1500
     }
   }

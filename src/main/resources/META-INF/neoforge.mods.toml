@@ -92,3 +92,8 @@ issueTrackerURL="${issue_url}"
     versionRange="${lib_version_range}"
     ordering="NONE"
     side="BOTH"
+[[dependencies.${mod_id}]]
+    modId="productivebees"
+    type="optional"
+    ordering="AFTER"
+    side="BOTH"

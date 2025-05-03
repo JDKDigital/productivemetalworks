@@ -1,3 +1,27 @@
+1.21.1-1.4.1
+
+- Finished implementing min temperature requirement for melting recipes
+
+
+1.21.1-1.4.0
+
+- Added support for upgrades in the foundry. Supports speed, speedier and stability upgrades.
+- Added new stability upgrade which stops fluid alloying in the foundry.
+- Lowered default melting speed by half
+- Raw ore output is now 2x instead of 1.3x
+- Ore block output is now 3x instead of 2.6x
+
+
+1.21.1-1.3.1
+
+- Added config option to not render items in the foundry
+
+
+1.21.1-1.3.0
+
+- Updated textures (DevDyna)
+
+
 1.21.1-1.2.5
 
 - Fixed items picked up by the foundry losing data

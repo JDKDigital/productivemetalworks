@@ -53,8 +53,16 @@ public class LanguageProvider extends net.neoforged.neoforge.common.data.Languag
         add("jei." + ProductiveMetalworks.MODID + ".sg_casting", "Silent Gear Casting");
         add("jei." + ProductiveMetalworks.MODID + ".block_casting", "Block Casting");
         add("jei." + ProductiveMetalworks.MODID + ".fluid_alloying", "Fluid Alloying");
+        add("jei." + ProductiveMetalworks.MODID + ".temperature", "Temp: %s C");
         add("jade." + ProductiveMetalworks.MODID + ".cooling", "Cooling");
         add("block." + ProductiveMetalworks.MODID + "foundry_tank.fluid_tooltip", "Contains %smb %s");
+
+        add("config.jade.plugin_productivemetalworks.casting", "Productive Metalworks");
+
+        add("productivebees.information.upgrade.upgrade_stability", "Disables fluid alloying in the Foundry.");
+        add("productivemetalworks.information.upgrade.upgrade_stability", "Disables fluid alloying in the Foundry.");
+        add("productivemetalworks.information.upgrade.upgrade_time", "Can be installed in machines for faster processing.\nMultiple upgrades can be installed for a greater time decrease.");
+        add("productivemetalworks.information.upgrade.upgrade_time_2", "It's twice as good as the other one.");
 
         add("productivebees.ingredient.description.soul_lava_bee", "To acquire this bee, look up the crafting recipe for its spawn egg.");
         add("productivebees.ingredient.description.allthemodium_bee", "To acquire this bee, look up the crafting recipe for its spawn egg.");
@@ -63,6 +71,8 @@ public class LanguageProvider extends net.neoforged.neoforge.common.data.Languag
 
         add("book.productivemetalworks.name", "Big Book of Metallurgy");
         add("book.productivemetalworks.landing_text", "A shallow look into the world of metalworking.$(br2)Put on your gloves 'cause it's gonna get hot.");
+
+        add("guid." + ProductiveMetalworks.MODID + ".temperature", "Temperature: %s C");
 
         ProductiveMetalworks.ITEMS.getEntries().forEach(registryObject -> {
             if (registryObject.get() instanceof BucketItem) {

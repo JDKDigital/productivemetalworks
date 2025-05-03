@@ -2,6 +2,7 @@ package cy.jdkdigital.productivemetalworks.util;
 
 import com.mojang.datafixers.util.Pair;
 import cy.jdkdigital.productivemetalworks.ProductiveMetalworks;
+import cy.jdkdigital.productivemetalworks.common.datamap.FuelMap;
 import cy.jdkdigital.productivemetalworks.registry.MetalworksRegistrator;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
@@ -26,7 +27,7 @@ public class FluidHelper
     static Map<Item, FluidStack> itemToFluidCache = new HashMap<>();
     public static FluidStack itemToFluid(Level level, ItemStack itemStack) {
         if (!itemToFluidCache.containsKey(itemStack.getItem())) {
-            var meltingRecipe = RecipeHelper.getItemMeltingRecipe(level, itemStack);
+            var meltingRecipe = RecipeHelper.getItemMeltingRecipe(level, itemStack, new FuelMap(100000, 1f, 1f));
             if (meltingRecipe != null && meltingRecipe.value().result.size() == 1) {
                 itemToFluidCache.put(itemStack.getItem(), meltingRecipe.value().result.getFirst().copy());
             }

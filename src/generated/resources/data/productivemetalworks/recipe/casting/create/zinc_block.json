@@ -1,0 +1,19 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "create"
+    }
+  ],
+  "type": "productivemetalworks:block_casting",
+  "cast": [],
+  "consume_cast": false,
+  "fluid": {
+    "amount": 810,
+    "fluid": "productivemetalworks:molten_zinc"
+  },
+  "result": {
+    "count": 1,
+    "id": "create:zinc_block"
+  }
+}

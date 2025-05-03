@@ -16,7 +16,7 @@
   "minimum_temperature": 1000,
   "result": [
     {
-      "amount": 120,
+      "amount": 180,
       "id": "productivemetalworks:molten_osmium"
     }
   ]

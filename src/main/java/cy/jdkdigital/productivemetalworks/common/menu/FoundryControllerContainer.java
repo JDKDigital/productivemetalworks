@@ -20,7 +20,7 @@ import java.util.Objects;
 
 public class FoundryControllerContainer extends AbstractContainer
 {
-    public static int COLUMNS = 5;
+    public static int COLUMNS = 4;
     private final Inventory playerInventory;
     public final FoundryControllerBlockEntity blockEntity;
 
@@ -103,7 +103,8 @@ public class FoundryControllerContainer extends AbstractContainer
                 return 20;
             }
         });
-        // Fluid amount
+
+        // Fluid amounts
         addDataSlots(new ContainerData()
         {
             @Override
@@ -127,7 +128,9 @@ public class FoundryControllerContainer extends AbstractContainer
         if (rowCount > 0) {
             addSlotBox(this.blockEntity.getItemHandler(), 0, 80, 17, COLUMNS, 18, rowCount, 18);
         }
-        addSlotRange(this.blockEntity.getItemHandler(), rowCount * 5, 80, 17 + rowCount * 18, leftover, 18);
+        addSlotRange(this.blockEntity.getItemHandler(), rowCount * COLUMNS, 80, 17 + rowCount * 18, leftover, 18);
+
+        addSlotBox(this.blockEntity.getUpgradeHandler(), 0, 178, 8, 1, 18, 4, 18);
 
         layoutPlayerInventorySlots(playerInventory, 0, 8, 84);
     }
@@ -161,7 +164,7 @@ public class FoundryControllerContainer extends AbstractContainer
         this.slots.forEach(slot -> {
             if (slot instanceof ManualSlotItemHandler mSlot && mSlot.getItemHandler().equals(this.blockEntity.getItemHandler())) {
                 // disable slots above and below the shown rows
-                if (slot.index < offsetRow * FoundryControllerContainer.COLUMNS || slot.index > offsetRow * FoundryControllerContainer.COLUMNS + 14) {
+                if (slot.index < offsetRow * FoundryControllerContainer.COLUMNS || slot.index > offsetRow * FoundryControllerContainer.COLUMNS + 11) {
                     mSlot.disable();
                 } else {
                     mSlot.enable();

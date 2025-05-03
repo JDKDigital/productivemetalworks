@@ -1,6 +1,7 @@
 package cy.jdkdigital.productivemetalworks.util;
 
 import cy.jdkdigital.productivelib.util.MultiFluidTank;
+import cy.jdkdigital.productivemetalworks.common.datamap.FuelMap;
 import cy.jdkdigital.productivemetalworks.event.CastingRecipeEvent;
 import cy.jdkdigital.productivemetalworks.recipe.BlockCastingRecipe;
 import cy.jdkdigital.productivemetalworks.recipe.FluidAlloyingRecipe;
@@ -25,11 +26,14 @@ public class RecipeHelper
 {
     static Map<String, RecipeHolder<ItemMeltingRecipe>> itemMeltingRecipeCache = new HashMap<>();
     @Nullable
-    public static RecipeHolder<ItemMeltingRecipe> getItemMeltingRecipe(Level level, ItemStack item) {
-        String cacheKey = itemCacheKey(item);
+    public static RecipeHolder<ItemMeltingRecipe> getItemMeltingRecipe(Level level, ItemStack item, @Nullable FuelMap fuelData) {
+        if (fuelData == null) {
+            return null;
+        }
+        String cacheKey = itemCacheKey(item) + fuelData.temperature();
         if (!itemMeltingRecipeCache.containsKey(cacheKey)) {
             for (RecipeHolder<ItemMeltingRecipe> recipeHolder : level.getRecipeManager().getAllRecipesFor(MetalworksRegistrator.ITEM_MELTING_TYPE.get())) {
-                if (recipeHolder.value().matches(item)) {
+                if (recipeHolder.value().matches(item, fuelData.temperature())) {
                     itemMeltingRecipeCache.put(cacheKey, recipeHolder);
                 }
             }

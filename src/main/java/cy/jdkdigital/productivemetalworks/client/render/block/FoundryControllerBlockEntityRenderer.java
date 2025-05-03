@@ -3,6 +3,7 @@ package cy.jdkdigital.productivemetalworks.client.render.block;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import cy.jdkdigital.productivemetalworks.Config;
 import cy.jdkdigital.productivemetalworks.common.block.entity.FoundryControllerBlockEntity;
 import cy.jdkdigital.productivemetalworks.util.RenderHelper;
 import net.minecraft.client.Minecraft;
@@ -68,30 +69,32 @@ public class FoundryControllerBlockEntityRenderer implements BlockEntityRenderer
             }
 
             // Render inventory
-            var bb = new BoundingBox(
-                    Math.min(c1.getX(), c2.getX()),
-                    Math.min(c1.getY() + 1, c2.below(multiBlockData.height()).getY()),
-                    Math.min(c1.getZ(), c2.getZ()),
-                    Math.max(c1.getX(), c2.getX()),
-                    Math.max(c1.getY() + 1, c2.below(multiBlockData.height()).getY()),
-                    Math.max(c1.getZ(), c2.getZ())
-            );
-            var positions = BlockPos.betweenClosedStream(bb.inflatedBy(-1)).map(BlockPos::immutable).toList();
-            for (int slot = 0; slot < blockEntity.getItemHandler().getSlots(); slot++) {
-                ItemStack output = blockEntity.getItemHandler().getStackInSlot(slot);
-                if (!output.isEmpty() && slot < positions.size()) {
-                    var pos = positions.get(slot);
-                    poseStack.pushPose();
-                    poseStack.translate(pos.getX() - multiBlockData.controllerPos().getX() + RenderHelper.halfPixelFraction, pos.getY() - multiBlockData.controllerPos().getY() + RenderHelper.halfPixelFraction, pos.getZ() - multiBlockData.controllerPos().getZ() + RenderHelper.halfPixelFraction);
-                    poseStack.scale(1.0f - RenderHelper.pixelFraction, 1.0f - RenderHelper.pixelFraction, 1.0f - RenderHelper.pixelFraction);
-                    if (output.getItem() instanceof BlockItem blockItem) {
-                        Minecraft.getInstance().getBlockRenderer().renderSingleBlock(blockItem.getBlock().defaultBlockState(), poseStack, bufferSource, combinedLightIn, combinedOverlayIn, ModelData.EMPTY, null);
-                    } else {
-                        poseStack.translate(0.5f, 0.5f, 0.5f);
-                        poseStack.mulPose(Axis.XP.rotationDegrees((float) (90.0D % 360)));
-                        Minecraft.getInstance().getItemRenderer().renderStatic(output, ItemDisplayContext.FIXED, combinedLightIn, combinedOverlayIn, poseStack, bufferSource, blockEntity.getLevel(), 0);
+            if (Config.foundryRenderInventory) {
+                var bb = new BoundingBox(
+                        Math.min(c1.getX(), c2.getX()),
+                        Math.min(c1.getY() + 1, c2.below(multiBlockData.height()).getY()),
+                        Math.min(c1.getZ(), c2.getZ()),
+                        Math.max(c1.getX(), c2.getX()),
+                        Math.max(c1.getY() + 1, c2.below(multiBlockData.height()).getY()),
+                        Math.max(c1.getZ(), c2.getZ())
+                );
+                var positions = BlockPos.betweenClosedStream(bb.inflatedBy(-1)).map(BlockPos::immutable).toList();
+                for (int slot = 0; slot < blockEntity.getItemHandler().getSlots(); slot++) {
+                    ItemStack output = blockEntity.getItemHandler().getStackInSlot(slot);
+                    if (!output.isEmpty() && slot < positions.size()) {
+                        var pos = positions.get(slot);
+                        poseStack.pushPose();
+                        poseStack.translate(pos.getX() - multiBlockData.controllerPos().getX() + RenderHelper.halfPixelFraction, pos.getY() - multiBlockData.controllerPos().getY() + RenderHelper.halfPixelFraction, pos.getZ() - multiBlockData.controllerPos().getZ() + RenderHelper.halfPixelFraction);
+                        poseStack.scale(1.0f - RenderHelper.pixelFraction, 1.0f - RenderHelper.pixelFraction, 1.0f - RenderHelper.pixelFraction);
+                        if (output.getItem() instanceof BlockItem blockItem) {
+                            Minecraft.getInstance().getBlockRenderer().renderSingleBlock(blockItem.getBlock().defaultBlockState(), poseStack, bufferSource, combinedLightIn, combinedOverlayIn, ModelData.EMPTY, null);
+                        } else {
+                            poseStack.translate(0.5f, 0.5f, 0.5f);
+                            poseStack.mulPose(Axis.XP.rotationDegrees((float) (90.0D % 360)));
+                            Minecraft.getInstance().getItemRenderer().renderStatic(output, ItemDisplayContext.FIXED, combinedLightIn, combinedOverlayIn, poseStack, bufferSource, blockEntity.getLevel(), 0);
+                        }
+                        poseStack.popPose();
                     }
-                    poseStack.popPose();
                 }
             }
         }

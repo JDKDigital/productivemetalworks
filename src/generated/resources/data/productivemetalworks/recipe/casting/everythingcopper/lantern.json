@@ -5,7 +5,7 @@
       "modid": "everythingcopper"
     }
   ],
-  "type": "productivemetalworks:item_casting",
+  "type": "productivemetalworks:block_casting",
   "cast": {
     "item": "minecraft:torch"
   },

@@ -16,7 +16,7 @@
   "minimum_temperature": 1000,
   "result": [
     {
-      "amount": 1080,
+      "amount": 1620,
       "id": "productivemetalworks:molten_zinc"
     }
   ]

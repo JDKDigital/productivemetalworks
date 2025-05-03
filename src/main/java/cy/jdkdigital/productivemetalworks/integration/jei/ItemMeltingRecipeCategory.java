@@ -13,14 +13,17 @@ import mezz.jei.api.neoforge.NeoForgeTypes;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.category.AbstractRecipeCategory;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.neoforged.neoforge.fluids.FluidStack;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -47,6 +50,8 @@ public class ItemMeltingRecipeCategory extends AbstractRecipeCategory<RecipeHold
     @Override
     public void draw(RecipeHolder<ItemMeltingRecipe> recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
         this.background.draw(guiGraphics, 0, 0);
+
+        guiGraphics.drawString(Minecraft.getInstance().font, Language.getInstance().getVisualOrder(Component.translatable("jei.productivemetalworks.temperature", recipe.value().minTemperature)), 35, 52, 0xFF000000, false);
     }
 
     @Override
@@ -57,7 +62,10 @@ public class ItemMeltingRecipeCategory extends AbstractRecipeCategory<RecipeHold
                 .setSlotName("ingredients");
 
         builder.addSlot(RecipeIngredientRole.INPUT, 11, 8)
-                .addIngredients(NeoForgeTypes.FLUID_STACK, fuels)
+                .addIngredients(NeoForgeTypes.FLUID_STACK, fuels.stream().filter(fluidStack -> {
+                    var fueldData = fluidStack.getFluidHolder().getData(MetalworksRegistrator.FUEL_MAP);
+                    return fueldData != null && fueldData.temperature() >= recipe.value().minTemperature;
+                }).toList())
                 .setFluidRenderer(1000, false, 16,52)
                 .setSlotName("fuel");
 

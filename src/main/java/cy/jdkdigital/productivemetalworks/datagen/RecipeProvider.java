@@ -2,6 +2,7 @@ package cy.jdkdigital.productivemetalworks.datagen;
 
 import cy.jdkdigital.productivelib.common.condition.LazyCondition;
 import cy.jdkdigital.productivelib.crafting.condition.FluidTagEmptyCondition;
+import cy.jdkdigital.productivelib.registry.LibItems;
 import cy.jdkdigital.productivemetalworks.ProductiveMetalworks;
 import cy.jdkdigital.productivemetalworks.datagen.recipe.BlockCastingRecipeBuilder;
 import cy.jdkdigital.productivemetalworks.datagen.recipe.FluidAlloyingRecipeBuilder;
@@ -197,13 +198,13 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
                 .unlockedBy(getHasName(MetalworksRegistrator.FIRE_BRICK.get()), has(MetalworksRegistrator.FIRE_BRICK.get()))
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "crafting/liquid_heating_coil"));
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MetalworksRegistrator.POWERED_HEATING_COIL.get(), 1)
-                .pattern("CCC").pattern("CAC").pattern("XXX")
-                .define('C', Tags.Items.INGOTS_COPPER)
-                .define('A', Items.AMETHYST_BLOCK)
-                .define('X', MetalworksRegistrator.FIRE_BRICK.get())
-                .unlockedBy(getHasName(MetalworksRegistrator.FIRE_BRICK.get()), has(MetalworksRegistrator.FIRE_BRICK.get()))
-                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "crafting/powered_heating_coil"));
+//        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MetalworksRegistrator.POWERED_HEATING_COIL.get(), 1)
+//                .pattern("CCC").pattern("CAC").pattern("XXX")
+//                .define('C', Tags.Items.INGOTS_COPPER)
+//                .define('A', Items.AMETHYST_BLOCK)
+//                .define('X', MetalworksRegistrator.FIRE_BRICK.get())
+//                .unlockedBy(getHasName(MetalworksRegistrator.FIRE_BRICK.get()), has(MetalworksRegistrator.FIRE_BRICK.get()))
+//                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "crafting/powered_heating_coil"));
 
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, MetalworksRegistrator.MEAT_INGOT.get(), 8)
                 .requires(MetalworksRegistrator.MEAT_BLOCK.get())
@@ -385,6 +386,8 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
 
 
         // Misc items
+        ItemCastingRecipeBuilder.of(LibItems.UPGRADE_BASE.get().getDefaultInstance(), SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_ENDER, 100), LibItems.UPGRADE_STABILITY.get().getDefaultInstance(), true)
+                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/misc/upgrade_stability"));
         BlockCastingRecipeBuilder.of(SizedFluidIngredient.of(ModTags.Fluids.HONEY, 1000), Items.HONEY_BLOCK.getDefaultInstance())
                 .save(recipeOutput.withConditions(new NotCondition(new FluidTagEmptyCondition(ModTags.Fluids.HONEY))), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/honey_block"));
         ItemCastingRecipeBuilder.of(Items.GLASS_BOTTLE.getDefaultInstance(), SizedFluidIngredient.of(ModTags.Fluids.HONEY, 250), Items.HONEY_BOTTLE.getDefaultInstance())
@@ -399,9 +402,9 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/misc/clock"));
         ItemCastingRecipeBuilder.of(Items.REDSTONE.getDefaultInstance(), SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_IRON, 360), Items.COMPASS.getDefaultInstance(), true)
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/misc/compass"));
-        ItemCastingRecipeBuilder.of(Items.TORCH.getDefaultInstance(), SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_IRON, 80), Items.LANTERN.getDefaultInstance(), true)
+        BlockCastingRecipeBuilder.of(Items.TORCH.getDefaultInstance(), SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_IRON, 80), Items.LANTERN.getDefaultInstance(), true)
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/misc/lantern"));
-        ItemCastingRecipeBuilder.of(Items.SOUL_TORCH.getDefaultInstance(), SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_IRON, 80), Items.SOUL_LANTERN.getDefaultInstance(), true)
+        BlockCastingRecipeBuilder.of(Items.SOUL_TORCH.getDefaultInstance(), SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_IRON, 80), Items.SOUL_LANTERN.getDefaultInstance(), true)
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/misc/soul_lantern"));
         ItemCastingRecipeBuilder.of(MetalworksRegistrator.CAST_NUGGET.get().getDefaultInstance(), SizedFluidIngredient.of(ModTags.Fluids.MEAT, 10), MetalworksRegistrator.MEAT_NUGGET.get().getDefaultInstance(), false)
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/misc/meat_nugget"));
@@ -519,15 +522,15 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
             // Melt block
             itemMeltingRecipe(blockTag, new FluidStack(fluid, 810), recipeOutput);
             // Melt raw ore block
-            itemMeltingRecipe(rawBlockTag, new FluidStack(fluid, 1080), recipeOutput);
+            itemMeltingRecipe(rawBlockTag, new FluidStack(fluid, 1620), recipeOutput);
             // Melt ore
-            itemMeltingRecipe(oreTag, new FluidStack(fluid, 240), recipeOutput);
+            itemMeltingRecipe(oreTag, new FluidStack(fluid, 270), recipeOutput);
             // Melt ingot
             itemMeltingRecipe(ingotTag, new FluidStack(fluid, 90), recipeOutput);
             // Melt nugget
             itemMeltingRecipe(nuggetTag, new FluidStack(fluid, 10), recipeOutput);
             // Melt raw ore
-            itemMeltingRecipe(rawItemTag, new FluidStack(fluid, 120), recipeOutput);
+            itemMeltingRecipe(rawItemTag, new FluidStack(fluid, 180), recipeOutput);
             // Melt dust
             itemMeltingRecipe(dustTag, new FluidStack(fluid, 90), recipeOutput);
             // Melt Gear
@@ -658,9 +661,9 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
 
         // maybe copper nugget
         // lantern casting
-        ItemCastingRecipeBuilder.of(Items.TORCH.getDefaultInstance(), SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_COPPER, 80), BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("everythingcopper", "copper_lantern")).getDefaultInstance(), true)
+        BlockCastingRecipeBuilder.of(Items.TORCH.getDefaultInstance(), SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_COPPER, 80), BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("everythingcopper", "copper_lantern")).getDefaultInstance(), true)
                 .save(recipeOutput.withConditions(new ModLoadedCondition("everythingcopper")), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/everythingcopper/lantern"));
-        ItemCastingRecipeBuilder.of(Items.SOUL_TORCH.getDefaultInstance(), SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_COPPER, 80), BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("everythingcopper", "copper_soul_lantern")).getDefaultInstance(), true)
+        BlockCastingRecipeBuilder.of(Items.SOUL_TORCH.getDefaultInstance(), SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_COPPER, 80), BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("everythingcopper", "copper_soul_lantern")).getDefaultInstance(), true)
                 .save(recipeOutput.withConditions(new ModLoadedCondition("everythingcopper")), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/everythingcopper/soul_lantern"));
     }
 
@@ -689,15 +692,15 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
             // Melt block
             itemMeltingRecipe(blockTag, new FluidStack(fluid, 810), 3000, 0, recipeOutput);
             // Melt raw ore block
-            itemMeltingRecipe(rawBlockTag, new FluidStack(fluid, 1080), 3000, 0, recipeOutput);
+            itemMeltingRecipe(rawBlockTag, new FluidStack(fluid, 1620), 3000, 0, recipeOutput);
             // Melt ore
-            itemMeltingRecipe(oreTag, new FluidStack(fluid, 240), 3000, 0, recipeOutput);
+            itemMeltingRecipe(oreTag, new FluidStack(fluid, 270), 3000, 0, recipeOutput);
             // Melt ingot
             itemMeltingRecipe(ingotTag, new FluidStack(fluid, 90), 3000, 0, recipeOutput);
             // Melt nugget
             itemMeltingRecipe(nuggetTag, new FluidStack(fluid, 10), 3000, 0, recipeOutput);
             // Melt raw ore
-            itemMeltingRecipe(rawItemTag, new FluidStack(fluid, 120), 3000, 0, recipeOutput);
+            itemMeltingRecipe(rawItemTag, new FluidStack(fluid, 180), 3000, 0, recipeOutput);
             // Melt dust
             itemMeltingRecipe(dustTag, new FluidStack(fluid, 90), 3000, 0, recipeOutput);
             // Melt Gear
@@ -885,6 +888,7 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
             var fluid = BuiltInRegistries.FLUID.get(ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "molten_" + resource));
 
             var crushedItem = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("create", "crushed_raw_" + resource));
+            var blockItem = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("create", resource + "_block"));
             var ingotItem = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("create", resource + "_ingot"));
             var nuggetItem = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("create", resource + "_nugget"));
             var plateItem = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("create", (resource.equals("gold") ? "golden" : resource) + "_sheet"));
@@ -895,6 +899,11 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
                         .save(recipeOutput.withConditions(new ModLoadedCondition("create")), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/create/crushed_raw_" + resource));
             }
 
+            // Cast block
+            if (!ingotItem.equals(Items.AIR)) {
+                BlockCastingRecipeBuilder.of(SizedFluidIngredient.of(fluid, 810), blockItem.getDefaultInstance())
+                        .save(recipeOutput.withConditions(new ModLoadedCondition("create")), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/create/" + resource + "_block"));
+            }
             // Cast ingot
             if (!ingotItem.equals(Items.AIR)) {
                 ItemCastingRecipeBuilder.of(MetalworksRegistrator.CAST_INGOT.get().getDefaultInstance(), SizedFluidIngredient.of(fluid, 90), ingotItem.getDefaultInstance())
