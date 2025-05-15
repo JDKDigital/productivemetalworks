@@ -24,7 +24,7 @@ public class EventHandler
                     event.getStack().is(LibItems.UPGRADE_STABILITY.get())
                 )
         ) {
-            event.getTooltipComponents().add(Component.translatable("productivemetalworks.information.upgrade." + upgradeType).withStyle(ChatFormatting.GOLD));
+            event.getTooltipComponents().add(Component.translatable("productivemetalworks.information.upgrade." + upgradeType.getPath()).withStyle(ChatFormatting.GOLD));
         }
 
         switch (upgradeType.getPath()) {

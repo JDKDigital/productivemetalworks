@@ -254,6 +254,7 @@ public class CastingBlockEntity extends CapabilityBlockEntity
     }
 
     public void sync(ServerLevel serverLevel) {
+        this.invalidateCapabilities();
         serverLevel.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), Block.UPDATE_CLIENTS);
     }
 

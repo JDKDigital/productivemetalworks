@@ -65,7 +65,7 @@ public class FluidTagProvider extends FluidTagsProvider
         tag(ModTags.Fluids.MOLTEN_SIGNALUM).add(MetalworksRegistrator.MOLTEN_SIGNALUM.get());
         tag(ModTags.Fluids.MOLTEN_CONSTANTAN).add(MetalworksRegistrator.MOLTEN_CONSTANTAN.get());
         tag(ModTags.Fluids.MOLTEN_REFINED_GLOWSTONE).add(MetalworksRegistrator.MOLTEN_REFINED_GLOWSTONE.get());
-//        tag(ModTags.Fluids.MOLTEN_REFINED_OBSIDIAN).add(MetalworksRegistrator.MOLTEN_REFINED_OBSIDIAN.get());
+        tag(ModTags.Fluids.MOLTEN_REFINED_OBSIDIAN).add(MetalworksRegistrator.MOLTEN_REFINED_OBSIDIAN.get());
     }
 
     @Override

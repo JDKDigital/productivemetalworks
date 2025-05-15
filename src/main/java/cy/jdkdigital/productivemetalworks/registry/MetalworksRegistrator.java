@@ -146,7 +146,7 @@ public class MetalworksRegistrator
     public static DeferredHolder<Fluid, BaseFlowingFluid.Source> MOLTEN_SIGNALUM = registerFluid("molten_signalum", 0xffdb7f15);
     public static DeferredHolder<Fluid, BaseFlowingFluid.Source> MOLTEN_CONSTANTAN = registerFluid("molten_constantan", 0xffdab38e);
     public static DeferredHolder<Fluid, BaseFlowingFluid.Source> MOLTEN_REFINED_GLOWSTONE = registerFluid("molten_refined_glowstone", 0xffb1aa56);
-//    public static DeferredHolder<Fluid, BaseFlowingFluid.Source> MOLTEN_REFINED_OBSIDIAN = registerFluid("molten_refined_obsidian", 0xff654c89);
+    public static DeferredHolder<Fluid, BaseFlowingFluid.Source> MOLTEN_REFINED_OBSIDIAN = registerFluid("molten_refined_obsidian", 0xff654c89);
 
     // Recipes
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<?>> FLUID_ALLOYING = ProductiveMetalworks.RECIPE_SERIALIZERS.register("fluid_alloying", FluidAlloyingRecipe.Serializer::new);

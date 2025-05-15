@@ -2,6 +2,7 @@ package cy.jdkdigital.productivemetalworks.common.menu;
 
 import cy.jdkdigital.productivelib.container.AbstractContainer;
 import cy.jdkdigital.productivelib.container.ManualSlotItemHandler;
+import cy.jdkdigital.productivemetalworks.ProductiveMetalworks;
 import cy.jdkdigital.productivemetalworks.common.block.entity.FoundryControllerBlockEntity;
 import cy.jdkdigital.productivemetalworks.registry.MetalworksRegistrator;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -123,7 +124,7 @@ public class FoundryControllerContainer extends AbstractContainer
             }
         });
 
-        int rowCount = calculateRowCount(1);
+        int rowCount = calculateRowCount(0);
         int leftover = this.blockEntity.getItemHandler().getSlots()%COLUMNS;
         if (rowCount > 0) {
             addSlotBox(this.blockEntity.getItemHandler(), 0, 80, 17, COLUMNS, 18, rowCount, 18);

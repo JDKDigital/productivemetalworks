@@ -1,0 +1,45 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "productivelib:fluid_tag_empty",
+        "tag": "c:molten_osmium"
+      }
+    },
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "productivelib:fluid_tag_empty",
+        "tag": "c:molten_obsidian"
+      }
+    },
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "productivelib:fluid_tag_empty",
+        "tag": "c:molten_diamond"
+      }
+    }
+  ],
+  "type": "productivemetalworks:fluid_alloying",
+  "fluids": [
+    {
+      "amount": 90,
+      "tag": "c:molten_osmium"
+    },
+    {
+      "amount": 25,
+      "tag": "c:molten_obsidian"
+    },
+    {
+      "amount": 10,
+      "tag": "c:molten_diamond"
+    }
+  ],
+  "result": {
+    "amount": 90,
+    "id": "productivemetalworks:molten_refined_obsidian"
+  },
+  "speed": 1
+}

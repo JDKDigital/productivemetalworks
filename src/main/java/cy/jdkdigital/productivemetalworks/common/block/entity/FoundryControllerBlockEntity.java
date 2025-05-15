@@ -115,10 +115,6 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
             LibItems.UPGRADE_TIME.get(),
             LibItems.UPGRADE_TIME_2.get(),
             LibItems.UPGRADE_STABILITY.get()
-//            LibItems.UPGRADE_PRODUCTIVITY.get(),
-//            LibItems.UPGRADE_PRODUCTIVITY_2.get(),
-//            LibItems.UPGRADE_PRODUCTIVITY_3.get(),
-//            LibItems.UPGRADE_PRODUCTIVITY_4.get()
     ));
 
     public FoundryControllerBlockEntity(BlockPos pos, BlockState state) {
@@ -180,7 +176,7 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
                     FluidStack consumedFuel = new FluidStack(fuel.getFluid(), 0);
                     for (int slot = 0; slot < blockEntity.itemHandler.size(); slot++) {
                         var ticker = blockEntity.itemHandler.getTicker(slot);
-                        if (ticker.getSecond() > 0 && ticker.getFirst() == 0) {
+                        if (ticker.getSecond() > 0 && ticker.getFirst() <= 0) {
                             var item = blockEntity.getItemHandler().getStackInSlot(slot);
                             if (!item.isEmpty()) {
                                 RecipeHolder<ItemMeltingRecipe> recipe = RecipeHelper.getItemMeltingRecipe(level, item, fuelData);

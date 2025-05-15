@@ -19,6 +19,7 @@ public class FoundryDrainBlockEntity extends AbstractBlockEntity implements IMul
     @Override
     public void setMultiblockController(BlockPos pos) {
         this.controllerPosition = pos;
+        this.invalidateCapabilities();
     }
 
     @Override

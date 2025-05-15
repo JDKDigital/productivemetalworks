@@ -3,6 +3,7 @@ package cy.jdkdigital.productivemetalworks.common.block.entity;
 import cy.jdkdigital.productivelib.common.block.entity.FluidTankBlockEntity;
 import cy.jdkdigital.productivelib.common.block.entity.IMultiBlockPeripheralBlockEntity;
 import cy.jdkdigital.productivelib.util.ImmutableFluidStack;
+import cy.jdkdigital.productivemetalworks.ProductiveMetalworks;
 import cy.jdkdigital.productivemetalworks.registry.MetalworksRegistrator;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -90,7 +91,7 @@ public class FoundryTankBlockEntity extends FluidTankBlockEntity implements IMul
         super.applyImplicitComponents(componentInput);
         ImmutableFluidStack fluid = componentInput.getOrDefault(MetalworksRegistrator.FLUID_STACK.get(), ImmutableFluidStack.EMPTY);
         if (!fluid.fluid().isEmpty()) {
-            this.getFluidHandler().setFluid(fluid.fluid());
+            this.getFluidHandler().setFluid(fluid.fluid().copy());
         }
     }
 
@@ -98,7 +99,7 @@ public class FoundryTankBlockEntity extends FluidTankBlockEntity implements IMul
     protected void collectImplicitComponents(DataComponentMap.Builder components) {
         super.collectImplicitComponents(components);
         if (!this.getFluidHandler().getFluid().isEmpty()) {
-            components.set(MetalworksRegistrator.FLUID_STACK.get(), new ImmutableFluidStack(this.getFluidHandler().getFluid()));
+            components.set(MetalworksRegistrator.FLUID_STACK.get(), new ImmutableFluidStack(this.getFluidHandler().getFluid().copy()));
         }
     }
 }

@@ -548,6 +548,22 @@
         }
       ]
     },
+    "productivemetalworks:molten_refined_obsidian": {
+      "units": [
+        {
+          "amount": 10,
+          "unit": "nugget"
+        },
+        {
+          "amount": 90,
+          "unit": "ingot"
+        },
+        {
+          "amount": 810,
+          "unit": "block"
+        }
+      ]
+    },
     "productivemetalworks:molten_shulker_shell": {
       "units": [
         {

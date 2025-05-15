@@ -1,5 +1,6 @@
 package cy.jdkdigital.productivemetalworks.event;
 
+import cy.jdkdigital.productivelib.registry.LibItems;
 import cy.jdkdigital.productivemetalworks.ProductiveMetalworks;
 import cy.jdkdigital.productivemetalworks.common.block.entity.FoundryControllerBlockEntity;
 import cy.jdkdigital.productivemetalworks.network.MoveFoundryFluidData;
@@ -64,6 +65,9 @@ public class ModEventHandler
                     event.accept(item.value());
                 }
             }
+            event.accept(LibItems.UPGRADE_TIME.get());
+            event.accept(LibItems.UPGRADE_TIME_2.get());
+            event.accept(LibItems.UPGRADE_STABILITY.get());
         }
     }
 

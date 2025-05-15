@@ -1,4 +1,22 @@
 {
+  "neoforge:conditions": [
+    {
+      "type": "productivelib:lazy",
+      "value": {
+        "type": "blueprint:and",
+        "values": [
+          {
+            "type": "neoforge:mod_loaded",
+            "modid": "clayworks"
+          },
+          {
+            "type": "clayworks:config",
+            "value": "kiln"
+          }
+        ]
+      }
+    }
+  ],
   "parent": "minecraft:recipes/root",
   "criteria": {
     "has_fire_clay": {
@@ -13,7 +31,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "productivemetalworks:blasting/fire_brick_blasting"
+        "recipe": "productivemetalworks:fire_brick_from_baking"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +44,7 @@
   ],
   "rewards": {
     "recipes": [
-      "productivemetalworks:blasting/fire_brick_blasting"
+      "productivemetalworks:fire_brick_from_baking"
     ]
   }
 }

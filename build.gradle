@@ -160,6 +160,12 @@ dependencies {
     implementation "curse.maven:everythingcopper-579545:6155643"
     implementation "curse.maven:immersive-engineering-231951:5828000"
     implementation "curse.maven:create-328085:6271847"
+    implementation "curse.maven:geore-530544:6490978"
+    implementation "curse.maven:modern-industrialization-405388:6491289"
+    implementation "curse.maven:guideme-1173950:6488254"
+    implementation "curse.maven:clayworks-592162:6449901"
+    implementation "curse.maven:blueprint-382216:6449863" // clayworks
+    implementation "curse.maven:gallery-1173553:6449910" // clayworks
 }
 
 tasks.withType(ProcessResources).configureEach {

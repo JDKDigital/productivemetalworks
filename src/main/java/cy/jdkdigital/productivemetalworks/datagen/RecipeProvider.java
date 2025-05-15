@@ -1,5 +1,7 @@
 package cy.jdkdigital.productivemetalworks.datagen;
 
+import com.teamabnormals.clayworks.common.item.crafting.BakingRecipe;
+import com.teamabnormals.clayworks.core.data.server.ClayworksRecipeProvider;
 import cy.jdkdigital.productivelib.common.condition.LazyCondition;
 import cy.jdkdigital.productivelib.crafting.condition.FluidTagEmptyCondition;
 import cy.jdkdigital.productivelib.registry.LibItems;
@@ -49,7 +51,7 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
             "productivemetalwork:platinum", "productivemetalwork:silver", "productivemetalwork:tin", "productivemetalwork:uranium",
             "productivemetalwork:zinc", "productivemetalwork:iridium", "productivemetalwork:steel", "productivemetalwork:invar",
             "productivemetalwork:electrum", "productivemetalwork:bronze", "productivemetalwork:brass", "productivemetalwork:enderium",
-            "productivemetalwork:lumium", "productivemetalwork:signalum", "productivemetalwork:refined_glowstone"
+            "productivemetalwork:lumium", "productivemetalwork:signalum", "productivemetalwork:refined_glowstone", "productivemetalwork:refined_obsidian"
     };
     static String[] ATO_METALS = new String[]{
             "minecraft:iron", "minecraft:copper", "minecraft:gold", "minecraft:netherite",
@@ -67,6 +69,12 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
             "ftbmaterials:electrum", "ftbmaterials:bronze", "ftbmaterials:brass", "ftbmaterials:enderium",
             "ftbmaterials:lumium", "ftbmaterials:signalum", "ftbmaterials:refined_glowstone", "ftbmaterials:obsidian"
     };
+    static String[] MI_METALS = new String[]{
+            "modern_industrialization:aluminum", "modern_industrialization:lead", "modern_industrialization:nickel",
+            "modern_industrialization:platinum", "modern_industrialization:silver", "modern_industrialization:tin",
+            "modern_industrialization:iridium", "modern_industrialization:steel", "modern_industrialization:invar",
+            "modern_industrialization:electrum", "modern_industrialization:bronze", "modern_industrialization:uranium"
+    };
 
     public RecipeProvider(PackOutput gen, CompletableFuture<HolderLookup.Provider> registries) {
         super(gen, registries);
@@ -82,6 +90,15 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
                 .unlockedBy(getHasName(MetalworksRegistrator.FIRE_BRICK.get()), has(MetalworksRegistrator.FIRE_BRICK.get()))
                 .save(recipeOutput.withConditions(new ModLoadedCondition("patchouli")), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "crafting/guide_book"));
 
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, LibItems.UPGRADE_TIME.get(), 1)
+                .pattern("XOX").pattern("OBO").pattern("XOX")
+                .define('X', MetalworksRegistrator.FIRE_BRICK.get())
+                .define('O', Items.CLOCK)
+                .define('B', LibItems.UPGRADE_BASE.get())
+                .unlockedBy(getHasName(MetalworksRegistrator.FIRE_BRICK.get()), has(MetalworksRegistrator.FIRE_BRICK.get()))
+                .unlockedBy(getHasName(Items.CLOCK), has(Items.CLOCK))
+                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "crafting/upgrade_time"));
+
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MetalworksRegistrator.FIRE_CLAY.get(), 4)
                 .pattern("XOX").pattern("OXO").pattern("XOX")
                 .define('X', Items.CLAY_BALL)
@@ -90,19 +107,22 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
                 .unlockedBy(getHasName(Items.SAND), has(Tags.Items.SANDS))
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "crafting/fire_clay"));
 
-        SimpleCookingRecipeBuilder.blasting(Ingredient.of(MetalworksRegistrator.FIRE_CLAY.get()), RecipeCategory.MISC, MetalworksRegistrator.FIRE_BRICK.get(), 0.4f, 200)
+        SimpleCookingRecipeBuilder.blasting(Ingredient.of(MetalworksRegistrator.FIRE_CLAY.get()), RecipeCategory.MISC, MetalworksRegistrator.FIRE_BRICK.get(), 0.4f, 100)
                 .unlockedBy(getHasName(MetalworksRegistrator.FIRE_CLAY.get()), has(MetalworksRegistrator.FIRE_CLAY.get()))
-                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "blasting/fire_brick_blasting"));
+                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "blasting/fire_brick"));
 
         SimpleCookingRecipeBuilder.smelting(Ingredient.of(MetalworksRegistrator.FIRE_CLAY.get()), RecipeCategory.MISC, MetalworksRegistrator.FIRE_BRICK.get(), 0.4f, 200)
                 .unlockedBy(getHasName(MetalworksRegistrator.FIRE_CLAY.get()), has(MetalworksRegistrator.FIRE_CLAY.get()))
-                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "blasting/fire_brick"));
+                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "smelting/fire_brick"));
+
+        ClayworksRecipeProvider.bakingRecipe(recipeOutput, new LazyCondition(ClayworksRecipeProvider.KILN_COMPAT), RecipeCategory.MISC, MetalworksRegistrator.FIRE_CLAY.get(), MetalworksRegistrator.FIRE_BRICK.get(), 0.4F, 100, ProductiveMetalworks.MODID); // , ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "clayworks/fire_brick_from_baking")
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MetalworksRegistrator.FIRE_BRICKS.get(DyeColor.BLACK).get(), 4)
                 .pattern("XX").pattern("XX")
                 .define('X', MetalworksRegistrator.FIRE_BRICK.get())
                 .unlockedBy(getHasName(MetalworksRegistrator.FIRE_BRICK.get()), has(MetalworksRegistrator.FIRE_BRICK.get()))
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "crafting/black_fire_bricks"));
+
         MetalworksRegistrator.FIRE_BRICKS.forEach((color, holder) -> {
             ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, holder.get(), 1)
                     .requires(ModTags.Items.FIRE_BRICKS)
@@ -237,14 +257,14 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
         itemMeltingRecipe(ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "dusts/obsidian")), new FluidStack(MetalworksRegistrator.MOLTEN_OBSIDIAN.get(), 250), 1400, 0, recipeOutput);
         ItemMeltingRecipeBuilder.of(Ingredient.of(Tags.Items.GEMS_DIAMOND), new FluidStack(MetalworksRegistrator.MOLTEN_DIAMOND.get(), 100))
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/gems/diamond"));
-        ItemMeltingRecipeBuilder.of(Ingredient.of(Tags.Items.ORES_DIAMOND), new FluidStack(MetalworksRegistrator.MOLTEN_DIAMOND.get(), 200))
+        ItemMeltingRecipeBuilder.of(Ingredient.of(Tags.Items.ORES_DIAMOND), new FluidStack(MetalworksRegistrator.MOLTEN_DIAMOND.get(), 300))
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/ores/diamond"));
         ItemMeltingRecipeBuilder.of(Ingredient.of(Tags.Items.STORAGE_BLOCKS_DIAMOND), new FluidStack(MetalworksRegistrator.MOLTEN_DIAMOND.get(), 900))
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/storage_blocks/diamond"));
         itemMeltingRecipe(ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "dusts/diamond")), new FluidStack(MetalworksRegistrator.MOLTEN_DIAMOND.get(), 100), recipeOutput);
         ItemMeltingRecipeBuilder.of(Ingredient.of(Tags.Items.GEMS_EMERALD), new FluidStack(MetalworksRegistrator.MOLTEN_EMERALD.get(), 100))
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/gems/emerald"));
-        ItemMeltingRecipeBuilder.of(Ingredient.of(Tags.Items.ORES_EMERALD), new FluidStack(MetalworksRegistrator.MOLTEN_EMERALD.get(), 200))
+        ItemMeltingRecipeBuilder.of(Ingredient.of(Tags.Items.ORES_EMERALD), new FluidStack(MetalworksRegistrator.MOLTEN_EMERALD.get(), 300))
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/ores/emerald"));
         ItemMeltingRecipeBuilder.of(Ingredient.of(Tags.Items.STORAGE_BLOCKS_EMERALD), new FluidStack(MetalworksRegistrator.MOLTEN_EMERALD.get(), 900))
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/storage_blocks/emerald"));
@@ -252,21 +272,21 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/dusts/redstone"));
         ItemMeltingRecipeBuilder.of(Ingredient.of(Tags.Items.STORAGE_BLOCKS_REDSTONE), new FluidStack(MetalworksRegistrator.MOLTEN_REDSTONE.get(), 900))
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/storage_blocks/redstone"));
-        ItemMeltingRecipeBuilder.of(Ingredient.of(Tags.Items.ORES_REDSTONE), new FluidStack(MetalworksRegistrator.MOLTEN_REDSTONE.get(), 400))
+        ItemMeltingRecipeBuilder.of(Ingredient.of(Tags.Items.ORES_REDSTONE), new FluidStack(MetalworksRegistrator.MOLTEN_REDSTONE.get(), 500))
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/ores/redstone"));
         ItemMeltingRecipeBuilder.of(Ingredient.of(Tags.Items.GEMS_LAPIS), new FluidStack(MetalworksRegistrator.MOLTEN_LAPIS.get(), 100))
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/gems/lapis"));
         ItemMeltingRecipeBuilder.of(Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS), new FluidStack(MetalworksRegistrator.MOLTEN_LAPIS.get(), 900))
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/storage_blocks/lapis"));
-        ItemMeltingRecipeBuilder.of(Ingredient.of(Tags.Items.ORES_LAPIS), new FluidStack(MetalworksRegistrator.MOLTEN_LAPIS.get(), 400))
+        ItemMeltingRecipeBuilder.of(Ingredient.of(Tags.Items.ORES_LAPIS), new FluidStack(MetalworksRegistrator.MOLTEN_LAPIS.get(), 500))
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/ores/lapis"));
-        ItemMeltingRecipeBuilder.of(Ingredient.of(Items.COAL, Items.CHARCOAL), new FluidStack(MetalworksRegistrator.MOLTEN_CARBON.get(), 100))
+        ItemMeltingRecipeBuilder.of(Ingredient.of(ItemTags.COALS), new FluidStack(MetalworksRegistrator.MOLTEN_CARBON.get(), 100))
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/coals"));
         ItemMeltingRecipeBuilder.of(Ingredient.of(Tags.Items.STORAGE_BLOCKS_COAL), new FluidStack(MetalworksRegistrator.MOLTEN_CARBON.get(), 900))
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/storage_blocks/coals"));
         ItemMeltingRecipeBuilder.of(Ingredient.of(ModTags.Items.STORAGE_BLOCKS_CHARCOAL), new FluidStack(MetalworksRegistrator.MOLTEN_CARBON.get(), 900))
                 .save(recipeOutput.withConditions(new NotCondition(new TagEmptyCondition(ModTags.Items.STORAGE_BLOCKS_CHARCOAL))), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/storage_blocks/charcoals"));
-        ItemMeltingRecipeBuilder.of(Ingredient.of(Tags.Items.ORES_COAL), new FluidStack(MetalworksRegistrator.MOLTEN_CARBON.get(), 200))
+        ItemMeltingRecipeBuilder.of(Ingredient.of(Tags.Items.ORES_COAL), new FluidStack(MetalworksRegistrator.MOLTEN_CARBON.get(), 300))
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/ores/coals"));
         ItemMeltingRecipeBuilder.of(Ingredient.of(Tags.Items.DUSTS_GLOWSTONE), new FluidStack(MetalworksRegistrator.MOLTEN_GLOWSTONE.get(), 100))
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/dusts/glowstone"));
@@ -282,7 +302,7 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/storage_blocks/amethyst"));
         ItemMeltingRecipeBuilder.of(Ingredient.of(Tags.Items.GEMS_QUARTZ), new FluidStack(MetalworksRegistrator.MOLTEN_QUARTZ.get(), 100))
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/gems/quarts"));
-        ItemMeltingRecipeBuilder.of(Ingredient.of(Tags.Items.ORES_QUARTZ), new FluidStack(MetalworksRegistrator.MOLTEN_QUARTZ.get(), 200))
+        ItemMeltingRecipeBuilder.of(Ingredient.of(Tags.Items.ORES_QUARTZ), new FluidStack(MetalworksRegistrator.MOLTEN_QUARTZ.get(), 300))
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/ores/quarts"));
         ItemMeltingRecipeBuilder.of(Ingredient.of(Items.QUARTZ_BLOCK, Items.QUARTZ_BRICKS, Items.QUARTZ_PILLAR), new FluidStack(MetalworksRegistrator.MOLTEN_QUARTZ.get(), 400))
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/storage_blocks/quarts"));
@@ -459,14 +479,15 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
         alloyRecipe(List.of(SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_LEAD, 27), SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_PLATINUM, 9), SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_ENDER, 20)), 1, new FluidStack(MetalworksRegistrator.MOLTEN_ENDERIUM, 36), recipeOutput);
         // Refined glowstone
         alloyRecipe(List.of(SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_OSMIUM, 9), SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_GLOWSTONE, 5)), 10, new FluidStack(MetalworksRegistrator.MOLTEN_REFINED_GLOWSTONE, 9), recipeOutput);
+        // Refined obsidian
+        alloyRecipe(List.of(SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_OSMIUM, 90), SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_OBSIDIAN, 25), SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_DIAMOND, 10)), 1, new FluidStack(MetalworksRegistrator.MOLTEN_REFINED_OBSIDIAN, 90), recipeOutput);
 
         metalCompat(ProductiveMetalworks.MODID, PM_METALS, recipeOutput);
         modMetalCompat("alltheores", ATO_METALS, recipeOutput);
         modMetalCompat("ftbmaterials", FTB_METALS, recipeOutput);
+        modMetalCompat("modern_industrialization", MI_METALS, recipeOutput);
 
-        if (ModList.get().isLoaded("productivebees")) {
-            pbeesCompat(recipeOutput);
-        }
+        pbeesCompat(recipeOutput);
         copperCompat(recipeOutput);
         atmCompat(recipeOutput);
         idCompat(recipeOutput);
@@ -475,6 +496,7 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
         mekanismCompat(recipeOutput);
         immersiveCompat(recipeOutput);
         createCompat(recipeOutput);
+        georeCompat(recipeOutput);
     }
 
     // Vanilla stuff and tags, whatever is not mod specific
@@ -846,7 +868,7 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
     }
 
     private void mekanismCompat(RecipeOutput recipeOutput) {
-        for (String resource: new String[]{"steel", "bronze", "refined_glowstone", "osmium", "tin", "lead", "uranium"}) {
+        for (String resource: new String[]{"steel", "bronze", "refined_glowstone", "refined_obsidian", "osmium", "tin", "lead", "uranium"}) {
             var fluid = BuiltInRegistries.FLUID.get(ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "molten_" + resource));
             var blockItem = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("mekanism", "block_" + resource));
             var ingotItem = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("mekanism", "ingot_" + resource));
@@ -900,7 +922,7 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
             }
 
             // Cast block
-            if (!ingotItem.equals(Items.AIR)) {
+            if (!blockItem.equals(Items.AIR)) {
                 BlockCastingRecipeBuilder.of(SizedFluidIngredient.of(fluid, 810), blockItem.getDefaultInstance())
                         .save(recipeOutput.withConditions(new ModLoadedCondition("create")), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/create/" + resource + "_block"));
             }
@@ -930,6 +952,43 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
                 .save(recipeOutput.withConditions(new ModLoadedCondition("create")), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/create/bar_of_chocolate"));
         ItemCastingRecipeBuilder.of(Items.SWEET_BERRIES.getDefaultInstance(), SizedFluidIngredient.of(chocolateFluid, 250), BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("create", "chocolate_glazed_berries")).getDefaultInstance())
                 .save(recipeOutput.withConditions(new ModLoadedCondition("create")), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/create/chocolate_glazed_berries"));
+    }
+
+    private void georeCompat(RecipeOutput recipeOutput) {
+        for (String resource : new String[]{"iron", "gold", "copper", "zinc"}) {
+            var fluid = BuiltInRegistries.FLUID.get(ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "molten_" + (resource.equals("coal") ? "carbon" : resource)));
+
+            var shardItem = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("geore", resource + "_shard"));
+            var blockItem = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("geore", resource + "_block"));
+
+            // melt block
+            ItemMeltingRecipeBuilder.of(
+                    Ingredient.of(blockItem),
+                    new FluidStack(fluid, 360)
+            ).save(recipeOutput.withConditions(new ModLoadedCondition("geore")), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/geore/" + resource + "_block"));
+            // melt shard
+            ItemMeltingRecipeBuilder.of(
+                    Ingredient.of(shardItem),
+                    new FluidStack(fluid, 90)
+            ).save(recipeOutput.withConditions(new ModLoadedCondition("geore")), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/geore/" + resource + "_shard"));
+        }
+        for (String resource : new String[]{"coal", "diamond", "emerald", "lapis", "quartz", "redstone"}) {
+            var fluid = BuiltInRegistries.FLUID.get(ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "molten_" + (resource.equals("coal") ? "carbon" : resource)));
+
+            var shardItem = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("geore", resource + "_shard"));
+            var blockItem = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("geore", resource + "_block"));
+
+            // melt block
+            ItemMeltingRecipeBuilder.of(
+                    Ingredient.of(blockItem),
+                    new FluidStack(fluid, 400)
+            ).save(recipeOutput.withConditions(new ModLoadedCondition("geore")), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/geore/" + resource + "_block"));
+            // melt shard
+            ItemMeltingRecipeBuilder.of(
+                    Ingredient.of(shardItem),
+                    new FluidStack(fluid, 100)
+            ).save(recipeOutput.withConditions(new ModLoadedCondition("geore")), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/geore/" + resource + "_shard"));
+        }
     }
 
     private static void itemMeltingRecipe(TagKey<Item> tag, FluidStack output, RecipeOutput recipeOutput) {

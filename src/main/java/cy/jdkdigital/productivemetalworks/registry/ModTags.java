@@ -91,6 +91,6 @@ public class ModTags
         public static final TagKey<Fluid> MOLTEN_SIGNALUM = FluidTags.create(ResourceLocation.fromNamespaceAndPath("c", "molten_signalum"));
         public static final TagKey<Fluid> MOLTEN_CONSTANTAN = FluidTags.create(ResourceLocation.fromNamespaceAndPath("c", "molten_constantan"));
         public static final TagKey<Fluid> MOLTEN_REFINED_GLOWSTONE = FluidTags.create(ResourceLocation.fromNamespaceAndPath("c", "molten_refined_glowstone"));
-//    public static final TagKey<Fluid> MOLTEN_REFINED_OBSIDIAN = FluidTags.create(ResourceLocation.fromNamespaceAndPath("c", "molten_refined_obsidian"));
+        public static final TagKey<Fluid> MOLTEN_REFINED_OBSIDIAN = FluidTags.create(ResourceLocation.fromNamespaceAndPath("c", "molten_refined_obsidian"));
     }
 }

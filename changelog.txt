@@ -1,3 +1,20 @@
+1.21.1-1.5.2
+
+- Added capability invalidation for casting table and basin
+
+
+1.21.1-1.5.1
+
+- Fixed stacked fluid tanks sharing fluid stack
+
+
+1.21.1-1.5.0
+
+- Added Molten Refined Obsidian
+- Added new recipe for speed upgrades
+- Fixed a bug with some slots in the foundry not being usable
+
+
 1.21.1-1.4.1
 
 - Finished implementing min temperature requirement for melting recipes
