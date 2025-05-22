@@ -130,7 +130,7 @@
   "block.productivemetalworks.yellow_foundry_tank": "黄色の鋳造炉のタンク",
   "block.productivemetalworks.yellow_foundry_window": "黄色の鋳造炉の窓",
   "block.productivemetalworksfoundry_tank.fluid_tooltip": "流体：%smB %s",
-  "book.productivemetalworks.landing_text": "金属加工の世界をちょっと覗いてみましょう。$(br2)熱くなるので、手袋をはめてくださいね。",
+  "book.productivemetalworks.landing_text": "金属加工の世界を少し覗いてみましょう。$(br2)熱くなるので、手袋をはめてくださいね。",
   "book.productivemetalworks.name": "冶金大全",
   "config.jade.plugin_productivemetalworks.casting": "Productive Metalworks",
   "fluid_type.productivemetalworks.meat": "肉",
