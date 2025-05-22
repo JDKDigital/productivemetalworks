@@ -30,19 +30,15 @@ public class GuideBookProvider extends PatchouliBookProvider
                 .setBookTexture("patchouli:textures/gui/book_red.png")
                 .setShowProgress(false)
                 .setUseResourcePack(true)
+                .setI18n(true)
                 .setCreativeTab(MetalworksRegistrator.TAB_KEY.location().toString());
 
-        var introCategory = bookBuilder.addCategory("intro", "An Introduction", "Getting started with the basics of building your foundry.", MetalworksRegistrator.FIRE_BRICK.get().asItem().getDefaultInstance());
-        var introEntry = introCategory.addEntry("intro", "The Foundry", MetalworksRegistrator.FOUNDRY_CONTROLLERS.get(DyeColor.BLACK).get().asItem().getDefaultInstance());
-            introEntry.addTextPage("Welcome to Productive Metalworks. A mod inspired by the Tinker's Construct Smeltery. You will find some differences, and lots of similarities. Do note, this mod is NOT a tool making mod, it is only the foundry.");
-            introEntry.addTextPage("In order to construct the Foundry you need fire bricks which are obtained by smelting fire clay. You will start by making the black fire bricks. These are the base ones and can be dyed to get the different colored ones.");
-            introEntry.addTextPage("The blocks you will need to achieve your foundry are:$(br)" +
-                    "* Foundry Controller$(br)" +
-                    "* Foundry Tank$(br) " +
-                    "* Liquid Heating Coils$(br) " +
-                    "* Foundry Drain$(br) " +
-                    "* Fire Bricks or Foundry Windows$(br) " +
-                    "* Casting Basin & Table");
+        var introCategory = bookBuilder.addCategory("intro", "book.productivemetalworks.intro_category.title", "book.productivemetalworks.intro_category.text", MetalworksRegistrator.FIRE_BRICK.get().asItem().getDefaultInstance());
+        var introEntry = introCategory.addEntry("intro", "book.productivemetalworks.intro_page.title", MetalworksRegistrator.FOUNDRY_CONTROLLERS.get(DyeColor.BLACK).get().asItem().getDefaultInstance());
+            introEntry.addTextPage("book.productivemetalworks.intro_page.metalworks").setFlag("!mod:sgearmetalworks");
+            introEntry.addTextPage("book.productivemetalworks.intro_page.sgearmetalworks").setFlag("mod:sgearmetalworks");
+            introEntry.addTextPage("book.productivemetalworks.intro_page.obtaining");
+            introEntry.addTextPage("book.productivemetalworks.intro_page.building");
             introEntry.addMultiblockPage("foundry", new MultiblockPageBuilder.MultiblockBuilder()
                     .setPattern(new String[][] {
                         {" WWW ", "W   W", "W   W", "W   W", " WWW ", "     "},
@@ -60,19 +56,17 @@ public class GuideBookProvider extends PatchouliBookProvider
                         "P", "productivemetalworks:foundry_tap[facing=south]",
                         "Q", "productivemetalworks:foundry_tap[facing=east]"
                     ))
-                    .build()).setName("3x3 Foundry").build();
-            introEntry.addTextPage("A major difference is you will need to make the bottom of your foundry liquid heating coils. These enable you to actually heat up the foundry. The corners of the foundry multiblock are optional.");
-            introEntry.addTextPage("$(br)The foundry by default will smelt raw ore at a 1.3x rate and the melting rate is determined by the fuel used.");
+                    .build()).setName("book.productivemetalworks.intro_page.multiblock").build();
+        introEntry.addTextPage("book.productivemetalworks.intro_page.structure");
+        introEntry.addTextPage("book.productivemetalworks.intro_page.casting");
             introEntry.build();
 
-//        var sgearCategory = bookBuilder.addCategory("sgear", "Silent Gear Metalworks", "Silent Gear casting with the Foundry.", Items.DIAMOND_SWORD.getDefaultInstance()).setFlag("mod:silentgear");
-//
-//        var sgearMissingEntry = sgearCategory.addEntry("sgear_missing", "Gear Casting", MetalworksRegistrator.CASTING_TABLE.get().asItem().getDefaultInstance()).setFlag("mod:silentgear,!mod:sgearmetalworks");
-//            sgearMissingEntry.addTextPage("").setFlag("mod:silentgear,!mod:sgearmetalworks");
-//
-//        var sgearEntry = sgearCategory.addEntry("sgear", "Gear Casting", MetalworksRegistrator.CASTING_TABLE.get().asItem().getDefaultInstance()).setFlag("mod:silentgear,mod:sgearmetalworks");
-//            sgearEntry.addTextPage("").setFlag("mod:silentgear,mod:sgearmetalworks");
+        var sgearCategory = bookBuilder.addCategory("sgear", "book.productivemetalworks.sgear_category.title", "book.productivemetalworks.sgear_category.text", Items.DIAMOND_SWORD.getDefaultInstance()).setFlag("mod:sgearmetalworks");
 
+        var sgearEntry = sgearCategory.addEntry("sgear", "book.productivemetalworks.sgear_page.title", MetalworksRegistrator.CASTING_TABLE.get().asItem().getDefaultInstance()).setFlag("mod:sgearmetalworks");
+        sgearEntry.addTextPage("book.productivemetalworks.sgear_page.parts").setFlag("mod:sgearmetalworks");
+        sgearEntry.addTextPage("book.productivemetalworks.sgear_page.casts").setFlag("mod:sgearmetalworks");
+        sgearEntry.addTextPage("book.productivemetalworks.sgear_page.grading").setFlag("mod:sgearmetalworks");
 
         bookBuilder.build(consumer);
     }

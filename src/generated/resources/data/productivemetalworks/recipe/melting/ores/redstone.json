@@ -7,7 +7,7 @@
   "minimum_temperature": 1000,
   "result": [
     {
-      "amount": 400,
+      "amount": 500,
       "id": "productivemetalworks:molten_redstone"
     }
   ]

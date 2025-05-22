@@ -1,19 +1,25 @@
 {
   "category": "productivemetalworks:intro",
   "icon": "productivemetalworks:black_foundry_controller",
-  "name": "The Foundry",
+  "name": "book.productivemetalworks.intro_page.title",
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "Welcome to Productive Metalworks. A mod inspired by the Tinker's Construct Smeltery. You will find some differences, and lots of similarities. Do note, this mod is NOT a tool making mod, it is only the foundry."
+      "flag": "!mod:sgearmetalworks",
+      "text": "book.productivemetalworks.intro_page.metalworks"
     },
     {
       "type": "patchouli:text",
-      "text": "In order to construct the Foundry you need fire bricks which are obtained by smelting fire clay. You will start by making the black fire bricks. These are the base ones and can be dyed to get the different colored ones."
+      "flag": "mod:sgearmetalworks",
+      "text": "book.productivemetalworks.intro_page.sgearmetalworks"
     },
     {
       "type": "patchouli:text",
-      "text": "The blocks you will need to achieve your foundry are:$(br)* Foundry Controller$(br)* Foundry Tank$(br) * Liquid Heating Coils$(br) * Foundry Drain$(br) * Fire Bricks or Foundry Windows$(br) * Casting Basin & Table"
+      "text": "book.productivemetalworks.intro_page.obtaining"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "book.productivemetalworks.intro_page.building"
     },
     {
       "type": "patchouli:multiblock",
@@ -57,15 +63,15 @@
         ]
       },
       "multiblock_id": "foundry",
-      "name": "3x3 Foundry"
+      "name": "book.productivemetalworks.intro_page.multiblock"
     },
     {
       "type": "patchouli:text",
-      "text": "A major difference is you will need to make the bottom of your foundry liquid heating coils. These enable you to actually heat up the foundry. The corners of the foundry multiblock are optional."
+      "text": "book.productivemetalworks.intro_page.structure"
     },
     {
       "type": "patchouli:text",
-      "text": "$(br)The foundry by default will smelt raw ore at a 1.3x rate and the melting rate is determined by the fuel used."
+      "text": "book.productivemetalworks.intro_page.casting"
     }
   ]
 }

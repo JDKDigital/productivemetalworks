@@ -1,5 +1,5 @@
 {
-  "description": "Getting started with the basics of building your foundry.",
+  "description": "book.productivemetalworks.intro_category.text",
   "icon": "productivemetalworks:fire_brick",
-  "name": "An Introduction"
+  "name": "book.productivemetalworks.intro_category.title"
 }
