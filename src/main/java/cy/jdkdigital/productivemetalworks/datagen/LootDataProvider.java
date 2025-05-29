@@ -98,6 +98,7 @@ public class LootDataProvider implements DataProvider
             dropSelf(MetalworksRegistrator.CASTING_TABLE.get());
             dropSelf(MetalworksRegistrator.LIQUID_HEATING_COIL.get());
             dropSelf(MetalworksRegistrator.POWERED_HEATING_COIL.get());
+            dropSelf(MetalworksRegistrator.HIGH_POWERED_HEATING_COIL.get());
             createSelfDropDispatchTable(
                     MetalworksRegistrator.MEAT_BLOCK.get(),
                     LootItemBlockStatePropertyCondition.hasBlockStateProperties(MetalworksRegistrator.MEAT_BLOCK.get())

@@ -1,6 +1,7 @@
 {
   "values": [
     "productivemetalworks:liquid_heating_coil",
-    "productivemetalworks:powered_heating_coil"
+    "productivemetalworks:powered_heating_coil",
+    "productivemetalworks:high_powered_heating_coil"
   ]
 }

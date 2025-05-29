@@ -61,9 +61,7 @@ public class ModEventHandler
     public static void buildContents(BuildCreativeModeTabContentsEvent event) {
         if (event.getTabKey().equals(MetalworksRegistrator.TAB_KEY)) {
             for (DeferredHolder<Item, ? extends Item> item : ProductiveMetalworks.ITEMS.getEntries()) {
-                if (!item.is(MetalworksRegistrator.POWERED_HEATING_COIL.getId())) {
-                    event.accept(item.value());
-                }
+                event.accept(item.value());
             }
             event.accept(LibItems.UPGRADE_TIME.get());
             event.accept(LibItems.UPGRADE_TIME_2.get());

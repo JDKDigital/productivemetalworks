@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "bottom": "productivemetalworks:block/high_powered_heating_coil_top_off",
+    "side": "productivemetalworks:block/high_powered_heating_coil_side_off",
+    "top": "productivemetalworks:block/high_powered_heating_coil_top_off"
+  }
+}

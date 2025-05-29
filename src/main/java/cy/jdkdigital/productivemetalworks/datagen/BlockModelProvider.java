@@ -79,6 +79,7 @@ public class BlockModelProvider implements DataProvider
         addBlockItemParentModel(MetalworksRegistrator.FIRE_CLAY.get(), "", "", itemModels);
         addBlockItemParentModel(MetalworksRegistrator.LIQUID_HEATING_COIL.get(), "", "_off", itemModels);
         addBlockItemParentModel(MetalworksRegistrator.POWERED_HEATING_COIL.get(), "", "_off", itemModels);
+        addBlockItemParentModel(MetalworksRegistrator.HIGH_POWERED_HEATING_COIL.get(), "", "_off", itemModels);
         addBlockItemModel(MetalworksRegistrator.CASTING_BASIN.get(), "casting_basin_base", itemModels);
         addBlockItemModel(MetalworksRegistrator.CASTING_TABLE.get(), "casting_table_base", itemModels);
         addBlockItemParentModel(MetalworksRegistrator.MEAT_BLOCK.get(), "", "", itemModels);
@@ -178,6 +179,7 @@ public class BlockModelProvider implements DataProvider
             this.blockStateOutput.accept(createHorizontalFacing(MetalworksRegistrator.FOUNDRY_TAP.get(), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "block/foundry_tap_base")));
             this.blockStateOutput.accept(createHeatingCoil(MetalworksRegistrator.LIQUID_HEATING_COIL.get()));
             this.blockStateOutput.accept(createHeatingCoil(MetalworksRegistrator.POWERED_HEATING_COIL.get()));
+            this.blockStateOutput.accept(createHeatingCoil(MetalworksRegistrator.HIGH_POWERED_HEATING_COIL.get()));
             this.blockStateOutput.accept(createHorizontalFacing(MetalworksRegistrator.CASTING_BASIN.get(), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "block/casting_basin_base")));
             this.blockStateOutput.accept(createHorizontalFacing(MetalworksRegistrator.CASTING_TABLE.get(), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "block/casting_table_base")));
             this.blockStateOutput.accept(createFullBlock(MetalworksRegistrator.FIRE_CLAY.get()));

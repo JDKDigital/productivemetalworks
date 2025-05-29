@@ -5,6 +5,7 @@
     "productivemetalworks:casting_table",
     "productivemetalworks:liquid_heating_coil",
     "productivemetalworks:powered_heating_coil",
+    "productivemetalworks:high_powered_heating_coil",
     "#productivemetalworks:foundry_controllers",
     "#productivemetalworks:foundry_drains",
     "#productivemetalworks:foundry_tanks",

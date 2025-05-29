@@ -77,6 +77,7 @@ public class MetalworksRegistrator
     public static final DeferredHolder<Block, Block> CASTING_TABLE = registerBlock("casting_table", () -> new CastingTableBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CAULDRON)), true);
     public static final DeferredHolder<Block, Block> LIQUID_HEATING_COIL = registerBlock("liquid_heating_coil", () -> new AttachedBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).lightLevel(state -> state.getValue(BlockStateProperties.ATTACHED) ? 7 : 0)), true);
     public static final DeferredHolder<Block, Block> POWERED_HEATING_COIL = registerBlock("powered_heating_coil", () -> new AttachedBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).lightLevel(state -> state.getValue(BlockStateProperties.ATTACHED) ? 7 : 0)), true);
+    public static final DeferredHolder<Block, Block> HIGH_POWERED_HEATING_COIL = registerBlock("high_powered_heating_coil", () -> new AttachedBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).lightLevel(state -> state.getValue(BlockStateProperties.ATTACHED) ? 7 : 0)), true);
     public static final DeferredHolder<Block, Block> FIRE_CLAY = registerBlock("fire_clay", () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.CLAY)), true);
     public static final DeferredHolder<Block, Block> MEAT_BLOCK = registerBlock("meat_block", () -> new MeatBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.DIRT).noOcclusion().sound(SoundType.SLIME_BLOCK)), new Item.Properties().craftRemainder(Items.BONE));
 
