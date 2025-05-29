@@ -9,6 +9,7 @@ import cy.jdkdigital.productivelib.registry.LibItems;
 import cy.jdkdigital.productivelib.util.MultiBlockDetector;
 import cy.jdkdigital.productivelib.util.MultiFluidTank;
 import cy.jdkdigital.productivemetalworks.Config;
+import cy.jdkdigital.productivemetalworks.common.block.FoundryControllerBlock;
 import cy.jdkdigital.productivemetalworks.common.menu.FoundryControllerContainer;
 import cy.jdkdigital.productivemetalworks.recipe.FluidAlloyingRecipe;
 import cy.jdkdigital.productivemetalworks.recipe.ItemMeltingRecipe;
@@ -26,7 +27,6 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
@@ -215,8 +215,7 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
         if (++blockEntity.tickCounter%200 == 0) {// TODO scaling number based on failures
             blockEntity.tickCounter = 0;
             try {
-                var foundryData = MultiBlockDetector.detectStructure(level, pos, ModTags.Blocks.FOUNDRY_WALL_BLOCKS, ModTags.Blocks.FOUNDRY_BOTTOM_BLOCKS, true, true, Config.foundryMaxVolume, Config.foundryMaxCircumference, Config.foundryMaxHeight);
-                blockEntity.setMultiBlockData(foundryData);
+                blockEntity.setMultiBlockData(FoundryControllerBlock.detectMultiblock(level, pos));
             } catch (InvalidStructureException e) {
                 blockEntity.setMultiBlockData(null);
             }

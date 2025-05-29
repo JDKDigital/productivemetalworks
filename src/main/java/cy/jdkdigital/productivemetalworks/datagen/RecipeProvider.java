@@ -955,7 +955,7 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
     }
 
     private void georeCompat(RecipeOutput recipeOutput) {
-        for (String resource : new String[]{"iron", "gold", "copper", "zinc"}) {
+        for (String resource : new String[]{"iron", "gold", "copper", "zinc", "uranium", "tin", "silver", "platinum", "osmium", "aluminum", "lead", "nickel"}) {
             var fluid = BuiltInRegistries.FLUID.get(ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "molten_" + (resource.equals("coal") ? "carbon" : resource)));
 
             var shardItem = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("geore", resource + "_shard"));
@@ -972,7 +972,7 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
                     new FluidStack(fluid, 90)
             ).save(recipeOutput.withConditions(new ModLoadedCondition("geore")), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/geore/" + resource + "_shard"));
         }
-        for (String resource : new String[]{"coal", "diamond", "emerald", "lapis", "quartz", "redstone"}) {
+        for (String resource : new String[]{"coal", "diamond", "emerald", "lapis", "quartz", "redstone", "ancient_debris"}) {
             var fluid = BuiltInRegistries.FLUID.get(ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "molten_" + (resource.equals("coal") ? "carbon" : resource)));
 
             var shardItem = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("geore", resource + "_shard"));

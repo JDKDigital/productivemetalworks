@@ -36,7 +36,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 
 public class FoundryControllerBlock extends CapabilityContainerBlock implements IMultiBlockController
 {
@@ -97,8 +96,7 @@ public class FoundryControllerBlock extends CapabilityContainerBlock implements 
     protected BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
         if (level instanceof ServerLevel serverLevel && serverLevel.getBlockEntity(pos) instanceof FoundryControllerBlockEntity blockEntity) {
             try {
-                var foundryData = MultiBlockDetector.detectStructure(serverLevel, pos, ModTags.Blocks.FOUNDRY_WALL_BLOCKS, ModTags.Blocks.FOUNDRY_BOTTOM_BLOCKS, true, true, Config.foundryMaxVolume, Config.foundryMaxCircumference, Config.foundryMaxHeight);
-                blockEntity.setMultiBlockData(foundryData);
+                blockEntity.setMultiBlockData(detectMultiblock(serverLevel, pos));
             } catch (InvalidStructureException ise) {
             }
         }
@@ -115,8 +113,7 @@ public class FoundryControllerBlock extends CapabilityContainerBlock implements 
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         if (level.getBlockEntity(pos) instanceof FoundryControllerBlockEntity blockEntity) {
             try {
-                var foundryData = MultiBlockDetector.detectStructure(level, pos, ModTags.Blocks.FOUNDRY_WALL_BLOCKS, ModTags.Blocks.FOUNDRY_BOTTOM_BLOCKS, true, true, Config.foundryMaxVolume, Config.foundryMaxCircumference, Config.foundryMaxHeight);
-                blockEntity.setMultiBlockData(foundryData);
+                blockEntity.setMultiBlockData(detectMultiblock(level, pos));
                 if (!level.isClientSide) {
                     player.openMenu(blockEntity, pos);
                 }
@@ -150,5 +147,9 @@ public class FoundryControllerBlock extends CapabilityContainerBlock implements 
             }
         }
         super.onRemove(oldState, level, pos, newState, isMoving);
+    }
+
+    public static MultiBlockDetector.MultiBlockData detectMultiblock(Level level, BlockPos pos) throws InvalidStructureException {
+        return MultiBlockDetector.detectStructure(level, pos, ModTags.Blocks.FOUNDRY_WALL_BLOCKS, ModTags.Blocks.FOUNDRY_BOTTOM_BLOCKS, true, true, true, Config.foundryMaxVolume, Config.foundryMaxCircumference, Config.foundryMaxHeight);
     }
 }

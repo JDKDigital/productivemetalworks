@@ -104,15 +104,26 @@ public class FoundryControllerScreen extends AbstractContainerScreen<FoundryCont
         if (fluidPositions.size() != this.menu.blockEntity.fluidHandler.getTanks()) {
             fluidPositions.clear();
         }
-        int nextFluidOffsetFraction = 0;
+        int fluidCount = 0;
+        for (int tank = 0; tank < this.menu.blockEntity.fluidHandler.getTanks(); tank++) {
+            if (!this.menu.blockEntity.fluidHandler.getFluidInTank(tank).isEmpty()) {
+                fluidCount++;
+            }
+        }
+        int tankHeight = 52;
+        int fluidMinHeight = 4;
+        int fluidMinAmount = tankCapacity/tankHeight * fluidMinHeight;
+        int fluidMaxAmount = tankCapacity - (fluidCount * fluidMinAmount - fluidMinAmount);
+
+        int nextFluidOffset = 0;
         for (int tank = 0; tank < this.menu.blockEntity.fluidHandler.getTanks(); tank++) {
             FluidStack fluidStack = this.menu.blockEntity.fluidHandler.getFluidInTank(tank);
             if (!fluidStack.isEmpty()) {
-                int adjustedAmount = Math.max(fluidStack.getAmount(), tankCapacity/52);
-                double fluidHeight = Math.floor(52d * ((double) adjustedAmount / (double) tankCapacity)) + (tank > 0 ? 1 : 0);
-                fluidPositions.put(tank, Pair.of(nextFluidOffsetFraction, (int) fluidHeight));
-                FluidContainerUtil.renderFluidTank(guiGraphics, this, fluidStack, adjustedAmount + (tank > 0 ? tankCapacity/52 : 0), tankCapacity, 8, 17, 42, 52, 0, 0, -1 * nextFluidOffsetFraction);
-                nextFluidOffsetFraction += (int) fluidHeight;
+                int adjustedAmount = Math.max(Math.min(fluidMaxAmount, fluidStack.getAmount()), fluidMinAmount);
+                double fluidHeight = Math.round(tankHeight * ((double) adjustedAmount / (double) tankCapacity));
+                fluidPositions.put(tank, Pair.of(nextFluidOffset, (int) fluidHeight));
+                FluidContainerUtil.renderTiledFluid(guiGraphics, this, fluidStack, 8, 17 + 52 - (int)fluidHeight - nextFluidOffset, 42, (int)fluidHeight, 0);
+                nextFluidOffset += (int) fluidHeight;
             }
         }
     }

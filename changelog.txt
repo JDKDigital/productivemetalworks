@@ -1,3 +1,11 @@
+1.21.1-1.6.0
+
+- Updated the guide book with more details and a section for Silent Gear Metalworks
+- Fluid in the Foundry GUI now have a minimum height making them easier to click
+- Updated Japanese translation (Abbage230)
+- Moved guide book text into translation files
+
+
 1.21.1-1.5.2
 
 - Added capability invalidation for casting table and basin

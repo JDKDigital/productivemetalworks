@@ -1,0 +1,20 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "geore"
+    }
+  ],
+  "type": "productivemetalworks:item_melting",
+  "ingredient": {
+    "item": "geore:platinum_block"
+  },
+  "maximum_temperature": 0,
+  "minimum_temperature": 1000,
+  "result": [
+    {
+      "amount": 360,
+      "id": "productivemetalworks:molten_platinum"
+    }
+  ]
+}
