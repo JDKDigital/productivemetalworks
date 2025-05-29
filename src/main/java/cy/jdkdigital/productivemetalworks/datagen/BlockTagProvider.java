@@ -25,6 +25,7 @@ public class BlockTagProvider extends BlockTagsProvider
         MetalworksRegistrator.FOUNDRY_CONTROLLERS.forEach((dyeColor, holder) -> tag(ModTags.Blocks.FOUNDRY_CONTROLLERS).add(holder.get()));
         MetalworksRegistrator.FOUNDRY_DRAINS.forEach((dyeColor, holder) -> tag(ModTags.Blocks.FOUNDRY_DRAINS).add(holder.get()));
         MetalworksRegistrator.FOUNDRY_TANKS.forEach((dyeColor, holder) -> tag(ModTags.Blocks.FOUNDRY_TANKS).add(holder.get()));
+        MetalworksRegistrator.FOUNDRY_CAPACITORS.forEach((dyeColor, holder) -> tag(ModTags.Blocks.FOUNDRY_CAPACITORS).add(holder.get()));
         MetalworksRegistrator.FOUNDRY_WINDOWS.forEach((dyeColor, holder) -> tag(ModTags.Blocks.FOUNDRY_WINDOWS).add(holder.get()));
         MetalworksRegistrator.FIRE_BRICKS.forEach((dyeColor, holder) -> tag(ModTags.Blocks.FIRE_BRICKS).add(holder.get()));
 
@@ -32,6 +33,7 @@ public class BlockTagProvider extends BlockTagsProvider
                 .addTag(ModTags.Blocks.FOUNDRY_CONTROLLERS)
                 .addTag(ModTags.Blocks.FOUNDRY_DRAINS)
                 .addTag(ModTags.Blocks.FOUNDRY_TANKS)
+                .addTag(ModTags.Blocks.FOUNDRY_CAPACITORS)
                 .addTag(ModTags.Blocks.FOUNDRY_WINDOWS)
                 .addTag(ModTags.Blocks.FIRE_BRICKS)
                 .add(MetalworksRegistrator.MEAT_BLOCK.get());
@@ -54,6 +56,7 @@ public class BlockTagProvider extends BlockTagsProvider
                 .addTag(ModTags.Blocks.FOUNDRY_CONTROLLERS)
                 .addTag(ModTags.Blocks.FOUNDRY_DRAINS)
                 .addTag(ModTags.Blocks.FOUNDRY_TANKS)
+                .addTag(ModTags.Blocks.FOUNDRY_CAPACITORS)
                 .addTag(ModTags.Blocks.FOUNDRY_WINDOWS)
                 .addTag(ModTags.Blocks.FIRE_BRICKS);
     }

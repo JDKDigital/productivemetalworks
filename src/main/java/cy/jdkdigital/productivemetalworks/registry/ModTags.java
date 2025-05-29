@@ -17,6 +17,7 @@ public class ModTags
         public static final TagKey<Block> FOUNDRY_CONTROLLERS = BlockTags.create(ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "foundry_controllers"));
         public static final TagKey<Block> FOUNDRY_DRAINS = BlockTags.create(ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "foundry_drains"));
         public static final TagKey<Block> FOUNDRY_TANKS = BlockTags.create(ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "foundry_tanks"));
+        public static final TagKey<Block> FOUNDRY_CAPACITORS = BlockTags.create(ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "foundry_capacitors"));
         public static final TagKey<Block> FOUNDRY_WINDOWS = BlockTags.create(ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "foundry_windows"));
         public static final TagKey<Block> FIRE_BRICKS = BlockTags.create(ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "fire_bricks"));
         public static final TagKey<Block> FOUNDRY_WALL_BLOCKS = BlockTags.create(ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "foundry_wall_blocks"));
@@ -29,6 +30,7 @@ public class ModTags
         public static final TagKey<Item> FOUNDRY_CONTROLLERS = ItemTags.create(ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "foundry_controllers"));
         public static final TagKey<Item> FOUNDRY_DRAINS = ItemTags.create(ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "foundry_drains"));
         public static final TagKey<Item> FOUNDRY_TANKS = ItemTags.create(ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "foundry_tanks"));
+        public static final TagKey<Item> FOUNDRY_CAPACITORS = ItemTags.create(ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "foundry_capacitors"));
         public static final TagKey<Item> FOUNDRY_WINDOWS = ItemTags.create(ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "foundry_windows"));
         public static final TagKey<Item> FIRE_BRICKS = ItemTags.create(ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "fire_bricks"));
         public static final TagKey<Item> CASTS = ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "casts"));

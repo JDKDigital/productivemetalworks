@@ -3,6 +3,7 @@
     "#productivemetalworks:foundry_controllers",
     "#productivemetalworks:foundry_drains",
     "#productivemetalworks:foundry_tanks",
+    "#productivemetalworks:foundry_capacitors",
     "#productivemetalworks:foundry_windows",
     "#productivemetalworks:fire_bricks",
     "productivemetalworks:meat_block"

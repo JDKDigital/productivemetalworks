@@ -69,6 +69,9 @@ public class BlockModelProvider implements DataProvider
         MetalworksRegistrator.FOUNDRY_TANKS.forEach((dyeColor, holder) -> {
             addBlockItemParentModel(holder.get(), "", "", itemModels);
         });
+        MetalworksRegistrator.FOUNDRY_CAPACITORS.forEach((dyeColor, holder) -> {
+            addBlockItemParentModel(holder.get(), "", "", itemModels);
+        });
         MetalworksRegistrator.FOUNDRY_WINDOWS.forEach((dyeColor, holder) -> {
             addBlockItemParentModel(holder.get(), "", "", itemModels);
         });
@@ -155,6 +158,7 @@ public class BlockModelProvider implements DataProvider
         static ModelTemplate controllerBaseModel = new ModelTemplate(Optional.of(ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "block/foundry_controller_base")), Optional.empty(), TextureSlot.FRONT, TextureSlot.SIDE, TextureSlot.TOP);
         static ModelTemplate drainBaseModel = new ModelTemplate(Optional.of(ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "block/foundry_drain_base")), Optional.empty(), TextureSlot.FRONT, TextureSlot.SIDE, TextureSlot.TOP);
         static ModelTemplate tankBaseModel = new ModelTemplate(Optional.of(ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "block/foundry_tank_base")), Optional.empty(), TextureSlot.FRONT, TextureSlot.SIDE, TextureSlot.TOP);
+        static ModelTemplate capacitorBaseModel = new ModelTemplate(Optional.of(ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "block/foundry_capacitor_base")), Optional.empty(), TextureSlot.FRONT, TextureSlot.SIDE, TextureSlot.TOP);
         static ModelTemplate windowBaseModel = new ModelTemplate(Optional.of(ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "block/foundry_window_base")), Optional.empty(), TextureSlot.FRONT, TextureSlot.SIDE, TextureSlot.TOP);
 
         protected void registerStatesAndModels(Consumer<BlockStateGenerator> blockStateOutput, BiConsumer<ResourceLocation, Supplier<JsonElement>> modelOutput) {
@@ -169,6 +173,9 @@ public class BlockModelProvider implements DataProvider
             });
             MetalworksRegistrator.FOUNDRY_TANKS.forEach((dyeColor, holder) -> {
                 this.blockStateOutput.accept(createBasedBlock(holder.get(), tankBaseModel, dyeColor, "block/" + dyeColor.getSerializedName() + "_foundry_tank_front"));
+            });
+            MetalworksRegistrator.FOUNDRY_CAPACITORS.forEach((dyeColor, holder) -> {
+                this.blockStateOutput.accept(createBasedBlock(holder.get(), capacitorBaseModel, dyeColor, "block/" + dyeColor.getSerializedName() + "_foundry_capacitor_front"));
             });
             MetalworksRegistrator.FOUNDRY_WINDOWS.forEach((dyeColor, holder) -> {
                 this.blockStateOutput.accept(createBasedBlock(holder.get(), windowBaseModel, dyeColor, "block/" + dyeColor.getSerializedName() + "_foundry_window_front"));

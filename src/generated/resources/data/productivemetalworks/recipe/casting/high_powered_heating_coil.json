@@ -1,0 +1,24 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:mod_loaded",
+        "modid": "allthemodium"
+      }
+    }
+  ],
+  "type": "productivemetalworks:block_casting",
+  "cast": {
+    "item": "productivemetalworks:powered_heating_coil"
+  },
+  "consume_cast": true,
+  "fluid": {
+    "amount": 1000,
+    "fluid": "productivemetalworks:molten_shulker_shell"
+  },
+  "result": {
+    "count": 1,
+    "id": "productivemetalworks:high_powered_heating_coil"
+  }
+}

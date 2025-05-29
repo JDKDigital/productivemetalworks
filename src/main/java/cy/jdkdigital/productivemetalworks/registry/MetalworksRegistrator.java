@@ -15,9 +15,11 @@ import cy.jdkdigital.productivemetalworks.recipe.ItemMeltingRecipe;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.food.Foods;
 import net.minecraft.world.inventory.MenuType;
@@ -50,6 +52,7 @@ public class MetalworksRegistrator
     public static final DataMapType<EntityType<?>, EntityMeltingMap> ENTITY_MELTING_MAP = DataMapType.builder(ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "entity_melting"), Registries.ENTITY_TYPE, EntityMeltingMap.CODEC).synced(EntityMeltingMap.CODEC, false).build();
     public static final DataMapType<Fluid, UnitMap> UNIT_MAP = DataMapType.builder(ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "unit_map"), Registries.FLUID, UnitMap.CODEC).synced(UnitMap.CODEC, false).build();
     public static final Supplier<DataComponentType<ImmutableFluidStack>> FLUID_STACK = ProductiveMetalworks.DATA_COMPONENTS.register("fluid_stack", () -> DataComponentType.<ImmutableFluidStack>builder().persistent(ImmutableFluidStack.CODEC).networkSynchronized(ImmutableFluidStack.STREAM_CODEC).build());
+//    public static final Supplier<DataComponentType<Integer>> ENERGY = ProductiveMetalworks.DATA_COMPONENTS.register("energy", () -> DataComponentType.<Integer>builder().persistent(ExtraCodecs.NON_NEGATIVE_INT).networkSynchronized(ByteBufCodecs.VAR_INT));
 
     public static Map<String, Integer> FLUID_COLORS = new HashMap<>();
     public static FluidType.Properties MOLTEN_FLUID_TYPE_PROPERTIES = FluidType.Properties.create()
@@ -69,6 +72,7 @@ public class MetalworksRegistrator
     public static final Map<DyeColor, DeferredHolder<Block, Block>> FOUNDRY_CONTROLLERS = registerDyedBlocks("foundry_controller", () -> new FoundryControllerBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.STONE_BRICKS).noOcclusion().lightLevel(state -> state.getValue(BlockStateProperties.ATTACHED) ? 8 : 0).sound(SoundType.NETHER_BRICKS)));
     public static final Map<DyeColor, DeferredHolder<Block, Block>> FOUNDRY_DRAINS = registerDyedBlocks("foundry_drain", () -> new FoundryDrainBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.STONE_BRICKS).sound(SoundType.NETHER_BRICKS)));
     public static final Map<DyeColor, DeferredHolder<Block, Block>> FOUNDRY_TANKS = registerDyedBlocks("foundry_tank", () -> new FoundryTankBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.STONE_BRICKS).noOcclusion().sound(SoundType.NETHER_BRICKS)));
+    public static final Map<DyeColor, DeferredHolder<Block, Block>> FOUNDRY_CAPACITORS = registerDyedBlocks("foundry_capacitor", () -> new FoundryCapacitorBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.STONE_BRICKS).noOcclusion().sound(SoundType.NETHER_BRICKS)));
     public static final Map<DyeColor, DeferredHolder<Block, Block>> FOUNDRY_WINDOWS = registerDyedBlocks("foundry_window", () -> new FoundryWindowBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.GLASS)));
     public static final Map<DyeColor, DeferredHolder<Block, Block>> FIRE_BRICKS = registerDyedBlocks("fire_bricks", () -> new FireBricksBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.STONE_BRICKS).sound(SoundType.NETHER_BRICKS)));
 
@@ -84,6 +88,7 @@ public class MetalworksRegistrator
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FoundryControllerBlockEntity>> FOUNDRY_CONTROLLER_BLOCK_ENTITY = ProductiveMetalworks.BLOCK_ENTITIES.register("foundry_controller", () -> BlockEntityType.Builder.of(FoundryControllerBlockEntity::new, FOUNDRY_CONTROLLERS.values().stream().map(DeferredHolder::get).toList().toArray(new Block[0])).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FoundryDrainBlockEntity>> FOUNDRY_DRAIN_BLOCK_ENTITY = ProductiveMetalworks.BLOCK_ENTITIES.register("foundry_drain", () -> BlockEntityType.Builder.of(FoundryDrainBlockEntity::new, FOUNDRY_DRAINS.values().stream().map(DeferredHolder::get).toList().toArray(new Block[0])).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FoundryTankBlockEntity>> FOUNDRY_TANK_BLOCK_ENTITY = ProductiveMetalworks.BLOCK_ENTITIES.register("foundry_tank", () -> BlockEntityType.Builder.of(FoundryTankBlockEntity::new, FOUNDRY_TANKS.values().stream().map(DeferredHolder::get).toList().toArray(new Block[0])).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FoundryCapacitorBlockEntity>> FOUNDRY_CAPACITOR_BLOCK_ENTITY = ProductiveMetalworks.BLOCK_ENTITIES.register("foundry_capacitor", () -> BlockEntityType.Builder.of(FoundryCapacitorBlockEntity::new, FOUNDRY_CAPACITORS.values().stream().map(DeferredHolder::get).toList().toArray(new Block[0])).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FoundryTapBlockEntity>> FOUNDRY_TAP_BLOCK_ENTITY = ProductiveMetalworks.BLOCK_ENTITIES.register("foundry_tap", () -> BlockEntityType.Builder.of(FoundryTapBlockEntity::new, FOUNDRY_TAP.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CastingBlockEntity>> CASTING_BLOCK_ENTITY = ProductiveMetalworks.BLOCK_ENTITIES.register("casting", () -> BlockEntityType.Builder.of(CastingBlockEntity::new, CASTING_TABLE.get(), CASTING_BASIN.get()).build(null));
 

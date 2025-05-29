@@ -46,6 +46,11 @@ public class ModEventHandler
                 (myBlockEntity, side) -> myBlockEntity.getFluidHandler()
         );
         event.registerBlockEntity(
+                Capabilities.EnergyStorage.BLOCK,
+                MetalworksRegistrator.FOUNDRY_CAPACITOR_BLOCK_ENTITY.get(),
+                (myBlockEntity, side) -> myBlockEntity.getEnergyHandler()
+        );
+        event.registerBlockEntity(
                 Capabilities.FluidHandler.BLOCK,
                 MetalworksRegistrator.CASTING_BLOCK_ENTITY.get(),
                 (myBlockEntity, side) -> myBlockEntity.isCooling() ? null : myBlockEntity.getFluidHandler()

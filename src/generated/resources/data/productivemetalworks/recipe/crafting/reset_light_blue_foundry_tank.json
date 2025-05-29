@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "productivemetalworks:light_blue_foundry_tank"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "productivemetalworks:light_blue_foundry_tank"
+  }
+}

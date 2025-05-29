@@ -218,13 +218,16 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
                 .unlockedBy(getHasName(MetalworksRegistrator.FIRE_BRICK.get()), has(MetalworksRegistrator.FIRE_BRICK.get()))
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "crafting/liquid_heating_coil"));
 
-//        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MetalworksRegistrator.POWERED_HEATING_COIL.get(), 1)
-//                .pattern("CCC").pattern("CAC").pattern("XXX")
-//                .define('C', Tags.Items.INGOTS_COPPER)
-//                .define('A', Items.AMETHYST_BLOCK)
-//                .define('X', MetalworksRegistrator.FIRE_BRICK.get())
-//                .unlockedBy(getHasName(MetalworksRegistrator.FIRE_BRICK.get()), has(MetalworksRegistrator.FIRE_BRICK.get()))
-//                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "crafting/powered_heating_coil"));
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MetalworksRegistrator.POWERED_HEATING_COIL.get(), 1)
+                .pattern("CCC").pattern("CAC").pattern("XXX")
+                .define('C', Tags.Items.INGOTS_COPPER)
+                .define('A', Items.AMETHYST_BLOCK)
+                .define('X', MetalworksRegistrator.FIRE_BRICK.get())
+                .unlockedBy(getHasName(MetalworksRegistrator.FIRE_BRICK.get()), has(MetalworksRegistrator.FIRE_BRICK.get()))
+                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "crafting/powered_heating_coil"));
+
+        BlockCastingRecipeBuilder.of(MetalworksRegistrator.POWERED_HEATING_COIL.get().asItem().getDefaultInstance(), SizedFluidIngredient.of(MetalworksRegistrator.MOLTEN_SHULKER_SHELL.get(), 1000), MetalworksRegistrator.HIGH_POWERED_HEATING_COIL.get().asItem().getDefaultInstance())
+                .save(recipeOutput.withConditions(new NotCondition(new ModLoadedCondition("allthemodium"))), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/high_powered_heating_coil"));
 
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, MetalworksRegistrator.MEAT_INGOT.get(), 8)
                 .requires(MetalworksRegistrator.MEAT_BLOCK.get())
@@ -242,6 +245,14 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
                 .define('M', MetalworksRegistrator.MEAT_NUGGET.get())
                 .unlockedBy(getHasName(MetalworksRegistrator.MEAT_NUGGET.get()), has(MetalworksRegistrator.MEAT_NUGGET.get()))
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "crafting/meat_ingots_from_nugget"));
+
+        // reset tanks
+        MetalworksRegistrator.FOUNDRY_TANKS.forEach((dyeColor, tankBlock) -> {
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, tankBlock.get(), 1)
+                    .requires(tankBlock.get())
+                    .unlockedBy(getHasName(tankBlock.get()), has(tankBlock.get()))
+                    .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "crafting/reset_" + dyeColor.getSerializedName() + "_foundry_tank"));
+        });
 
         // Melting
         ItemMeltingRecipeBuilder.of(Ingredient.of(Tags.Items.FOODS_RAW_MEAT), new FluidStack(MetalworksRegistrator.LIQUID_MEAT.get(), 30), 1000, 0)
@@ -760,6 +771,8 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
         ItemCastingRecipeBuilder.of(Items.CARROT.getDefaultInstance(), SizedFluidIngredient.of(atmFluid, 80), BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("allthemodium", "allthemodium_carrot")).getDefaultInstance())
                 .save(recipeOutput.withConditions(new ModLoadedCondition("allthemodium")), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/atm/carrot"));
 
+        BlockCastingRecipeBuilder.of(MetalworksRegistrator.POWERED_HEATING_COIL.get().asItem().getDefaultInstance(), SizedFluidIngredient.of(BuiltInRegistries.FLUID.get(ResourceLocation.fromNamespaceAndPath("allthemodium", "soul_lava")), 1000), MetalworksRegistrator.HIGH_POWERED_HEATING_COIL.get().asItem().getDefaultInstance())
+                .save(recipeOutput.withConditions(new ModLoadedCondition("allthemodium")), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/atm/high_powered_heating_coil"));
     }
 
     private static void idCompat(RecipeOutput recipeOutput) {

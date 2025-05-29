@@ -25,6 +25,7 @@ public class ItemTagProvider extends ItemTagsProvider
         copy(ModTags.Blocks.FOUNDRY_CONTROLLERS, ModTags.Items.FOUNDRY_CONTROLLERS);
         copy(ModTags.Blocks.FOUNDRY_DRAINS, ModTags.Items.FOUNDRY_DRAINS);
         copy(ModTags.Blocks.FOUNDRY_TANKS, ModTags.Items.FOUNDRY_TANKS);
+        copy(ModTags.Blocks.FOUNDRY_CAPACITORS, ModTags.Items.FOUNDRY_CAPACITORS);
         copy(ModTags.Blocks.FOUNDRY_WINDOWS, ModTags.Items.FOUNDRY_WINDOWS);
         copy(ModTags.Blocks.FIRE_BRICKS, ModTags.Items.FIRE_BRICKS);
 

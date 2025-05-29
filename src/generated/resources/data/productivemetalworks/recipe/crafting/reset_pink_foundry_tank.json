@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "productivemetalworks:pink_foundry_tank"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "productivemetalworks:pink_foundry_tank"
+  }
+}
