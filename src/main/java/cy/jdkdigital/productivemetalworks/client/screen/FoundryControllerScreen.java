@@ -94,10 +94,29 @@ public class FoundryControllerScreen extends AbstractContainerScreen<FoundryCont
         // Draw scrollbar
         guiGraphics.blitSprite(SCROLLER_SPRITE, this.getGuiLeft() + 156, this.getGuiTop() + 17 + (int)(37f * this.scrollOffs), 12, 15);
 
-        // Draw fuel tank
-        if (!this.menu.blockEntity.fuel.isEmpty()) {
-            FluidContainerUtil.renderFluidTank(guiGraphics, this, this.menu.blockEntity.fuel, this.fuelTanks * 4000, 57, 17, 16, 52);
+
+        switch (this.menu.blockEntity.getCoilType()) {
+            case UNKNOWN, FLUID -> {
+                // Draw fuel tank
+                if (!this.menu.blockEntity.fuel.isEmpty()) {
+                    FluidContainerUtil.renderFluidTank(guiGraphics, this, this.menu.blockEntity.fuel, this.fuelTanks * 4000, 57, 17, 16, 52);
+                }
+            }
+            case ENERGY -> {
+                // Draw energy tank
+                if (this.menu.blockEntity.getPowerMax() == 0) {
+                    break;
+                }
+
+                guiGraphics.blit(GUI, getGuiLeft() + 134, getGuiTop() + 70, 238, 256, 18, 58);
+
+                float powerRatio = ((float) this.menu.blockEntity.getPower() / (float) this.menu.blockEntity.getPowerMax());
+                int energyLevel = (int) ((54f * powerRatio) + 0.5f);
+                guiGraphics.blit(GUI, getGuiLeft() + 134, getGuiTop() + 70 - energyLevel, 239, 256-59 - energyLevel, 16, energyLevel);
+            }
+
         }
+
 
         // Draw fluid tank
         int tankCapacity = this.menu.blockEntity.fluidHandler.getCapacity();
@@ -112,7 +131,7 @@ public class FoundryControllerScreen extends AbstractContainerScreen<FoundryCont
         }
         int tankHeight = 52;
         int fluidMinHeight = 4;
-        int fluidMinAmount = tankCapacity/tankHeight * fluidMinHeight;
+        int fluidMinAmount = tankCapacity / tankHeight * fluidMinHeight;
         int fluidMaxAmount = tankCapacity - (fluidCount * fluidMinAmount - fluidMinAmount);
 
         int nextFluidOffset = 0;
