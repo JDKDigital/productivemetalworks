@@ -8,7 +8,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 public class HeatingCoilBlock extends Block implements IHeatingCoilBlock
 {
-    private CoilType coilType;
+    private final CoilType coilType;
 
     public HeatingCoilBlock(Properties properties, CoilType coilType) {
         super(properties);

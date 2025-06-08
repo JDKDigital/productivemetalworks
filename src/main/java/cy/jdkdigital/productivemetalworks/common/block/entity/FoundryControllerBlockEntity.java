@@ -40,7 +40,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.ticks.TickPriority;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -76,13 +75,30 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
         }
     };
 
+    public CoilType getCoilType() {
+        return coilType;
+    }
+
     protected TickingSlotInventoryHandler itemHandler = new TickingSlotInventoryHandler(200, this)
     {
         @Override
         protected int getTimeInSlot(ItemStack stack) {
+            FoundryControllerBlockEntity fbe = (FoundryControllerBlockEntity)this.blockEntity;
+
+            IMelterProcessor mp;
+            switch (fbe.coilType) {
+                case CoilType.FLUID -> {
+                    mp = new LiquidMelter();
+                }
+                case CoilType.ENERGY -> {
+                    mp = new EnergyMelter();
+                }
+                default -> {return 0;}
+            }
+
             if (this.blockEntity != null && blockEntity.getLevel() instanceof Level pLevel) {
-                var fuelData = FoundryControllerBlockEntity.this.getFuel().getFluidHolder().getData(MetalworksRegistrator.FUEL_MAP);
-                RecipeHolder<ItemMeltingRecipe> recipe = RecipeHelper.getItemMeltingRecipe(pLevel, stack, fuelData);
+                var fuelData = mp.getFoundryFuel(pLevel, fbe);//FoundryControllerBlockEntity.this.getFuel().getFluidHolder().getData(MetalworksRegistrator.FUEL_MAP);
+                RecipeHolder<ItemMeltingRecipe> recipe = RecipeHelper.getItemMeltingRecipe(pLevel, stack, fuelData.getFuelData());
                 if (recipe != null) {
                     return recipe.value().result.stream().map(FluidStack::getAmount).reduce(Integer::sum).orElse(0);
                 }
@@ -290,7 +306,7 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
     public FluidStack getFuel() {
         var mb = getMultiblockData();
         if (level == null || mb == null) {
-            return null;
+            return FluidStack.EMPTY;
         }
 
         FluidStack fluidFuel = FluidStack.EMPTY;
@@ -319,6 +335,21 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
         for (BlockPos pos : mb.peripherals()) {
             if (level.getBlockEntity(pos) instanceof FoundryCapacitorBlockEntity capacitor) {
                 power += capacitor.energyHandler.getEnergyStored();
+            }
+        }
+        return power;
+    }
+
+    public int getPowerMax() {
+        var mb = getMultiblockData();
+        if (level == null || mb == null) {
+            return 0;
+        }
+
+        int power = 0;
+        for (BlockPos pos : mb.peripherals()) {
+            if (level.getBlockEntity(pos) instanceof FoundryCapacitorBlockEntity capacitor) {
+                power += capacitor.energyHandler.getMaxEnergyStored();
             }
         }
         return power;
@@ -413,6 +444,8 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
     {
         void tick(Level level, BlockPos pos, BlockState state, FoundryControllerBlockEntity blockEntity);
 
+        IFoundryFuel getFoundryFuel(Level level, FoundryControllerBlockEntity blockEntity);
+
         default boolean meltItems(Level level, FoundryControllerBlockEntity blockEntity, IFoundryFuel consumedFuel, IFoundryFuel availableFuel) {
             int speedModifier = blockEntity.getSpeedModifier();
             float burnSpeed = availableFuel.getFuelData().speed() * speedModifier;
@@ -499,6 +532,10 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
                 blockEntity.sync(level);
             }
         }
+
+        public IFoundryFuel getFoundryFuel(Level level, FoundryControllerBlockEntity blockEntity) {
+            return new FluidFuel(blockEntity.getFuel());
+        }
     }
 
     static class EnergyMelter implements IMelterProcessor
@@ -540,6 +577,16 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
                 }
                 blockEntity.sync(level);
             }
+        }
+
+        public IFoundryFuel getFoundryFuel(Level level, FoundryControllerBlockEntity blockEntity) {
+            var coilPos = new BlockPos(
+                    (blockEntity.getMultiblockData().topCorners().getFirst().getX() + blockEntity.getMultiblockData().topCorners().getSecond().getX()) / 2,
+                    blockEntity.getMultiblockData().topCorners().getFirst().getY() - blockEntity.getMultiblockData().height(),
+                    (blockEntity.getMultiblockData().topCorners().getFirst().getZ() + blockEntity.getMultiblockData().topCorners().getSecond().getZ()) / 2
+            );
+
+            return new PowerFuel(blockEntity.getPower(), level.getBlockState(coilPos).getBlock());
         }
     }
 
