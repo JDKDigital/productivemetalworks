@@ -1,6 +1,5 @@
 package cy.jdkdigital.productivemetalworks.datagen;
 
-import com.teamabnormals.clayworks.common.item.crafting.BakingRecipe;
 import com.teamabnormals.clayworks.core.data.server.ClayworksRecipeProvider;
 import cy.jdkdigital.productivelib.common.condition.LazyCondition;
 import cy.jdkdigital.productivelib.crafting.condition.FluidTagEmptyCondition;
@@ -29,7 +28,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.material.Fluids;
-import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.conditions.IConditionBuilder;
 import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
@@ -190,6 +188,17 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
                     .requires(color.getTag())
                     .unlockedBy("has_foundry_window", has(ModTags.Items.FOUNDRY_WINDOWS))
                     .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "crafting/" + color.getSerializedName() + "_foundry_window_from_dye"));
+        });
+
+        MetalworksRegistrator.FOUNDRY_CAPACITORS.forEach((color, holder) -> {
+            BlockCastingRecipeBuilder.of(MetalworksRegistrator.FIRE_BRICKS.get(color).get().asItem().getDefaultInstance(), SizedFluidIngredient.of(MetalworksRegistrator.MOLTEN_REDSTONE.get(), 1000), holder.get().asItem().getDefaultInstance())
+                    .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/" + color.getSerializedName() + "_foundry_capacitor"));
+
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, holder.get(), 1)
+                    .requires(ModTags.Items.FOUNDRY_CAPACITORS)
+                    .requires(color.getTag())
+                    .unlockedBy("has_foundry_capacitor", has(ModTags.Items.FOUNDRY_CAPACITORS))
+                    .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "crafting/" + color.getSerializedName() + "_foundry_capacitor_from_dye"));
         });
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MetalworksRegistrator.FOUNDRY_TAP.get(), 1)
@@ -467,7 +476,7 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
         // Obsidian
         alloyRecipe(List.of(SizedFluidIngredient.of(FluidTags.WATER, 1), SizedFluidIngredient.of(FluidTags.LAVA, 2)), 50, new FluidStack(MetalworksRegistrator.MOLTEN_OBSIDIAN.get(), 2), recipeOutput);
         // Netherite
-        alloyRecipe(List.of(SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_ANCIENT_DEBRIS, 4), SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_GOLD, 4)), 10, new FluidStack(MetalworksRegistrator.MOLTEN_NETHERITE, 1), recipeOutput);
+        alloyRecipe(List.of(SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_ANCIENT_DEBRIS, 40), SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_GOLD, 36)), 5, new FluidStack(MetalworksRegistrator.MOLTEN_NETHERITE, 9), recipeOutput);
         // Magma cream
         alloyRecipe(List.of(SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_BLAZE, 1), SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_SLIME, 1)), 20, new FluidStack(MetalworksRegistrator.MOLTEN_MAGMA_CREAM, 1), recipeOutput);
         // Steel

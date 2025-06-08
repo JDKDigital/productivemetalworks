@@ -4,7 +4,8 @@
       "fluid": {
         "amount": 10,
         "id": "productivemetalworks:meat"
-      }
+      },
+      "gui_scale": 0.8
     }
   }
 }

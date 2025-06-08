@@ -18,17 +18,17 @@
   "type": "productivemetalworks:fluid_alloying",
   "fluids": [
     {
-      "amount": 4,
+      "amount": 40,
       "tag": "c:molten_ancient_debris"
     },
     {
-      "amount": 4,
+      "amount": 36,
       "tag": "c:molten_gold"
     }
   ],
   "result": {
-    "amount": 1,
+    "amount": 9,
     "id": "productivemetalworks:molten_netherite"
   },
-  "speed": 10
+  "speed": 5
 }

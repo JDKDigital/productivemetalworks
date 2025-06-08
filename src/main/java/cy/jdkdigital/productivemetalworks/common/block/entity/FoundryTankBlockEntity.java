@@ -3,7 +3,6 @@ package cy.jdkdigital.productivemetalworks.common.block.entity;
 import cy.jdkdigital.productivelib.common.block.entity.FluidTankBlockEntity;
 import cy.jdkdigital.productivelib.common.block.entity.IMultiBlockPeripheralBlockEntity;
 import cy.jdkdigital.productivelib.util.ImmutableFluidStack;
-import cy.jdkdigital.productivemetalworks.ProductiveMetalworks;
 import cy.jdkdigital.productivemetalworks.registry.MetalworksRegistrator;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;

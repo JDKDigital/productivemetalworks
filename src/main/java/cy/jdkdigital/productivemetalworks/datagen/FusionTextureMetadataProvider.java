@@ -40,16 +40,6 @@ public class FusionTextureMetadataProvider extends com.supermartijn642.fusion.ap
                     DefaultTextureTypes.CONNECTING,
                     tankTextureData
             );
-
-            var capacitorTextureData = ConnectingTextureData.builder()
-                    .layout(ConnectingTextureLayout.VERTICAL)
-                    .build();
-
-            this.addTextureMetadata(
-                    ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "block/" + dyeColor.getSerializedName() + "_foundry_capacitor_front"),
-                    DefaultTextureTypes.CONNECTING,
-                    capacitorTextureData
-            );
         }
     }
 }

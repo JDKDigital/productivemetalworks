@@ -2,10 +2,13 @@ package cy.jdkdigital.productivemetalworks.common.block;
 
 import com.mojang.serialization.MapCodec;
 import cy.jdkdigital.productivelib.common.block.IMultiBlockPeripheral;
+import cy.jdkdigital.productivemetalworks.ProductiveMetalworks;
 import cy.jdkdigital.productivemetalworks.common.block.entity.FoundryControllerBlockEntity;
 import cy.jdkdigital.productivemetalworks.common.block.entity.FoundryDrainBlockEntity;
+import cy.jdkdigital.productivemetalworks.common.block.entity.FoundryTankBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -69,5 +72,21 @@ public class FoundryDrainBlock extends BaseEntityBlock implements IMultiBlockPer
             return ItemInteractionResult.sidedSuccess(level.isClientSide);
         }
         return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
+    }
+
+    @Override
+    protected boolean hasAnalogOutputSignal(BlockState state) {
+        return true;
+    }
+
+    @Override
+    protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
+        var be = level.getBlockEntity(pos);
+        if (be instanceof FoundryDrainBlockEntity drainBlockEntity && drainBlockEntity.getMultiblockController() != null) {
+            if (level.getBlockEntity(drainBlockEntity.getMultiblockController()) instanceof FoundryControllerBlockEntity foundryController) {
+                return Mth.lerpInt(1f * foundryController.fluidHandler.totalFluidAmount() / foundryController.fluidHandler.getCapacity(), 0, 15);
+            }
+        }
+        return 0;
     }
 }

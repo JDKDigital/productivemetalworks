@@ -1,7 +1,6 @@
 package cy.jdkdigital.productivemetalworks.common.block;
 
 import com.mojang.serialization.MapCodec;
-import cy.jdkdigital.productivemetalworks.ProductiveMetalworks;
 import cy.jdkdigital.productivemetalworks.common.block.entity.CastingBlockEntity;
 import cy.jdkdigital.productivemetalworks.registry.MetalworksRegistrator;
 import net.minecraft.core.BlockPos;

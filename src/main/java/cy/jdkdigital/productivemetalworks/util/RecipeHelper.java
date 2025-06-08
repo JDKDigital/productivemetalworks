@@ -34,7 +34,7 @@ public class RecipeHelper
         if (!itemMeltingRecipeCache.containsKey(cacheKey)) {
             for (RecipeHolder<ItemMeltingRecipe> recipeHolder : level.getRecipeManager().getAllRecipesFor(MetalworksRegistrator.ITEM_MELTING_TYPE.get())) {
                 if (recipeHolder.value().matches(item, fuelData.temperature())) {
-                    itemMeltingRecipeCache.put(cacheKey, recipeHolder);
+                    itemMeltingRecipeCache.put(cacheKey, new RecipeHolder<>(recipeHolder.id(), recipeHolder.value()));
                 }
             }
         }

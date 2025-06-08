@@ -1,3 +1,9 @@
+1.21.1-1.7.0
+
+- Added entity melting recipe category for JEI
+- Fixed items not melting in slots above ID 200
+
+
 1.21.1-1.6.0
 
 - Updated the guide book with more details and a section for Silent Gear Metalworks

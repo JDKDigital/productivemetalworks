@@ -51,20 +51,6 @@ public class FusionBlockModelProvider extends FusionModelProvider
 
             var tankModel = ModelInstance.of(DefaultModelTypes.CONNECTING, tankBuilder.build());
             this.addModel(ModelLocationUtils.getModelLocation(MetalworksRegistrator.FOUNDRY_TANKS.get(dyeColor).get(), ""), tankModel);
-
-
-            var capacitorBuilder = ConnectingModelDataBuilder.builder()
-                    .parent(ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "block/foundry_capacitor_base"))
-                    .texture(TextureSlot.SIDE.getId(), TextureMapping.getBlockTexture(MetalworksRegistrator.FIRE_BRICKS.get(dyeColor).get()))
-                    .texture(TextureSlot.TOP.getId(), TextureMapping.getBlockTexture(MetalworksRegistrator.FIRE_BRICKS.get(dyeColor).get()))
-                    .texture(TextureSlot.FRONT.getId(), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "block/" + dyeColor.getSerializedName() + "_foundry_capacitor_front"));
-
-            for (DyeColor dyeColor1 : DyeColor.values()) {
-                capacitorBuilder = capacitorBuilder.connection(DefaultConnectionPredicates.matchBlock(MetalworksRegistrator.FOUNDRY_CAPACITORS.get(dyeColor1).get()));
-            }
-
-            var capacitorModel = ModelInstance.of(DefaultModelTypes.CONNECTING, capacitorBuilder.build());
-            this.addModel(ModelLocationUtils.getModelLocation(MetalworksRegistrator.FOUNDRY_CAPACITORS.get(dyeColor).get(), ""), capacitorModel);
         }
     }
 }

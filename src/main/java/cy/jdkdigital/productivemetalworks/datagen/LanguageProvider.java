@@ -49,6 +49,7 @@ public class LanguageProvider extends net.neoforged.neoforge.common.data.Languag
         add(ProductiveMetalworks.MODID + ".unit.scrap.multiple", "%s Scraps");
 
         add("jei." + ProductiveMetalworks.MODID + ".item_melting", "Item Melting");
+        add("jei." + ProductiveMetalworks.MODID + ".entity_melting", "Entity Melting");
         add("jei." + ProductiveMetalworks.MODID + ".item_casting", "Item Casting");
         add("jei." + ProductiveMetalworks.MODID + ".sg_casting", "Silent Gear Casting");
         add("jei." + ProductiveMetalworks.MODID + ".block_casting", "Block Casting");
@@ -107,6 +108,7 @@ public class LanguageProvider extends net.neoforged.neoforge.common.data.Languag
                 "$(br)The foundry by default will smelt raw ore at a 2x rate and the melting rate is determined by the fuel used. Check JEI for all the melting recipes");
         add("book.productivemetalworks.intro_page.casting", "To get usable resources from the melted materials you need to cast ingots or blocks from them using the casting basin or table with a cast.$(br2)" +
                 "The Foundry can easily be automated by using a redstone pulse or clock on the tap or by replacing the tap with any other fluid transport pipe.");
+
         add("book.productivemetalworks.sgear_category.title", "Silent Gear Metalworks");
         add("book.productivemetalworks.sgear_category.text", "Silent Gear casting with the Foundry.");
         add("book.productivemetalworks.sgear_page.title", "Gear Casting");

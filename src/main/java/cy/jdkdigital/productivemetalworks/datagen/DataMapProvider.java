@@ -23,15 +23,19 @@ public class DataMapProvider extends net.neoforged.neoforge.common.data.DataMapP
     }
 
     @Override
-    protected void gather() {
+    protected void gather(HolderLookup.Provider provider) {
         final var fuels = builder(MetalworksRegistrator.FUEL_MAP);
+        final var coils = builder(MetalworksRegistrator.POWER_COIL_MAP);
         final var entityMelting = builder(MetalworksRegistrator.ENTITY_MELTING_MAP);
         final var units = builder(MetalworksRegistrator.UNIT_MAP);
 
         fuels.add(Fluids.LAVA.builtInRegistryHolder(), new FuelMap(1500, 0.2f, 0.5f), false);
         fuels.add(ResourceLocation.fromNamespaceAndPath("allthemodium", "soul_lava"), new FuelMap(3000, 0.1f, 1.0f), false, new ModLoadedCondition("allthemodium"));
 
-        entityMelting.add(EntityType.PLAYER.builtInRegistryHolder(), new EntityMeltingMap(new FluidStack(MetalworksRegistrator.LIQUID_MEAT.get(), 10)), false);
+        coils.add(MetalworksRegistrator.POWERED_HEATING_COIL, new FuelMap(1500, 4000f, 0.5f), false);
+        coils.add(MetalworksRegistrator.HIGH_POWERED_HEATING_COIL, new FuelMap(3000, 4000f, 1.0f), false);
+
+        entityMelting.add(EntityType.PLAYER.builtInRegistryHolder(), new EntityMeltingMap(new FluidStack(MetalworksRegistrator.LIQUID_MEAT.get(), 10), 0.8f), false);
 
         var metalUnits = new UnitMap(List.of(
                 new UnitMap.Unit(10, "nugget"),

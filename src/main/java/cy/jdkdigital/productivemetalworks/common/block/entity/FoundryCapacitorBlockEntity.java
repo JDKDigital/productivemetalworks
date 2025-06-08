@@ -6,6 +6,9 @@ import cy.jdkdigital.productivemetalworks.registry.MetalworksRegistrator;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.energy.EnergyStorage;
 
@@ -13,7 +16,25 @@ public class FoundryCapacitorBlockEntity extends CapabilityBlockEntity implement
 {
     private BlockPos controllerPosition;
 
-    public EnergyStorage energyHandler = new EnergyStorage(10000);
+    public EnergyStorage energyHandler = new EnergyStorage(40000) {
+        @Override
+        public int receiveEnergy(int toReceive, boolean simulate) {
+            var receivedEnergy = super.receiveEnergy(toReceive, simulate);
+            if (receivedEnergy > 0 && level instanceof ServerLevel) {
+                sync(level);
+            }
+            return receivedEnergy;
+        }
+
+        @Override
+        public int extractEnergy(int toExtract, boolean simulate) {
+            var extractedEnergy = super.extractEnergy(toExtract, simulate);
+            if (extractedEnergy > 0 && level instanceof ServerLevel) {
+                sync(level);
+            }
+            return extractedEnergy;
+        }
+    };
 
     public FoundryCapacitorBlockEntity(BlockPos pos, BlockState blockState) {
         super(MetalworksRegistrator.FOUNDRY_CAPACITOR_BLOCK_ENTITY.get(), pos, blockState);
@@ -32,6 +53,10 @@ public class FoundryCapacitorBlockEntity extends CapabilityBlockEntity implement
     @Override
     public BlockPos getMultiblockController() {
         return this.controllerPosition;
+    }
+
+    public void sync(Level level) {
+        level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), Block.UPDATE_CLIENTS);
     }
 
     @Override

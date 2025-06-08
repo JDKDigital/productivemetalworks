@@ -3,12 +3,14 @@ package cy.jdkdigital.productivemetalworks.event;
 import cy.jdkdigital.productivelib.event.UpgradeTooltipEvent;
 import cy.jdkdigital.productivelib.registry.LibItems;
 import cy.jdkdigital.productivemetalworks.ProductiveMetalworks;
+import cy.jdkdigital.productivemetalworks.integration.jei.ingredient.EntityRenderer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.level.LevelEvent;
 
 @EventBusSubscriber(modid = ProductiveMetalworks.MODID)
 public class EventHandler
@@ -32,5 +34,10 @@ public class EventHandler
                 event.addValidBlock(Component.literal("Foundry Controller"));
             }
         }
+    }
+
+    @SubscribeEvent
+    private static void levelUnload(final LevelEvent.Unload event) {
+        EntityRenderer.cache.clear();
     }
 }

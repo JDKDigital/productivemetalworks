@@ -8,18 +8,13 @@ import cy.jdkdigital.productivemetalworks.common.datamap.EntityMeltingMap;
 import cy.jdkdigital.productivemetalworks.common.datamap.FuelMap;
 import cy.jdkdigital.productivemetalworks.common.datamap.UnitMap;
 import cy.jdkdigital.productivemetalworks.common.menu.FoundryControllerContainer;
-import cy.jdkdigital.productivemetalworks.recipe.BlockCastingRecipe;
-import cy.jdkdigital.productivemetalworks.recipe.FluidAlloyingRecipe;
-import cy.jdkdigital.productivemetalworks.recipe.ItemCastingRecipe;
-import cy.jdkdigital.productivemetalworks.recipe.ItemMeltingRecipe;
+import cy.jdkdigital.productivemetalworks.recipe.*;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.food.Foods;
 import net.minecraft.world.inventory.MenuType;
@@ -49,6 +44,7 @@ public class MetalworksRegistrator
     public static void register() {}
 
     public static final DataMapType<Fluid, FuelMap> FUEL_MAP = DataMapType.builder(ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "fuel_map"), Registries.FLUID, FuelMap.CODEC).synced(FuelMap.CODEC, false).build();
+    public static final DataMapType<Block, FuelMap> POWER_COIL_MAP = DataMapType.builder(ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "power_coil_map"), Registries.BLOCK, FuelMap.CODEC).synced(FuelMap.CODEC, false).build();
     public static final DataMapType<EntityType<?>, EntityMeltingMap> ENTITY_MELTING_MAP = DataMapType.builder(ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "entity_melting"), Registries.ENTITY_TYPE, EntityMeltingMap.CODEC).synced(EntityMeltingMap.CODEC, false).build();
     public static final DataMapType<Fluid, UnitMap> UNIT_MAP = DataMapType.builder(ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "unit_map"), Registries.FLUID, UnitMap.CODEC).synced(UnitMap.CODEC, false).build();
     public static final Supplier<DataComponentType<ImmutableFluidStack>> FLUID_STACK = ProductiveMetalworks.DATA_COMPONENTS.register("fluid_stack", () -> DataComponentType.<ImmutableFluidStack>builder().persistent(ImmutableFluidStack.CODEC).networkSynchronized(ImmutableFluidStack.STREAM_CODEC).build());
@@ -160,7 +156,9 @@ public class MetalworksRegistrator
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<?>> FLUID_ALLOYING = ProductiveMetalworks.RECIPE_SERIALIZERS.register("fluid_alloying", FluidAlloyingRecipe.Serializer::new);
     public static final DeferredHolder<RecipeType<?>, RecipeType<FluidAlloyingRecipe>> FLUID_ALLOYING_TYPE = ProductiveMetalworks.RECIPE_TYPES.register("fluid_alloying", () -> new RecipeType<>() {});
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<?>> ITEM_MELTING = ProductiveMetalworks.RECIPE_SERIALIZERS.register("item_melting", ItemMeltingRecipe.Serializer::new);
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<?>> ENTITY_MELTING = ProductiveMetalworks.RECIPE_SERIALIZERS.register("entity_melting", EntityMeltingRecipe.Serializer::new);
     public static final DeferredHolder<RecipeType<?>, RecipeType<ItemMeltingRecipe>> ITEM_MELTING_TYPE = ProductiveMetalworks.RECIPE_TYPES.register("item_melting", () -> new RecipeType<>() {});
+    public static final DeferredHolder<RecipeType<?>, RecipeType<EntityMeltingRecipe>> ENTITY_MELTING_TYPE = ProductiveMetalworks.RECIPE_TYPES.register("entity_melting", () -> new RecipeType<>() {});
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<?>> BLOCK_CASTING = ProductiveMetalworks.RECIPE_SERIALIZERS.register("block_casting", BlockCastingRecipe.Serializer::new);
     public static final DeferredHolder<RecipeType<?>, RecipeType<BlockCastingRecipe>> BLOCK_CASTING_TYPE = ProductiveMetalworks.RECIPE_TYPES.register("block_casting", () -> new RecipeType<>() {});
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<?>> ITEM_CASTING = ProductiveMetalworks.RECIPE_SERIALIZERS.register("item_casting", ItemCastingRecipe.Serializer::new);

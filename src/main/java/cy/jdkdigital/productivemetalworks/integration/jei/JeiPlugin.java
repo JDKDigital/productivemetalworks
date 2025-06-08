@@ -1,14 +1,12 @@
 package cy.jdkdigital.productivemetalworks.integration.jei;
 
 import cy.jdkdigital.productivemetalworks.ProductiveMetalworks;
-import cy.jdkdigital.productivemetalworks.recipe.BlockCastingRecipe;
-import cy.jdkdigital.productivemetalworks.recipe.FluidAlloyingRecipe;
-import cy.jdkdigital.productivemetalworks.recipe.ItemCastingRecipe;
-import cy.jdkdigital.productivemetalworks.recipe.ItemMeltingRecipe;
+import cy.jdkdigital.productivemetalworks.recipe.*;
 import cy.jdkdigital.productivemetalworks.registry.MetalworksRegistrator;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.helpers.IJeiHelpers;
+import mezz.jei.api.ingredients.IIngredientType;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
@@ -16,6 +14,7 @@ import mezz.jei.api.registration.IRecipeRegistration;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -33,9 +32,12 @@ public class JeiPlugin implements IModPlugin
     private static final ResourceLocation pluginId = ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, ProductiveMetalworks.MODID);
 
     public static final RecipeType<RecipeHolder<ItemMeltingRecipe>> ITEM_MELTING = RecipeType.createRecipeHolderType(MetalworksRegistrator.ITEM_MELTING_TYPE.getId());
+    public static final RecipeType<RecipeHolder<EntityMeltingRecipe>> ENTITY_MELTING = RecipeType.createRecipeHolderType(MetalworksRegistrator.ENTITY_MELTING_TYPE.getId());
     public static final RecipeType<RecipeHolder<ItemCastingRecipe>> ITEM_CASTING = RecipeType.createRecipeHolderType(MetalworksRegistrator.ITEM_CASTING_TYPE.getId());
     public static final RecipeType<RecipeHolder<BlockCastingRecipe>> BLOCK_CASTING = RecipeType.createRecipeHolderType(MetalworksRegistrator.BLOCK_CASTING_TYPE.getId());
     public static final RecipeType<RecipeHolder<FluidAlloyingRecipe>> FLUID_ALLOYING = RecipeType.createRecipeHolderType(MetalworksRegistrator.FLUID_ALLOYING_TYPE.getId());
+
+    public static final IIngredientType<Entity> ENTITY_INGREDIENT = () -> Entity.class;
 
     @Override
     public ResourceLocation getPluginUid() {
@@ -48,6 +50,7 @@ public class JeiPlugin implements IModPlugin
         IGuiHelper guiHelper = jeiHelpers.getGuiHelper();
 
         registration.addRecipeCategories(new ItemMeltingRecipeCategory(guiHelper));
+        registration.addRecipeCategories(new EntityMeltingRecipeCategory(guiHelper));
         registration.addRecipeCategories(new ItemCastingRecipeCategory(guiHelper));
         registration.addRecipeCategories(new BlockCastingRecipeCategory(guiHelper));
         registration.addRecipeCategories(new FluidAlloyingRecipeCategory(guiHelper));
@@ -61,6 +64,12 @@ public class JeiPlugin implements IModPlugin
         registration.addRecipeCatalyst(MetalworksRegistrator.CASTING_BASIN.get(), BLOCK_CASTING);
     }
 
+//    @Override
+//    public void registerIngredients(IModIngredientRegistration registration) {
+//        List<Entity> ingredients = BuiltInRegistries.ENTITY_TYPE.holders().filter(entityTypeReference -> entityTypeReference.getData(MetalworksRegistrator.ENTITY_MELTING_MAP) != null).map(entityTypeReference -> entityTypeReference.value()).toList();
+//        registration.register(ENTITY_INGREDIENT, new ArrayList<>(ingredients), new EntityIngredientHelper(), new EntityIngredientRenderer());
+//    }
+
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
         RecipeManager recipeManager = Minecraft.getInstance().level.getRecipeManager();
@@ -69,6 +78,15 @@ public class JeiPlugin implements IModPlugin
         registration.addRecipes(ITEM_CASTING, recipeManager.getAllRecipesFor(MetalworksRegistrator.ITEM_CASTING_TYPE.get()));
         registration.addRecipes(BLOCK_CASTING, recipeManager.getAllRecipesFor(MetalworksRegistrator.BLOCK_CASTING_TYPE.get()));
         registration.addRecipes(FLUID_ALLOYING, recipeManager.getAllRecipesFor(MetalworksRegistrator.FLUID_ALLOYING_TYPE.get()));
+
+        // Entity melting
+        BuiltInRegistries.ENTITY_TYPE.holders().forEach(entityType -> {
+            var data = entityType.getData(MetalworksRegistrator.ENTITY_MELTING_MAP);
+            if (data != null) {
+                var id = BuiltInRegistries.ENTITY_TYPE.getKey(entityType.value());
+                registration.addRecipes(ENTITY_MELTING, List.of(new RecipeHolder<>(ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "/melting/entity/" + id.getPath()), new EntityMeltingRecipe(id, List.of(data.fluid())))));
+            }
+        });
 
         // Waxing recipes
         List<RecipeHolder<BlockCastingRecipe>> WAXING_RECIPES = new ArrayList<>();

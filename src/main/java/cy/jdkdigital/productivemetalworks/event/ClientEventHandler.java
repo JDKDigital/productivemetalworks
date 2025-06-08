@@ -1,10 +1,7 @@
 package cy.jdkdigital.productivemetalworks.event;
 
 import cy.jdkdigital.productivemetalworks.ProductiveMetalworks;
-import cy.jdkdigital.productivemetalworks.client.render.block.CastingBlockEntityRenderer;
-import cy.jdkdigital.productivemetalworks.client.render.block.FoundryControllerBlockEntityRenderer;
-import cy.jdkdigital.productivemetalworks.client.render.block.FoundryTankBlockEntityRenderer;
-import cy.jdkdigital.productivemetalworks.client.render.block.FoundryTapBlockEntityRenderer;
+import cy.jdkdigital.productivemetalworks.client.render.block.*;
 import cy.jdkdigital.productivemetalworks.client.screen.FoundryControllerScreen;
 import cy.jdkdigital.productivemetalworks.registry.MetalworksRegistrator;
 import net.minecraft.client.Camera;
@@ -36,6 +33,7 @@ public class ClientEventHandler
         event.registerBlockEntityRenderer(MetalworksRegistrator.FOUNDRY_TANK_BLOCK_ENTITY.get(), FoundryTankBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(MetalworksRegistrator.FOUNDRY_TAP_BLOCK_ENTITY.get(), FoundryTapBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(MetalworksRegistrator.CASTING_BLOCK_ENTITY.get(), CastingBlockEntityRenderer::new);
+        event.registerBlockEntityRenderer(MetalworksRegistrator.FOUNDRY_CAPACITOR_BLOCK_ENTITY.get(), FoundryCapacitorBlockEntityRenderer::new);
     }
 
     @SubscribeEvent

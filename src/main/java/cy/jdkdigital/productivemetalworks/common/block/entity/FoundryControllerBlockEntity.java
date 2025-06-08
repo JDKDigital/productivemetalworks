@@ -9,6 +9,7 @@ import cy.jdkdigital.productivelib.registry.LibItems;
 import cy.jdkdigital.productivelib.util.MultiBlockDetector;
 import cy.jdkdigital.productivelib.util.MultiFluidTank;
 import cy.jdkdigital.productivemetalworks.Config;
+import cy.jdkdigital.productivemetalworks.ProductiveMetalworks;
 import cy.jdkdigital.productivemetalworks.common.block.FoundryControllerBlock;
 import cy.jdkdigital.productivemetalworks.common.menu.FoundryControllerContainer;
 import cy.jdkdigital.productivemetalworks.recipe.FluidAlloyingRecipe;
@@ -18,6 +19,7 @@ import cy.jdkdigital.productivemetalworks.registry.ModTags;
 import cy.jdkdigital.productivemetalworks.util.RecipeHelper;
 import cy.jdkdigital.productivemetalworks.util.TickingSlotInventoryHandler;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -31,9 +33,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.ticks.TickPriority;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
@@ -174,7 +178,7 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
                     blockEntity.itemHandler.tick(burnTicks);
                     boolean hasChanged = false;
                     FluidStack consumedFuel = new FluidStack(fuel.getFluid(), 0);
-                    for (int slot = 0; slot < blockEntity.itemHandler.size(); slot++) {
+                    for (int slot = 0; slot < blockEntity.itemHandler.getSlots(); slot++) {
                         var ticker = blockEntity.itemHandler.getTicker(slot);
                         if (ticker.getSecond() > 0 && ticker.getFirst() <= 0) {
                             var item = blockEntity.getItemHandler().getStackInSlot(slot);
@@ -185,7 +189,7 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
                                     int requiredFuel = (int)(totalProducedFluid * fuelData.consumption() * speedModifier);
                                     if (requiredFuel + consumedFuel.getAmount() <= fuel.getAmount() && totalProducedFluid <= blockEntity.fluidHandler.getCapacity() - blockEntity.fluidHandler.totalFluidAmount()) {
                                         consumedFuel.grow(requiredFuel);
-                                        blockEntity.itemHandler.extractItem(slot, 1, false, false);
+                                        blockEntity.itemHandler.setStackInSlot(slot, ItemStack.EMPTY);
                                         hasChanged = true;
                                         for (FluidStack fluidStack : recipe.value().result) {
                                             if (blockEntity.fluidHandler.fill(fluidStack, IFluidHandler.FluidAction.SIMULATE) == fluidStack.getAmount()) {
@@ -372,6 +376,22 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
     public void sync(Level level) {
         // TODO move to lib and schedule this so it's not called multiple times in the same tick
         level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), Block.UPDATE_CLIENTS);
+
+        // Update drains to trigger comparator updates
+        var mb = getMultiblockData();
+        if (mb != null) {
+            mb.peripherals().forEach(pos -> {
+                var peripheralBlockState = level.getBlockState(pos);
+                if (peripheralBlockState.is(ModTags.Blocks.FOUNDRY_DRAINS)) {
+                    for (Direction direction: Direction.values()) {
+                        var relBlockState = level.getBlockState(pos.relative(direction));
+                        if (relBlockState.is(Blocks.COMPARATOR) && !level.getBlockTicks().willTickThisTick(pos.relative(direction), relBlockState.getBlock())) {
+                            level.scheduleTick(pos.relative(direction), relBlockState.getBlock(), 2, TickPriority.NORMAL);
+                        }
+                    }
+                }
+            });
+        }
     }
 
     public void moveTankFirst(int tank) {

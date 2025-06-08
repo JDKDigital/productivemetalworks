@@ -59,7 +59,7 @@ abstract public class TickingSlotInventoryHandler extends InventoryHandlerHelper
 
     @Override
     public void setStackInSlot(int slot, ItemStack stack) {
-        if (!stack.isEmpty() && slot < tickers.size() && this.blockEntity.hasLevel() && !this.blockEntity.getLevel().isClientSide) {
+        if (!stack.isEmpty() && slot < tickers.size()) {
             int time = getTimeInSlot(stack);
             tickers.set(slot, Pair.of(time, time));
         }
