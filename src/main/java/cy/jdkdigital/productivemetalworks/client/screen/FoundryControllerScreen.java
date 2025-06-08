@@ -96,27 +96,25 @@ public class FoundryControllerScreen extends AbstractContainerScreen<FoundryCont
 
 
         switch (this.menu.blockEntity.getCoilType()) {
-            case UNKNOWN, FLUID -> {
+            case FLUID -> {
                 // Draw fuel tank
                 if (!this.menu.blockEntity.fuel.isEmpty()) {
                     FluidContainerUtil.renderFluidTank(guiGraphics, this, this.menu.blockEntity.fuel, this.fuelTanks * 4000, 57, 17, 16, 52);
                 }
             }
-            case ENERGY -> {
+            case UNKNOWN, ENERGY -> {
                 // Draw energy tank
                 if (this.menu.blockEntity.getPowerMax() == 0) {
                     break;
                 }
 
-                guiGraphics.blit(GUI, getGuiLeft() + 134, getGuiTop() + 70, 238, 256, 18, 58);
+                guiGraphics.blit(GUI, getGuiLeft() + 56, getGuiTop() + 14, 238, 0, 18, 58);
 
                 float powerRatio = ((float) this.menu.blockEntity.getPower() / (float) this.menu.blockEntity.getPowerMax());
                 int energyLevel = (int) ((54f * powerRatio) + 0.5f);
-                guiGraphics.blit(GUI, getGuiLeft() + 134, getGuiTop() + 70 - energyLevel, 239, 256-59 - energyLevel, 16, energyLevel);
+                guiGraphics.blit(GUI, getGuiLeft() + 57, getGuiTop() + 17 + 54 - energyLevel, 239,  59, 16, energyLevel);
             }
-
         }
-
 
         // Draw fluid tank
         int tankCapacity = this.menu.blockEntity.fluidHandler.getCapacity();
