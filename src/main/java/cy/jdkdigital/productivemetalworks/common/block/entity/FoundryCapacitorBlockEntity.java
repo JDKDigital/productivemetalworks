@@ -1,7 +1,9 @@
 package cy.jdkdigital.productivemetalworks.common.block.entity;
 
 import cy.jdkdigital.productivelib.common.block.entity.CapabilityBlockEntity;
+import cy.jdkdigital.productivelib.common.block.entity.FluidTankBlockEntity;
 import cy.jdkdigital.productivelib.common.block.entity.IMultiBlockPeripheralBlockEntity;
+import cy.jdkdigital.productivemetalworks.ProductiveMetalworks;
 import cy.jdkdigital.productivemetalworks.registry.MetalworksRegistrator;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -9,8 +11,10 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.energy.EnergyStorage;
+import net.neoforged.neoforge.fluids.FluidUtil;
 
 public class FoundryCapacitorBlockEntity extends CapabilityBlockEntity implements IMultiBlockPeripheralBlockEntity
 {
@@ -55,10 +59,6 @@ public class FoundryCapacitorBlockEntity extends CapabilityBlockEntity implement
         return this.controllerPosition;
     }
 
-    public void sync(Level level) {
-        level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), Block.UPDATE_CLIENTS);
-    }
-
     @Override
     public void savePacketNBT(CompoundTag tag, HolderLookup.Provider provider) {
         super.savePacketNBT(tag, provider);
@@ -74,6 +74,28 @@ public class FoundryCapacitorBlockEntity extends CapabilityBlockEntity implement
 
         if (tag.contains("controller")) {
             this.controllerPosition = BlockPos.of(tag.getLong("controller"));
+        }
+    }
+
+    public void sync(Level level) {
+        level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), Block.UPDATE_CLIENTS);
+    }
+
+    public static void serverTick(Level level, BlockPos blockPos, BlockState blockState, FoundryCapacitorBlockEntity capacitorBlockEntity) {
+        // share energy among other capacitors in the multiblock
+        if (capacitorBlockEntity.getMultiblockController() != null && level.getBlockEntity(capacitorBlockEntity.getMultiblockController()) instanceof FoundryControllerBlockEntity controllerBlockEntity) {
+            var mb = controllerBlockEntity.getMultiblockData();
+            if (mb != null) {
+                mb.peripherals().forEach(pos -> {
+                    if (!pos.equals(capacitorBlockEntity.getBlockPos()) && level.getBlockEntity(pos) instanceof CapabilityBlockEntity otherCapacitor) {
+                        int energyDiff = capacitorBlockEntity.getEnergyHandler().getEnergyStored() - otherCapacitor.getEnergyHandler().getEnergyStored();
+                        if (energyDiff > 1) {
+                            int transferred = otherCapacitor.getEnergyHandler().receiveEnergy(energyDiff/2, false);
+                            capacitorBlockEntity.getEnergyHandler().extractEnergy(transferred, false);
+                        }
+                    }
+                });
+            }
         }
     }
 

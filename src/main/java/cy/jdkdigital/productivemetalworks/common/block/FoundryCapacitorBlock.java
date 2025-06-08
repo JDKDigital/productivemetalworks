@@ -3,16 +3,21 @@ package cy.jdkdigital.productivemetalworks.common.block;
 import com.mojang.serialization.MapCodec;
 import cy.jdkdigital.productivelib.common.block.IMultiBlockPeripheral;
 import cy.jdkdigital.productivemetalworks.common.block.entity.FoundryCapacitorBlockEntity;
+import cy.jdkdigital.productivemetalworks.common.block.entity.FoundryTankBlockEntity;
+import cy.jdkdigital.productivemetalworks.registry.MetalworksRegistrator;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -53,6 +58,12 @@ public class FoundryCapacitorBlock extends BaseEntityBlock implements IMultiBloc
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new FoundryCapacitorBlockEntity(pos, state);
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
+        return level.isClientSide ? null : createTickerHelper(blockEntityType, MetalworksRegistrator.FOUNDRY_CAPACITOR_BLOCK_ENTITY.get(), FoundryCapacitorBlockEntity::serverTick);
     }
 
     @Override
