@@ -11,11 +11,15 @@ import cy.jdkdigital.productivelib.util.MultiFluidTank;
 import cy.jdkdigital.productivemetalworks.Config;
 import cy.jdkdigital.productivemetalworks.ProductiveMetalworks;
 import cy.jdkdigital.productivemetalworks.common.block.FoundryControllerBlock;
+import cy.jdkdigital.productivemetalworks.common.block.IHeatingCoilBlock;
+import cy.jdkdigital.productivemetalworks.common.datamap.FuelMap;
 import cy.jdkdigital.productivemetalworks.common.menu.FoundryControllerContainer;
 import cy.jdkdigital.productivemetalworks.recipe.FluidAlloyingRecipe;
 import cy.jdkdigital.productivemetalworks.recipe.ItemMeltingRecipe;
 import cy.jdkdigital.productivemetalworks.registry.MetalworksRegistrator;
 import cy.jdkdigital.productivemetalworks.registry.ModTags;
+import cy.jdkdigital.productivemetalworks.util.CoilType;
+import cy.jdkdigital.productivemetalworks.util.IFoundryFuel;
 import cy.jdkdigital.productivemetalworks.util.RecipeHelper;
 import cy.jdkdigital.productivemetalworks.util.TickingSlotInventoryHandler;
 import net.minecraft.core.BlockPos;
@@ -36,6 +40,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.ticks.TickPriority;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -54,11 +59,13 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
     private MultiBlockDetector.MultiBlockData foundryData;
     private int tickCounter = 0;
     private float leftoverTick = 0;
+    private CoilType coilType = CoilType.UNKNOWN;
 
     // used clientside for rendering fuel in gui screen
     public FluidStack fuel = FluidStack.EMPTY;
 
-    public MultiFluidTank fluidHandler = new MultiFluidTank(20, 90000) {
+    public MultiFluidTank fluidHandler = new MultiFluidTank(20, 90000)
+    {
         @Override
         protected void onContentsChanged(boolean hasChangedFluid) {
             super.onContentsChanged(hasChangedFluid);
@@ -69,7 +76,8 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
         }
     };
 
-    protected TickingSlotInventoryHandler itemHandler = new TickingSlotInventoryHandler(200, this) {
+    protected TickingSlotInventoryHandler itemHandler = new TickingSlotInventoryHandler(200, this)
+    {
         @Override
         protected int getTimeInSlot(ItemStack stack) {
             if (this.blockEntity != null && blockEntity.getLevel() instanceof Level pLevel) {
@@ -130,11 +138,20 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
         return upgradeHandler;
     }
 
+    protected void burnItemsAtSpeed(float burnSpeed) {
+        int burnTicks = Math.round(burnSpeed + this.leftoverTick);
+        this.leftoverTick = burnSpeed + this.leftoverTick - burnTicks;
+        this.itemHandler.tick(burnTicks);
+    }
+
     public static void serverTick(Level level, BlockPos pos, BlockState state, FoundryControllerBlockEntity blockEntity) {
         if (blockEntity.getMultiblockData() != null) {
-            var mb = blockEntity.getMultiblockData();
             FluidTankBlockEntity.tick(level, pos, state, blockEntity);
-            if (blockEntity.tickCounter%20 == 0 && (Config.foundryCollectItems || Config.foundryDamageEntities)) {
+
+            var mb = blockEntity.getMultiblockData();
+
+            // Process entity detection
+            if (blockEntity.tickCounter % 20 == 0 && (Config.foundryCollectItems || Config.foundryDamageEntities)) {
                 var c1 = mb.topCorners().getFirst().below(mb.height() - 1);
                 var c2 = mb.topCorners().getSecond().below(mb.height() - 2);
 
@@ -166,57 +183,20 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
                 });
             }
 
-            // Melt items from inventory if they have a melting recipe
-            FluidStack fuel = blockEntity.getFuel();
-            if (!fuel.isEmpty()) {
-                var fuelData = fuel.getFluid().builtInRegistryHolder().getData(MetalworksRegistrator.FUEL_MAP);
-                if (fuelData != null) {
-                    int speedModifier = blockEntity.getSpeedModifier();
-                    float burnSpeed = fuelData.speed() * speedModifier;
-                    int burnTicks = Math.round(burnSpeed + blockEntity.leftoverTick);
-                    blockEntity.leftoverTick = burnSpeed + blockEntity.leftoverTick - burnTicks;
-                    blockEntity.itemHandler.tick(burnTicks);
-                    boolean hasChanged = false;
-                    FluidStack consumedFuel = new FluidStack(fuel.getFluid(), 0);
-                    for (int slot = 0; slot < blockEntity.itemHandler.getSlots(); slot++) {
-                        var ticker = blockEntity.itemHandler.getTicker(slot);
-                        if (ticker.getSecond() > 0 && ticker.getFirst() <= 0) {
-                            var item = blockEntity.getItemHandler().getStackInSlot(slot);
-                            if (!item.isEmpty()) {
-                                RecipeHolder<ItemMeltingRecipe> recipe = RecipeHelper.getItemMeltingRecipe(level, item, fuelData);
-                                if (recipe != null) {
-                                    int totalProducedFluid = recipe.value().result.stream().map(FluidStack::getAmount).reduce(Integer::sum).orElse(0);
-                                    int requiredFuel = (int)(totalProducedFluid * fuelData.consumption() * speedModifier);
-                                    if (requiredFuel + consumedFuel.getAmount() <= fuel.getAmount() && totalProducedFluid <= blockEntity.fluidHandler.getCapacity() - blockEntity.fluidHandler.totalFluidAmount()) {
-                                        consumedFuel.grow(requiredFuel);
-                                        blockEntity.itemHandler.setStackInSlot(slot, ItemStack.EMPTY);
-                                        hasChanged = true;
-                                        for (FluidStack fluidStack : recipe.value().result) {
-                                            if (blockEntity.fluidHandler.fill(fluidStack, IFluidHandler.FluidAction.SIMULATE) == fluidStack.getAmount()) {
-                                                blockEntity.fluidHandler.fill(fluidStack, IFluidHandler.FluidAction.EXECUTE);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    if (hasChanged) {
-                        if (!consumedFuel.isEmpty()) {
-                            for (BlockPos blockPos : mb.peripherals()) {
-                                if (!consumedFuel.isEmpty() && level.getBlockEntity(blockPos) instanceof FoundryTankBlockEntity tankBlockEntity) {
-                                    var drainedFluid = tankBlockEntity.getFluidHandler().drain(consumedFuel, IFluidHandler.FluidAction.EXECUTE);
-                                    consumedFuel.shrink(drainedFluid.getAmount());
-                                }
-                            }
-                        }
-                        blockEntity.sync(level);
-                    }
+            IMelterProcessor mp;
+            switch (blockEntity.coilType) {
+                case CoilType.FLUID -> {
+                    mp = new LiquidMelter();
+                    mp.tick(level, pos, state, blockEntity);
+                }
+                case CoilType.ENERGY -> {
+                    mp = new EnergyMelter();
+                    mp.tick(level, pos, state, blockEntity);
                 }
             }
         }
 
-        if (++blockEntity.tickCounter%200 == 0) {// TODO scaling number based on failures
+        if (++blockEntity.tickCounter % 200 == 0) {// TODO scaling number based on failures
             blockEntity.tickCounter = 0;
             try {
                 blockEntity.setMultiBlockData(FoundryControllerBlock.detectMultiblock(level, pos));
@@ -309,23 +289,47 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
 
     public FluidStack getFuel() {
         var mb = getMultiblockData();
-        if (level != null && mb != null) {
-            FluidStack fuel = FluidStack.EMPTY;
-            for (BlockPos pos: mb.peripherals()) {
-                if (level.getBlockEntity(pos) instanceof FoundryTankBlockEntity tank) {
-                    var fluid = tank.getFluidHandler().getFluidInTank(0);
-                    if (!fluid.isEmpty()) {
-                        if (fuel.isEmpty()) {
-                            fuel = fluid.copy();
-                        } else if (fuel.is(fluid.getFluid())) {
-                            fuel.grow(fluid.getAmount());
-                        }
+        if (level == null || mb == null) {
+            return null;
+        }
+
+        FluidStack fluidFuel = FluidStack.EMPTY;
+        for (BlockPos pos : mb.peripherals()) {
+            if (level.getBlockEntity(pos) instanceof FoundryTankBlockEntity tank) {
+                var fluid = tank.getFluidHandler().getFluidInTank(0);
+                if (!fluid.isEmpty()) {
+                    if (fluidFuel.isEmpty()) {
+                        fluidFuel  = fluid.copy();
+                    } else if (fluidFuel.is(fluid.getFluid())) {
+                        fluidFuel.grow(fluid.getAmount());
                     }
                 }
             }
-            return fuel;
         }
-        return FluidStack.EMPTY;
+        return fluidFuel;
+    }
+
+    public int getPower() {
+        var mb = getMultiblockData();
+        if (level == null || mb == null) {
+            return 0;
+        }
+
+        int power = 0;
+        for (BlockPos pos : mb.peripherals()) {
+            if (level.getBlockEntity(pos) instanceof FoundryCapacitorBlockEntity capacitor) {
+                power += capacitor.energyHandler.getEnergyStored();
+            }
+        }
+        return power;
+    }
+
+    void addRecipeResult(List<FluidStack> result) {
+        for (FluidStack fluidStack : result) {
+            if (this.fluidHandler.fill(fluidStack, IFluidHandler.FluidAction.SIMULATE) == fluidStack.getAmount()) {
+                this.fluidHandler.fill(fluidStack, IFluidHandler.FluidAction.EXECUTE);
+            }
+        }
     }
 
     @Override
@@ -345,10 +349,14 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
                 var c1 = multiBlockData.topCorners().getFirst().below(multiBlockData.height());
                 var c2 = multiBlockData.topCorners().getSecond().below(multiBlockData.height());
 
+                this.coilType = CoilType.UNKNOWN;
                 BlockPos.betweenClosed(c1, c2).forEach(blockPos -> {
                     var state = serverLevel.getBlockState(blockPos);
                     if (state.is(ModTags.Blocks.HEATING_COILS) && !state.getValue(BlockStateProperties.ATTACHED)) {
                         serverLevel.setBlockAndUpdate(blockPos, state.setValue(BlockStateProperties.ATTACHED, true));
+                    }
+                    if (state.getBlock() instanceof IHeatingCoilBlock heatingCoilBlock) {
+                        this.coilType = heatingCoilBlock.getCoilType();
                     }
                 });
             } else if (getBlockState().getValue(BlockStateProperties.ATTACHED)) {
@@ -383,7 +391,7 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
             mb.peripherals().forEach(pos -> {
                 var peripheralBlockState = level.getBlockState(pos);
                 if (peripheralBlockState.is(ModTags.Blocks.FOUNDRY_DRAINS)) {
-                    for (Direction direction: Direction.values()) {
+                    for (Direction direction : Direction.values()) {
                         var relBlockState = level.getBlockState(pos.relative(direction));
                         if (relBlockState.is(Blocks.COMPARATOR) && !level.getBlockTicks().willTickThisTick(pos.relative(direction), relBlockState.getBlock())) {
                             level.scheduleTick(pos.relative(direction), relBlockState.getBlock(), 2, TickPriority.NORMAL);
@@ -398,6 +406,217 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
         if (tank > 0 && tank < this.fluidHandler.getTanks()) {
             this.fluidHandler.moveTankToTop(tank);
             this.sync(level);
+        }
+    }
+
+    interface IMelterProcessor
+    {
+        void tick(Level level, BlockPos pos, BlockState state, FoundryControllerBlockEntity blockEntity);
+
+        default boolean meltItems(Level level, FoundryControllerBlockEntity blockEntity, IFoundryFuel consumedFuel, IFoundryFuel availableFuel) {
+            int speedModifier = blockEntity.getSpeedModifier();
+            float burnSpeed = availableFuel.getFuelData().speed() * speedModifier;
+
+            // Update slots
+            blockEntity.burnItemsAtSpeed(burnSpeed);
+
+            boolean hasChanged = false;
+            for (int slot = 0; slot < blockEntity.itemHandler.size(); slot++) {
+                // Get timer
+                var ticker = blockEntity.itemHandler.getTicker(slot);
+                if (ticker.getSecond() <= 0 || ticker.getFirst() > 0) {
+                    continue;
+                }
+
+                // Get item in Slot
+                var item = blockEntity.getItemHandler().getStackInSlot(slot);
+                if (item.isEmpty()) {
+                    continue;
+                }
+
+                // Get Recipe for item in slot
+                RecipeHolder<ItemMeltingRecipe> recipe = RecipeHelper.getItemMeltingRecipe(level, item, availableFuel.getFuelData());
+                if (recipe == null) {
+                    continue;
+                }
+
+                // Sum total fluid amount that would be melted
+                int totalProducedFluid = recipe.value().result.stream().map(FluidStack::getAmount).reduce(Integer::sum).orElse(0);
+
+                // Look at the fuel required for this recipe melt
+                int requiredFuel = (int) (totalProducedFluid * availableFuel.getFuelData().consumption() * speedModifier);
+
+                // Do not proceed if fuel required would exceed total capacity
+                if (requiredFuel + consumedFuel.getAmount() > availableFuel.getAmount()) {
+                    continue;
+                }
+
+                // Do not proceed if liquid melted would exceed the total forge capacity
+                if (totalProducedFluid > blockEntity.fluidHandler.getCapacity() - blockEntity.fluidHandler.totalFluidAmount()) {
+                    continue;
+                }
+
+                // Actually consume the fuel and remove the item
+                consumedFuel.grow(requiredFuel);
+                blockEntity.itemHandler.extractItem(slot, 1, false, false);
+                hasChanged = true;
+
+                // Melt every result into the tank
+                blockEntity.addRecipeResult(recipe.value().result);
+            }
+            return hasChanged;
+        }
+    }
+
+    static class LiquidMelter implements IMelterProcessor
+    {
+        public void tick(Level level, BlockPos pos, BlockState state, FoundryControllerBlockEntity blockEntity) {
+            var mb = blockEntity.getMultiblockData();
+
+            // Melt items from inventory if they have a melting recipe
+            FluidStack fuelStack = blockEntity.getFuel();
+            if (fuelStack.isEmpty()) {
+                return;
+            }
+
+            IFoundryFuel fuel = new FluidFuel(fuelStack);
+            if (fuel.getFuelData() == null) {
+                return;
+            }
+
+            // Create an accumulator to count how much fuel will be used
+            IFoundryFuel consumedFuel = new FluidFuel(new FluidStack(fuelStack.getFluid(), 0));
+
+            boolean hasChanged = meltItems(level, blockEntity, consumedFuel, fuel);
+
+            if (hasChanged) {
+                for (BlockPos blockPos : mb.peripherals()) {
+                    if (!consumedFuel.isEmpty() && level.getBlockEntity(blockPos) instanceof FoundryTankBlockEntity tankBlockEntity) {
+                        var drainedFluid = tankBlockEntity.getFluidHandler().drain(new FluidStack(fuelStack.getFluid(), consumedFuel.getAmount()), IFluidHandler.FluidAction.EXECUTE);
+                        consumedFuel.shrink(drainedFluid.getAmount());
+                    }
+                }
+                blockEntity.sync(level);
+            }
+        }
+    }
+
+    static class EnergyMelter implements IMelterProcessor
+    {
+        public void tick(Level level, BlockPos pos, BlockState state, FoundryControllerBlockEntity blockEntity) {
+            var mb = blockEntity.getMultiblockData();
+
+            // Melt items from inventory if they have a melting recipe
+            int power = blockEntity.getPower();
+            if (power == 0) {
+                return;
+            }
+
+            // Get heating coil information
+            var coilPos = new BlockPos(
+                    (blockEntity.getMultiblockData().topCorners().getFirst().getX() + blockEntity.getMultiblockData().topCorners().getSecond().getX()) / 2,
+                    blockEntity.getMultiblockData().topCorners().getFirst().getY() - blockEntity.getMultiblockData().height(),
+                    (blockEntity.getMultiblockData().topCorners().getFirst().getZ() + blockEntity.getMultiblockData().topCorners().getSecond().getZ()) / 2
+            );
+
+            IFoundryFuel powerFuel = new PowerFuel(power, level.getBlockState(coilPos).getBlock());
+            if (powerFuel.getFuelData() == null) {
+                return;
+            }
+
+            ProductiveMetalworks.LOGGER.info("coil data at " + coilPos + " " + powerFuel.getFuelData());
+
+            // Create an accumulator to count how much fuel will be used
+            IFoundryFuel consumedFuel = new PowerFuel(0, powerFuel.getFuelData());
+
+            boolean hasChanged = meltItems(level, blockEntity, consumedFuel, powerFuel);
+
+            if (hasChanged) {
+                for (BlockPos blockPos : mb.peripherals()) {
+                    if (!consumedFuel.isEmpty() && level.getBlockEntity(blockPos) instanceof FoundryCapacitorBlockEntity capacitorBlockEntity) {
+                        int drainedPower = capacitorBlockEntity.energyHandler.extractEnergy(consumedFuel.getAmount(), false);
+                        consumedFuel.shrink(drainedPower);
+                    }
+                }
+                blockEntity.sync(level);
+            }
+        }
+    }
+
+    static class FluidFuel implements IFoundryFuel
+    {
+        private final FluidStack fluidStack;
+        private FuelMap fuelData;
+
+        FluidFuel(FluidStack fluidStack) {
+            this.fluidStack = fluidStack;
+            this.fuelData = fluidStack.getFluid().builtInRegistryHolder().getData(MetalworksRegistrator.FUEL_MAP);
+        }
+
+        @Override
+        public FuelMap getFuelData() {
+            return fuelData;
+        }
+
+        @Override
+        public int getAmount() {
+            return fluidStack.getAmount();
+        }
+
+        @Override
+        public void grow(int amount) {
+            fluidStack.grow(amount);
+        }
+
+        @Override
+        public void shrink(int amount) {
+            fluidStack.shrink(amount);
+        }
+
+        @Override
+        public boolean isEmpty() {
+            return fluidStack.isEmpty();
+        }
+    }
+
+    static class PowerFuel implements IFoundryFuel
+    {
+        private int power;
+        private FuelMap fuelData;
+
+        PowerFuel(int power, Block coilBlock) {
+            this.power = power;
+            this.fuelData = coilBlock.builtInRegistryHolder().getData(MetalworksRegistrator.POWER_COIL_MAP);
+        }
+
+        PowerFuel(int power, FuelMap fuelData) {
+            this.power = power;
+            this.fuelData = fuelData;
+        }
+
+        @Override
+        public FuelMap getFuelData() {
+            return fuelData;
+        }
+
+        @Override
+        public int getAmount() {
+            return power;
+        }
+
+        @Override
+        public void grow(int amount) {
+            power += amount;
+        }
+
+        @Override
+        public void shrink(int amount) {
+            power -= amount;
+        }
+
+        @Override
+        public boolean isEmpty() {
+            return power == 0;
         }
     }
 }
