@@ -19,6 +19,7 @@ import net.neoforged.neoforge.fluids.FluidUtil;
 public class FoundryCapacitorBlockEntity extends CapabilityBlockEntity implements IMultiBlockPeripheralBlockEntity
 {
     private BlockPos controllerPosition;
+    private int tickCounter = 0;
 
     public EnergyStorage energyHandler = new EnergyStorage(40000) {
         @Override
@@ -83,14 +84,15 @@ public class FoundryCapacitorBlockEntity extends CapabilityBlockEntity implement
 
     public static void serverTick(Level level, BlockPos blockPos, BlockState blockState, FoundryCapacitorBlockEntity capacitorBlockEntity) {
         // share energy among other capacitors in the multiblock
-        if (capacitorBlockEntity.getMultiblockController() != null && level.getBlockEntity(capacitorBlockEntity.getMultiblockController()) instanceof FoundryControllerBlockEntity controllerBlockEntity) {
+        if (++capacitorBlockEntity.tickCounter%5 == 0 && capacitorBlockEntity.getMultiblockController() != null && level.getBlockEntity(capacitorBlockEntity.getMultiblockController()) instanceof FoundryControllerBlockEntity controllerBlockEntity) {
+            capacitorBlockEntity.tickCounter = 0;
             var mb = controllerBlockEntity.getMultiblockData();
             if (mb != null) {
                 mb.peripherals().forEach(pos -> {
-                    if (!pos.equals(capacitorBlockEntity.getBlockPos()) && level.getBlockEntity(pos) instanceof CapabilityBlockEntity otherCapacitor) {
+                    if (!pos.equals(capacitorBlockEntity.getBlockPos()) && level.getBlockEntity(pos) instanceof FoundryCapacitorBlockEntity otherCapacitor) {
                         int energyDiff = capacitorBlockEntity.getEnergyHandler().getEnergyStored() - otherCapacitor.getEnergyHandler().getEnergyStored();
-                        if (energyDiff > 1) {
-                            int transferred = otherCapacitor.getEnergyHandler().receiveEnergy(energyDiff/2, false);
+                        if (energyDiff > 0) {
+                            int transferred = otherCapacitor.getEnergyHandler().receiveEnergy((int)Math.ceil(energyDiff/2d), false);
                             capacitorBlockEntity.getEnergyHandler().extractEnergy(transferred, false);
                         }
                     }

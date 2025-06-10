@@ -32,8 +32,8 @@ public class DataMapProvider extends net.neoforged.neoforge.common.data.DataMapP
         fuels.add(Fluids.LAVA.builtInRegistryHolder(), new FuelMap(1500, 0.2f, 0.5f), false);
         fuels.add(ResourceLocation.fromNamespaceAndPath("allthemodium", "soul_lava"), new FuelMap(3000, 0.1f, 1.0f), false, new ModLoadedCondition("allthemodium"));
 
-        coils.add(MetalworksRegistrator.POWERED_HEATING_COIL, new FuelMap(1500, 4000f, 0.5f), false);
-        coils.add(MetalworksRegistrator.HIGH_POWERED_HEATING_COIL, new FuelMap(3000, 4000f, 1.0f), false);
+        coils.add(MetalworksRegistrator.POWERED_HEATING_COIL, new FuelMap(1500, 30f, 0.5f), false);
+        coils.add(MetalworksRegistrator.HIGH_POWERED_HEATING_COIL, new FuelMap(3000, 40f, 1.0f), false);
 
         entityMelting.add(EntityType.PLAYER.builtInRegistryHolder(), new EntityMeltingMap(new FluidStack(MetalworksRegistrator.LIQUID_MEAT.get(), 10), 0.8f), false);
 

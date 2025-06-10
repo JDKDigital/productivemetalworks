@@ -83,24 +83,21 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
     {
         @Override
         protected int getTimeInSlot(ItemStack stack) {
-            FoundryControllerBlockEntity fbe = (FoundryControllerBlockEntity)this.blockEntity;
+            if (this.blockEntity instanceof FoundryControllerBlockEntity fbe) {
+                IMelterProcessor melter = switch (fbe.coilType) {
+                    case UNKNOWN -> null;
+                    case CoilType.FLUID -> new LiquidMelter();
+                    case CoilType.ENERGY -> new EnergyMelter();
+                };
 
-            IMelterProcessor mp;
-            switch (fbe.coilType) {
-                case CoilType.FLUID -> {
-                    mp = new LiquidMelter();
-                }
-                case CoilType.ENERGY -> {
-                    mp = new EnergyMelter();
-                }
-                default -> {return 0;}
-            }
-
-            if (this.blockEntity != null && blockEntity.getLevel() instanceof Level pLevel) {
-                var fuelData = mp.getFoundryFuel(pLevel, fbe);//FoundryControllerBlockEntity.this.getFuel().getFluidHolder().getData(MetalworksRegistrator.FUEL_MAP);
-                RecipeHolder<ItemMeltingRecipe> recipe = RecipeHelper.getItemMeltingRecipe(pLevel, stack, fuelData.getFuelData());
-                if (recipe != null) {
-                    return recipe.value().result.stream().map(FluidStack::getAmount).reduce(Integer::sum).orElse(0);
+                if (melter != null && this.blockEntity.getLevel() instanceof Level pLevel) {
+                    var fuelData = melter.getFoundryFuel(pLevel, fbe).getFuelData();
+                    if (fuelData != null) {
+                        RecipeHolder<ItemMeltingRecipe> recipe = RecipeHelper.getItemMeltingRecipe(pLevel, stack, fuelData);
+                        if (recipe != null) {
+                            return recipe.value().result.stream().map(FluidStack::getAmount).reduce(Integer::sum).orElse(0);
+                        }
+                    }
                 }
             }
             return 0;
@@ -223,14 +220,19 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
     }
 
     public static void clientTick(Level level, BlockPos blockPos, BlockState blockState, FoundryControllerBlockEntity blockEntity) {
-        var fuel = blockEntity.getFuel();
-        if (!fuel.isEmpty()) {
-            var fuelData = fuel.getFluid().builtInRegistryHolder().getData(MetalworksRegistrator.FUEL_MAP);
+        IMelterProcessor melter = switch (blockEntity.coilType) {
+            case UNKNOWN -> null;
+            case CoilType.FLUID -> new LiquidMelter();
+            case CoilType.ENERGY -> new EnergyMelter();
+        };
+        if (melter != null) {
+            var fuelData = melter.getFoundryFuel(level, blockEntity).getFuelData();
             if (fuelData != null) {
-                float burnSpeed = fuelData.speed() * blockEntity.getSpeedModifier();
-                int burnTicks = Math.round(burnSpeed + blockEntity.leftoverTick);
-                blockEntity.leftoverTick = burnSpeed + blockEntity.leftoverTick - burnTicks;
-                blockEntity.itemHandler.tick(burnTicks);
+                int speedModifier = blockEntity.getSpeedModifier();
+                float burnSpeed = fuelData.speed() * speedModifier;
+
+                // Update slots
+                blockEntity.burnItemsAtSpeed(burnSpeed);
             }
         }
     }
@@ -290,6 +292,7 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
         if (this.getMultiblockData() != null) {
             tag.put("multiData", this.getMultiblockData().serializeNBT(provider));
         }
+        tag.putString("coilType", coilType.name());
     }
 
     @Override
@@ -300,6 +303,9 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
             var data = new MultiBlockDetector.MultiBlockData(null, null, List.of(), 0, 0);
             data.deserializeNBT(provider, Objects.requireNonNull(tag.get("multiData")));
             setMultiBlockData(data);
+        }
+        if (tag.contains("coilType")) {
+            this.coilType = CoilType.valueOf(tag.getString("coilType"));
         }
     }
 
@@ -390,6 +396,7 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
                         this.coilType = heatingCoilBlock.getCoilType();
                     }
                 });
+                this.sync(level);
             } else if (getBlockState().getValue(BlockStateProperties.ATTACHED)) {
                 serverLevel.setBlockAndUpdate(getBlockPos(), getBlockState().setValue(BlockStateProperties.ATTACHED, false));
             }
@@ -440,15 +447,20 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
         }
     }
 
-    interface IMelterProcessor
+    public interface IMelterProcessor
     {
         void tick(Level level, BlockPos pos, BlockState state, FoundryControllerBlockEntity blockEntity);
 
         IFoundryFuel getFoundryFuel(Level level, FoundryControllerBlockEntity blockEntity);
 
         default boolean meltItems(Level level, FoundryControllerBlockEntity blockEntity, IFoundryFuel consumedFuel, IFoundryFuel availableFuel) {
+            var fuelData = availableFuel.getFuelData();
+            if (fuelData == null) {
+                return false;
+            }
+
             int speedModifier = blockEntity.getSpeedModifier();
-            float burnSpeed = availableFuel.getFuelData().speed() * speedModifier;
+            float burnSpeed = fuelData.speed() * speedModifier;
 
             // Update slots
             blockEntity.burnItemsAtSpeed(burnSpeed);
@@ -468,7 +480,7 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
                 }
 
                 // Get Recipe for item in slot
-                RecipeHolder<ItemMeltingRecipe> recipe = RecipeHelper.getItemMeltingRecipe(level, item, availableFuel.getFuelData());
+                RecipeHolder<ItemMeltingRecipe> recipe = RecipeHelper.getItemMeltingRecipe(level, item, fuelData);
                 if (recipe == null) {
                     continue;
                 }
@@ -477,14 +489,14 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
                 int totalProducedFluid = recipe.value().result.stream().map(FluidStack::getAmount).reduce(Integer::sum).orElse(0);
 
                 // Look at the fuel required for this recipe melt
-                int requiredFuel = (int) (totalProducedFluid * availableFuel.getFuelData().consumption() * speedModifier);
+                int requiredFuel = (int) (totalProducedFluid * fuelData.consumption() * speedModifier);
 
                 // Do not proceed if fuel required would exceed total capacity
                 if (requiredFuel + consumedFuel.getAmount() > availableFuel.getAmount()) {
                     continue;
                 }
 
-                // Do not proceed if liquid melted would exceed the total forge capacity
+                // Do not proceed if liquid melted would exceed the total foundry capacity
                 if (totalProducedFluid > blockEntity.fluidHandler.getCapacity() - blockEntity.fluidHandler.totalFluidAmount()) {
                     continue;
                 }
@@ -501,7 +513,7 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
         }
     }
 
-    static class LiquidMelter implements IMelterProcessor
+    public static class LiquidMelter implements IMelterProcessor
     {
         public void tick(Level level, BlockPos pos, BlockState state, FoundryControllerBlockEntity blockEntity) {
             var mb = blockEntity.getMultiblockData();
@@ -538,7 +550,7 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
         }
     }
 
-    static class EnergyMelter implements IMelterProcessor
+    public static class EnergyMelter implements IMelterProcessor
     {
         public void tick(Level level, BlockPos pos, BlockState state, FoundryControllerBlockEntity blockEntity) {
             var mb = blockEntity.getMultiblockData();
@@ -560,8 +572,6 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
             if (powerFuel.getFuelData() == null) {
                 return;
             }
-
-            ProductiveMetalworks.LOGGER.info("coil data at " + coilPos + " " + powerFuel.getFuelData());
 
             // Create an accumulator to count how much fuel will be used
             IFoundryFuel consumedFuel = new PowerFuel(0, powerFuel.getFuelData());
@@ -595,7 +605,7 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
         private final FluidStack fluidStack;
         private FuelMap fuelData;
 
-        FluidFuel(FluidStack fluidStack) {
+        public FluidFuel(FluidStack fluidStack) {
             this.fluidStack = fluidStack;
             this.fuelData = fluidStack.getFluid().builtInRegistryHolder().getData(MetalworksRegistrator.FUEL_MAP);
         }
@@ -631,12 +641,12 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
         private int power;
         private FuelMap fuelData;
 
-        PowerFuel(int power, Block coilBlock) {
+        public PowerFuel(int power, Block coilBlock) {
             this.power = power;
             this.fuelData = coilBlock.builtInRegistryHolder().getData(MetalworksRegistrator.POWER_COIL_MAP);
         }
 
-        PowerFuel(int power, FuelMap fuelData) {
+        public PowerFuel(int power, FuelMap fuelData) {
             this.power = power;
             this.fuelData = fuelData;
         }

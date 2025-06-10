@@ -3,10 +3,11 @@ package cy.jdkdigital.productivemetalworks.client.screen;
 import com.mojang.datafixers.util.Pair;
 import cy.jdkdigital.productivelib.util.FluidContainerUtil;
 import cy.jdkdigital.productivemetalworks.ProductiveMetalworks;
+import cy.jdkdigital.productivemetalworks.common.block.entity.FoundryControllerBlockEntity;
 import cy.jdkdigital.productivemetalworks.common.menu.FoundryControllerContainer;
 import cy.jdkdigital.productivemetalworks.network.MoveFoundryFluidData;
-import cy.jdkdigital.productivemetalworks.registry.MetalworksRegistrator;
 import cy.jdkdigital.productivemetalworks.registry.ModTags;
+import cy.jdkdigital.productivemetalworks.util.CoilType;
 import cy.jdkdigital.productivemetalworks.util.FluidHelper;
 import cy.jdkdigital.productivemetalworks.util.TickingSlotInventoryHandler;
 import net.minecraft.client.gui.GuiGraphics;
@@ -80,8 +81,8 @@ public class FoundryControllerScreen extends AbstractContainerScreen<FoundryCont
                         if (!stack.isEmpty()) {
                             var ticker = itemHandler.getTicker(slot);
                             if (ticker.getSecond() != 0 && !ticker.getFirst().equals(ticker.getSecond())) {
-                                int progress = (int) (18f - ((float)ticker.getFirst() / (float)ticker.getSecond()) * 18f);
-                                guiGraphics.blit(GUI, slotX, slotY + (18-progress), 202, 36 - progress, 18, progress);
+                                int progress = (int) (18f - ((float) ticker.getFirst() / (float) ticker.getSecond()) * 18f);
+                                guiGraphics.blit(GUI, slotX, slotY + (18 - progress), 202, 36 - progress, 18, progress);
                             } else {
                                 guiGraphics.blit(GUI, slotX, slotY, 202, 36, 18, 18);
                             }
@@ -92,27 +93,29 @@ public class FoundryControllerScreen extends AbstractContainerScreen<FoundryCont
         }
 
         // Draw scrollbar
-        guiGraphics.blitSprite(SCROLLER_SPRITE, this.getGuiLeft() + 156, this.getGuiTop() + 17 + (int)(37f * this.scrollOffs), 12, 15);
-
+        guiGraphics.blitSprite(SCROLLER_SPRITE, this.getGuiLeft() + 156, this.getGuiTop() + 17 + (int) (37f * this.scrollOffs), 12, 15);
 
         switch (this.menu.blockEntity.getCoilType()) {
-            case FLUID -> {
+            case UNKNOWN, FLUID -> {
                 // Draw fuel tank
                 if (!this.menu.blockEntity.fuel.isEmpty()) {
                     FluidContainerUtil.renderFluidTank(guiGraphics, this, this.menu.blockEntity.fuel, this.fuelTanks * 4000, 57, 17, 16, 52);
                 }
+                break;
             }
-            case UNKNOWN, ENERGY -> {
+            case ENERGY -> {
                 // Draw energy tank
                 if (this.menu.blockEntity.getPowerMax() == 0) {
                     break;
                 }
 
-                guiGraphics.blit(GUI, getGuiLeft() + 56, getGuiTop() + 14, 238, 0, 18, 58);
+                // battery
+                guiGraphics.blit(GUI, getGuiLeft() + 56, getGuiTop() + 14, 238, 0, 18, 56);
 
+                // energy
                 float powerRatio = ((float) this.menu.blockEntity.getPower() / (float) this.menu.blockEntity.getPowerMax());
-                int energyLevel = (int) ((54f * powerRatio) + 0.5f);
-                guiGraphics.blit(GUI, getGuiLeft() + 57, getGuiTop() + 17 + 54 - energyLevel, 239,  59, 16, energyLevel);
+                int energyLevel = (int) ((52f * powerRatio) + 0.5f);
+                guiGraphics.blit(GUI, getGuiLeft() + 57, getGuiTop() + 17 + 52 - energyLevel, 239,  59, 16, energyLevel);
             }
         }
 
@@ -139,7 +142,7 @@ public class FoundryControllerScreen extends AbstractContainerScreen<FoundryCont
                 int adjustedAmount = Math.max(Math.min(fluidMaxAmount, fluidStack.getAmount()), fluidMinAmount);
                 double fluidHeight = Math.round(tankHeight * ((double) adjustedAmount / (double) tankCapacity));
                 fluidPositions.put(tank, Pair.of(nextFluidOffset, (int) fluidHeight));
-                FluidContainerUtil.renderTiledFluid(guiGraphics, this, fluidStack, 8, 17 + 52 - (int)fluidHeight - nextFluidOffset, 42, (int)fluidHeight, 0);
+                FluidContainerUtil.renderTiledFluid(guiGraphics, this, fluidStack, 8, 17 + 52 - (int) fluidHeight - nextFluidOffset, 42, (int) fluidHeight, 0);
                 nextFluidOffset += (int) fluidHeight;
             }
         }
@@ -151,11 +154,31 @@ public class FoundryControllerScreen extends AbstractContainerScreen<FoundryCont
 
         List<FormattedCharSequence> tooltipList = new ArrayList<>();
         if (insideFuelTank(mouseX, mouseY)) {
-            if (!this.menu.blockEntity.fuel.isEmpty()) {
-                var fuelData = this.menu.blockEntity.fuel.getFluidHolder().getData(MetalworksRegistrator.FUEL_MAP);
-                tooltipList.add(Component.literal(this.menu.blockEntity.fuel.getAmount() + "mb " + Component.translatable(this.menu.blockEntity.fuel.getFluid().getFluidType().getDescriptionId()).getString()).getVisualOrderText());
-                if (fuelData != null) {
-                    tooltipList.add(Component.translatable("gui.productivemetalworks.temperature", fuelData.temperature()).getVisualOrderText());
+            FoundryControllerBlockEntity.IMelterProcessor melter = switch (this.menu.blockEntity.getCoilType()) {
+                case UNKNOWN -> null;
+                case CoilType.FLUID -> new FoundryControllerBlockEntity.LiquidMelter();
+                case CoilType.ENERGY -> new FoundryControllerBlockEntity.EnergyMelter();
+            };
+            switch (this.menu.blockEntity.getCoilType()) {
+                case FLUID -> {
+                    if (!this.menu.blockEntity.fuel.isEmpty()) {
+                        tooltipList.add(Component.literal(this.menu.blockEntity.fuel.getAmount() + "mb " + Component.translatable(this.menu.blockEntity.fuel.getFluid().getFluidType().getDescriptionId()).getString()).getVisualOrderText());
+                        if (melter != null) {
+                            var fuelData = melter.getFoundryFuel(this.menu.blockEntity.getLevel(), this.menu.blockEntity).getFuelData();
+                            if (fuelData != null) {
+                                tooltipList.add(Component.translatable("gui.productivemetalworks.temperature", fuelData.temperature()).getVisualOrderText());
+                            }
+                        }
+                    }
+                }
+                case ENERGY -> {
+                    tooltipList.add(Component.literal(this.menu.blockEntity.getPower() + " FE").getVisualOrderText());
+                    if (melter != null) {
+                        var fuelData = melter.getFoundryFuel(this.menu.blockEntity.getLevel(), this.menu.blockEntity).getFuelData();
+                        if (fuelData != null) {
+                            tooltipList.add(Component.translatable("gui.productivemetalworks.temperature", fuelData.temperature()).getVisualOrderText());
+                        }
+                    }
                 }
             }
         }
@@ -198,7 +221,7 @@ public class FoundryControllerScreen extends AbstractContainerScreen<FoundryCont
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
         if (this.isScrolling) {
-            this.scrollOffs = ((float)mouseY - (float)this.getGuiTop() - 24.5f) / 37f;
+            this.scrollOffs = ((float) mouseY - (float) this.getGuiTop() - 24.5f) / 37f;
             this.scrollOffs = Mth.clamp(this.scrollOffs, 0.0F, 1.0F);
             this.menu.scrollTo(this.scrollOffs);
             return true;

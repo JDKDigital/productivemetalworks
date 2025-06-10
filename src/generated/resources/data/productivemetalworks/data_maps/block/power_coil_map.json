@@ -1,12 +1,12 @@
 {
   "values": {
     "productivemetalworks:high_powered_heating_coil": {
-      "consumption": 4000.0,
+      "consumption": 40.0,
       "speed": 1.0,
       "temperature": 3000
     },
     "productivemetalworks:powered_heating_coil": {
-      "consumption": 4000.0,
+      "consumption": 40.0,
       "speed": 0.5,
       "temperature": 1500
     }

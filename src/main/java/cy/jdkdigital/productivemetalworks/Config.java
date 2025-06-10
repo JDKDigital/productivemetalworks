@@ -14,7 +14,7 @@ public class Config
 
     private static final ModConfigSpec.IntValue FOUNDRY_MAX_VOLUME = BUILDER
             .comment("Max internal volume of the foundry multiblock")
-            .defineInRange("foundryMaxVolume", 200, 1, Integer.MAX_VALUE);
+            .defineInRange("foundryMaxVolume", 1024, 1, Integer.MAX_VALUE);
 
     private static final ModConfigSpec.IntValue FOUNDRY_MAX_CIRCUMFERENCE = BUILDER
             .comment("Max circumference of the foundry multiblock")

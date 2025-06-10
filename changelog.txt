@@ -1,5 +1,6 @@
 1.21.1-1.7.0
 
+- Added Powered Heating Coils so the Foundry can run on FE
 - Added entity melting recipe category for JEI
 - Fixed items not melting in slots above ID 200
 
