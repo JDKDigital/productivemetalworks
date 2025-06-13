@@ -383,10 +383,12 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
                 }
 
                 // turn on heating coils
-                var c1 = multiBlockData.topCorners().getFirst().below(multiBlockData.height());
-                var c2 = multiBlockData.topCorners().getSecond().below(multiBlockData.height());
+                Direction controllerFacing = serverLevel.getBlockState(multiBlockData.controllerPos()).getValue(BlockStateProperties.HORIZONTAL_FACING);
+                var c1 = multiBlockData.topCorners().getFirst().relative(controllerFacing.getOpposite()).relative(controllerFacing.getCounterClockWise()).below(multiBlockData.height());
+                var c2 = multiBlockData.topCorners().getSecond().relative(controllerFacing).relative(controllerFacing.getClockWise()).below(multiBlockData.height());
 
                 this.coilType = CoilType.UNKNOWN;
+
                 BlockPos.betweenClosed(c1, c2).forEach(blockPos -> {
                     var state = serverLevel.getBlockState(blockPos);
                     if (state.is(ModTags.Blocks.HEATING_COILS) && !state.getValue(BlockStateProperties.ATTACHED)) {
