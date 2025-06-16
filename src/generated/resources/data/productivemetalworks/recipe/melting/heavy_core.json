@@ -1,0 +1,14 @@
+{
+  "type": "productivemetalworks:item_melting",
+  "ingredient": {
+    "item": "minecraft:heavy_core"
+  },
+  "maximum_temperature": 30000,
+  "minimum_temperature": 3000,
+  "result": [
+    {
+      "amount": 800,
+      "id": "productivemetalworks:molten_heavy_core"
+    }
+  ]
+}

@@ -1,3 +1,9 @@
+1.21.1-1.8.0
+
+- Added Molten Heavy Core
+- Fixed crash on dedicated servers
+
+
 1.21.1-1.7.0
 
 - Added Powered Heating Coils and Foundry Capacitors so the Foundry can run on FE (thanks to Slams for the assist)

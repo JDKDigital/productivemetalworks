@@ -52,6 +52,7 @@ public class ModTags
         public static final TagKey<Fluid> HONEY = FluidTags.create(ResourceLocation.fromNamespaceAndPath("c", "honey"));
         public static final TagKey<Fluid> MOLTEN_WAX = FluidTags.create(ResourceLocation.fromNamespaceAndPath("c", "wax"));
 
+        public static final TagKey<Fluid> MOLTEN_HEAVY_CORE = FluidTags.create(ResourceLocation.fromNamespaceAndPath("c", "molten_heavy_core"));
         public static final TagKey<Fluid> MOLTEN_AMETHYST = FluidTags.create(ResourceLocation.fromNamespaceAndPath("c", "molten_amethyst"));
         public static final TagKey<Fluid> MOLTEN_GLOWSTONE = FluidTags.create(ResourceLocation.fromNamespaceAndPath("c", "molten_glowstone"));
         public static final TagKey<Fluid> MOLTEN_REDSTONE = FluidTags.create(ResourceLocation.fromNamespaceAndPath("c", "molten_redstone"));

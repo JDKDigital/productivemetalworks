@@ -363,6 +363,8 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/magma_block"));
         ItemMeltingRecipeBuilder.of(Ingredient.of(Tags.Items.SHULKER_BOXES), new FluidStack(MetalworksRegistrator.MOLTEN_SHULKER_SHELL.get(), 200))
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/shulker_box"));
+        ItemMeltingRecipeBuilder.of(Ingredient.of(Items.HEAVY_CORE), new FluidStack(MetalworksRegistrator.MOLTEN_HEAVY_CORE.get(), 800), 3000, 30000)
+                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/heavy_core"));
 
         // Casting
         BlockCastingRecipeBuilder.of(SizedFluidIngredient.of(MetalworksRegistrator.MOLTEN_GLASS.get(), 1000), Items.GLASS.getDefaultInstance())
@@ -409,6 +411,8 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/ender_pearl"));
         ItemCastingRecipeBuilder.of(Items.ENDER_PEARL.getDefaultInstance(), SizedFluidIngredient.of(MetalworksRegistrator.MOLTEN_BLAZE.get(), 100), Items.ENDER_EYE.getDefaultInstance(), true)
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/ender_eye"));
+        ItemCastingRecipeBuilder.of(SizedFluidIngredient.of(MetalworksRegistrator.MOLTEN_HEAVY_CORE.get(), 900), Items.HEAVY_CORE.getDefaultInstance())
+                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/heavy_core"));
 
         // Casts
         ItemCastingRecipeBuilder.of(Tags.Items.INGOTS, SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_STEEL, 360), MetalworksRegistrator.CAST_INGOT.get().getDefaultInstance(), true)

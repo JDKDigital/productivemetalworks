@@ -104,6 +104,7 @@ public class MetalworksRegistrator
     public static DeferredHolder<Item, Item> CAST_PLATE = registerItem("plate_cast");
 
     // Fluids
+    public static DeferredHolder<Fluid, BaseFlowingFluid.Source> MOLTEN_HEAVY_CORE = registerFluid("molten_heavy_core", 0xff636776);
     public static DeferredHolder<Fluid, BaseFlowingFluid.Source> MOLTEN_AMETHYST = registerFluid("molten_amethyst", 0xffcfa0f3);
     public static DeferredHolder<Fluid, BaseFlowingFluid.Source> MOLTEN_GLOWSTONE = registerFluid("molten_glowstone", 0xfffbda74);
     public static DeferredHolder<Fluid, BaseFlowingFluid.Source> MOLTEN_REDSTONE = registerFluid("molten_redstone", 0xffa41808);

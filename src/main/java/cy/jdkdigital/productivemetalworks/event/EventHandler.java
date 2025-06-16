@@ -38,6 +38,8 @@ public class EventHandler
 
     @SubscribeEvent
     private static void levelUnload(final LevelEvent.Unload event) {
-        EntityRenderer.cache.clear();
+        if (event.getLevel().isClientSide()) {
+            EntityRenderer.cache.clear();
+        }
     }
 }

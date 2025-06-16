@@ -332,6 +332,22 @@
         }
       ]
     },
+    "productivemetalworks:molten_heavy_core": {
+      "units": [
+        {
+          "amount": 10,
+          "unit": "nugget"
+        },
+        {
+          "amount": 90,
+          "unit": "ingot"
+        },
+        {
+          "amount": 810,
+          "unit": "block"
+        }
+      ]
+    },
     "productivemetalworks:molten_invar": {
       "units": [
         {

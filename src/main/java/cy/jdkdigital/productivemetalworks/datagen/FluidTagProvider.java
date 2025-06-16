@@ -22,6 +22,7 @@ public class FluidTagProvider extends FluidTagsProvider
         tag(ModTags.Fluids.MOLTEN_WAX).add(MetalworksRegistrator.MOLTEN_WAX.get());
         tag(ModTags.Fluids.MOLTEN_ENDER).add(MetalworksRegistrator.MOLTEN_ENDER.get());
 
+        tag(ModTags.Fluids.MOLTEN_HEAVY_CORE).add(MetalworksRegistrator.MOLTEN_HEAVY_CORE.get());
         tag(ModTags.Fluids.MOLTEN_AMETHYST).add(MetalworksRegistrator.MOLTEN_AMETHYST.get());
         tag(ModTags.Fluids.MOLTEN_GLOWSTONE).add(MetalworksRegistrator.MOLTEN_GLOWSTONE.get());
         tag(ModTags.Fluids.MOLTEN_REDSTONE).add(MetalworksRegistrator.MOLTEN_REDSTONE.get());

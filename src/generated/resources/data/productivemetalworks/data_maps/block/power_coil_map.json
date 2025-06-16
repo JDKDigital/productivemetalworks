@@ -6,7 +6,7 @@
       "temperature": 3000
     },
     "productivemetalworks:powered_heating_coil": {
-      "consumption": 40.0,
+      "consumption": 30.0,
       "speed": 0.5,
       "temperature": 1500
     }
