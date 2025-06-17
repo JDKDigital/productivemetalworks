@@ -7,6 +7,8 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.BucketItem;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
+import net.createmod.ponder.foundation.PonderIndex;
+
 public class LanguageProvider extends net.neoforged.neoforge.common.data.LanguageProvider
 {
     public LanguageProvider(PackOutput output, String locale) {
@@ -117,6 +119,8 @@ public class LanguageProvider extends net.neoforged.neoforge.common.data.Languag
         add("book.productivemetalworks.sgear_page.casts", "There's a gear cast for every gear type that requires casting, this includes tips and tool rods. Please note that the tool rod cast is different from the regular rod cast.");
         add("book.productivemetalworks.sgear_page.grading", "There are a few other changes this mod makes to Silent Gear. The first one is the casting as already mentions, the other changes are that in order to grade or star charge your tool you have to do it to the final gear part and NOT the individual materials." +
                 "Grading and star charging needs to be done on the gear part multiple times as it will act on each individual material in the part one at a time.");
+
+        PonderIndex.getLangAccess().provideLang(ProductiveMetalworks.MODID, this::add);
     }
 
     @Override
