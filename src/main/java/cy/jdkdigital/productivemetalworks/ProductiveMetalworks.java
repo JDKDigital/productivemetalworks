@@ -1,6 +1,8 @@
 package cy.jdkdigital.productivemetalworks;
 
 import com.mojang.logging.LogUtils;
+
+import cy.jdkdigital.productivemetalworks.integration.ponder.MetalworksPonderPlugin;
 import cy.jdkdigital.productivemetalworks.registry.MetalworksRegistrator;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -12,15 +14,21 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.InterModComms;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.NeoForgeMod;
 import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
+
+import net.createmod.ponder.foundation.PonderIndex;
+
 import org.slf4j.Logger;
 
 // The value here should match an entry in the META-INF/neoforge.mods.toml file
@@ -67,6 +75,10 @@ public class ProductiveMetalworks
 
         if (ModList.get().isLoaded("invtweaks")) {
             InterModComms.sendTo("invtweaks", "blacklist-screen", () -> "cy.jdkdigital.productivemetalworks.client.screen.*");
+        }
+
+        if(FMLEnvironment.dist.isClient()) {
+            PonderIndex.addPlugin(new MetalworksPonderPlugin());
         }
     }
 }
