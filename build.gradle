@@ -30,9 +30,11 @@ repositories {
         name = "JEI"
         url 'https://maven.blamejared.com'
     }
-    repositories {
-        maven { url = "https://raw.githubusercontent.com/Fuzss/modresources/main/maven/" }
-        maven { url = "https://maven.createmod.net" }
+    maven {
+        url = "https://raw.githubusercontent.com/Fuzss/modresources/main/maven/"
+    }
+    maven {
+        url = "https://maven.createmod.net"
     }
 }
 
@@ -132,7 +134,7 @@ dependencies {
     jarJar(group: 'cy.jdkdigital.productivelib', name: 'productivelib', version: "${lib_version_range}") {
         transitive(false)
     }
-    jarJar(group: 'net.createmod.ponder', name: 'ponder-neoforge-1.21.1', version: "${ponder_version}") {
+    jarJar(group: 'net.createmod.ponder', name: 'Ponder-NeoForge-1.21.1', version: "${ponder_version}") {
         transitive(false)
     }
     jarJar(group: 'dev.engine-room.flywheel', name: 'flywheel-neoforge-1.21.1', version: "${flywheel_version}") {

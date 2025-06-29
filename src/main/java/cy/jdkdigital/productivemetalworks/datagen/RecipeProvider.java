@@ -1,6 +1,10 @@
 package cy.jdkdigital.productivemetalworks.datagen;
 
 import com.teamabnormals.clayworks.core.data.server.ClayworksRecipeProvider;
+import cy.jdkdigital.productivebees.common.crafting.conditions.BeeExistsCondition;
+import cy.jdkdigital.productivebees.common.crafting.ingredient.ComponentIngredient;
+import cy.jdkdigital.productivebees.init.ModEntities;
+import cy.jdkdigital.productivebees.init.ModItems;
 import cy.jdkdigital.productivelib.common.condition.LazyCondition;
 import cy.jdkdigital.productivelib.crafting.condition.FluidTagEmptyCondition;
 import cy.jdkdigital.productivelib.registry.LibItems;
@@ -27,6 +31,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.conditions.IConditionBuilder;
@@ -49,7 +54,8 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
             "productivemetalwork:platinum", "productivemetalwork:silver", "productivemetalwork:tin", "productivemetalwork:uranium",
             "productivemetalwork:zinc", "productivemetalwork:iridium", "productivemetalwork:steel", "productivemetalwork:invar",
             "productivemetalwork:electrum", "productivemetalwork:bronze", "productivemetalwork:brass", "productivemetalwork:enderium",
-            "productivemetalwork:lumium", "productivemetalwork:signalum", "productivemetalwork:refined_glowstone", "productivemetalwork:refined_obsidian"
+            "productivemetalwork:lumium", "productivemetalwork:signalum", "productivemetalwork:constantan",
+            "productivemetalwork:refined_glowstone", "productivemetalwork:refined_obsidian"
     };
     static String[] ATO_METALS = new String[]{
             "minecraft:iron", "minecraft:copper", "minecraft:gold", "minecraft:netherite",
@@ -57,7 +63,7 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
             "alltheores:platinum", "alltheores:silver", "alltheores:tin", "alltheores:uranium",
             "alltheores:zinc", "alltheores:iridium", "alltheores:steel", "alltheores:invar",
             "alltheores:electrum", "alltheores:bronze", "alltheores:brass", "alltheores:enderium",
-            "alltheores:lumium", "alltheores:signalum"
+            "alltheores:lumium", "alltheores:signalum", "alltheores:constantan"
     };
     static String[] FTB_METALS = new String[]{
             "minecraft:iron", "minecraft:copper", "minecraft:gold", "minecraft:netherite", "ftbmaterials:constantan",
@@ -363,7 +369,7 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/magma_block"));
         ItemMeltingRecipeBuilder.of(Ingredient.of(Tags.Items.SHULKER_BOXES), new FluidStack(MetalworksRegistrator.MOLTEN_SHULKER_SHELL.get(), 200))
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/shulker_box"));
-        ItemMeltingRecipeBuilder.of(Ingredient.of(Items.HEAVY_CORE), new FluidStack(MetalworksRegistrator.MOLTEN_HEAVY_CORE.get(), 800), 3000, 30000)
+        ItemMeltingRecipeBuilder.of(Ingredient.of(Items.HEAVY_CORE), new FluidStack(MetalworksRegistrator.MOLTEN_HEAVY_CORE.get(), 810), 3000, 30000)
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/heavy_core"));
 
         // Casting
@@ -411,7 +417,7 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/ender_pearl"));
         ItemCastingRecipeBuilder.of(Items.ENDER_PEARL.getDefaultInstance(), SizedFluidIngredient.of(MetalworksRegistrator.MOLTEN_BLAZE.get(), 100), Items.ENDER_EYE.getDefaultInstance(), true)
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/ender_eye"));
-        ItemCastingRecipeBuilder.of(SizedFluidIngredient.of(MetalworksRegistrator.MOLTEN_HEAVY_CORE.get(), 900), Items.HEAVY_CORE.getDefaultInstance())
+        ItemCastingRecipeBuilder.of(SizedFluidIngredient.of(MetalworksRegistrator.MOLTEN_HEAVY_CORE.get(), 810), Items.HEAVY_CORE.getDefaultInstance())
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/heavy_core"));
 
         // Casts
@@ -562,7 +568,7 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
             }
 
             if (fluid.equals(Fluids.EMPTY)) {
-                ProductiveMetalworks.LOGGER.info("empty fluid " + name);
+                ProductiveMetalworks.LOGGER.warn("empty fluid " + name);
             }
 
             // Melt block
@@ -684,6 +690,33 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
         // melt combs
 
         // casting recipes for bees that produce the alloy fluids
+        addBeeEggRecipe("iron", ModTags.Fluids.MOLTEN_STEEL, "steel", recipeOutput);
+        addBeeEggRecipe("coal", ModTags.Fluids.MOLTEN_STEEL, "steel", recipeOutput);
+
+        addBeeEggRecipe("silver", ModTags.Fluids.MOLTEN_SIGNALUM, "signalum", recipeOutput);
+        addBeeEggRecipe("copper", ModTags.Fluids.MOLTEN_SIGNALUM, "signalum", recipeOutput);
+
+        addBeeEggRecipe("silver", ModTags.Fluids.MOLTEN_LUMIUM, "lumium", recipeOutput);
+        addBeeEggRecipe("tin", ModTags.Fluids.MOLTEN_LUMIUM, "lumium", recipeOutput);
+
+        addBeeEggRecipe("iron", ModTags.Fluids.MOLTEN_INVAR, "invar", recipeOutput);
+        addBeeEggRecipe("nickel", ModTags.Fluids.MOLTEN_INVAR, "invar", recipeOutput);
+
+        addBeeEggRecipe("copper", ModTags.Fluids.MOLTEN_BRASS, "brass", recipeOutput);
+        addBeeEggRecipe("zinc", ModTags.Fluids.MOLTEN_BRASS, "brass", recipeOutput);
+
+        addBeeEggRecipe("copper", ModTags.Fluids.MOLTEN_BRONZE, "bronze", recipeOutput);
+        addBeeEggRecipe("tin", ModTags.Fluids.MOLTEN_BRONZE, "bronze", recipeOutput);
+
+        addBeeEggRecipe("copper", ModTags.Fluids.MOLTEN_CONSTANTAN, "constantan", recipeOutput);
+        addBeeEggRecipe("nickel", ModTags.Fluids.MOLTEN_CONSTANTAN, "constantan", recipeOutput);
+
+        addBeeEggRecipe("gold", ModTags.Fluids.MOLTEN_ELECTRUM, "electrum", recipeOutput);
+        addBeeEggRecipe("silver", ModTags.Fluids.MOLTEN_ELECTRUM, "electrum", recipeOutput);
+
+        addBeeEggRecipe("lead", ModTags.Fluids.MOLTEN_ENDERIUM, "enderium", recipeOutput);
+        addBeeEggRecipe("diamond", ModTags.Fluids.MOLTEN_ENDERIUM, "enderium", recipeOutput);
+        addBeeEggRecipe("platinum", ModTags.Fluids.MOLTEN_ENDERIUM, "enderium", recipeOutput);
 
         // cast wax block
         BlockCastingRecipeBuilder.of(SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_WAX, 450), BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("productivebees", "wax_block")).getDefaultInstance())
@@ -692,6 +725,23 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
         ItemCastingRecipeBuilder.of(SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_WAX, 50), BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("productivebees", "wax")).getDefaultInstance())
                 .save(recipeOutput.withConditions(new ModLoadedCondition("productivebees")), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/pbees/wax"));
 
+    }
+
+    private static void addBeeEggRecipe(String inputBee, TagKey<Fluid> fluid, String outputBee, RecipeOutput recipeOutput) {
+        ItemCastingRecipeBuilder.of(ComponentIngredient.of(getBeeSpawnEgg("productivebees:" + inputBee)), SizedFluidIngredient.of(fluid,710), getBeeSpawnEgg("productivebees:" + outputBee), true)
+                .save(recipeOutput.withConditions(new ModLoadedCondition("productivebees"))
+                                .withConditions(new LazyCondition(new BeeExistsCondition(ResourceLocation.parse("productivebees:" + inputBee))))
+                                .withConditions(new LazyCondition(new BeeExistsCondition(ResourceLocation.parse("productivebees:" + outputBee)))),
+                        ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/pbees/" + outputBee + "_bee_from_" + inputBee));
+    }
+
+    private static ItemStack getBeeSpawnEgg(String type) {
+        var inputEgg = new ItemStack(ModItems.CONFIGURABLE_SPAWN_EGG.get());
+        var inputTag = new CompoundTag();
+        inputTag.putString("id", ModEntities.CONFIGURABLE_BEE.getId().toString());
+        inputTag.putString("type", type);
+        inputEgg.set(DataComponents.ENTITY_DATA, CustomData.of(inputTag));
+        return inputEgg;
     }
 
     private static void copperCompat(RecipeOutput recipeOutput) {

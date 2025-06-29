@@ -2,6 +2,7 @@ package cy.jdkdigital.productivemetalworks.util;
 
 import com.mojang.datafixers.util.Pair;
 import cy.jdkdigital.productivelib.common.block.entity.InventoryHandlerHelper;
+import cy.jdkdigital.productivemetalworks.ProductiveMetalworks;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
@@ -59,7 +60,7 @@ abstract public class TickingSlotInventoryHandler extends InventoryHandlerHelper
 
     @Override
     public void setStackInSlot(int slot, ItemStack stack) {
-        if (!stack.isEmpty() && slot < tickers.size()) {
+        if (!stack.isEmpty() && slot < tickers.size() && this.blockEntity.hasLevel() && !this.blockEntity.getLevel().isClientSide) {
             int time = getTimeInSlot(stack);
             tickers.set(slot, Pair.of(time, time));
         }

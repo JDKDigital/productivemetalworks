@@ -71,6 +71,15 @@ public class LanguageProvider extends net.neoforged.neoforge.common.data.Languag
         add("productivebees.ingredient.description.allthemodium_bee", "To acquire this bee, look up the crafting recipe for its spawn egg.");
         add("productivebees.ingredient.description.vibranium_bee", "To acquire this bee, look up the crafting recipe for its spawn egg.");
         add("productivebees.ingredient.description.unobtainium_bee", "To acquire this bee, look up the crafting recipe for its spawn egg.");
+        add("productivebees.ingredient.description.brass_bee", "To acquire this bee, look up the crafting recipe for its spawn egg.");
+        add("productivebees.ingredient.description.bronze_bee", "To acquire this bee, look up the crafting recipe for its spawn egg.");
+        add("productivebees.ingredient.description.constantan_bee", "To acquire this bee, look up the crafting recipe for its spawn egg.");
+        add("productivebees.ingredient.description.electrum_bee", "To acquire this bee, look up the crafting recipe for its spawn egg.");
+        add("productivebees.ingredient.description.enderium_bee", "To acquire this bee, look up the crafting recipe for its spawn egg.");
+        add("productivebees.ingredient.description.invar_bee", "To acquire this bee, look up the crafting recipe for its spawn egg.");
+        add("productivebees.ingredient.description.lumium_bee", "To acquire this bee, look up the crafting recipe for its spawn egg.");
+        add("productivebees.ingredient.description.signalum_bee", "To acquire this bee, look up the crafting recipe for its spawn egg.");
+        add("productivebees.ingredient.description.steel_bee", "To acquire this bee, look up the crafting recipe for its spawn egg.");
 
         add("gui." + ProductiveMetalworks.MODID + ".temperature", "Temperature: %s C");
 

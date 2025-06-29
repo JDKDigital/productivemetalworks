@@ -7,7 +7,7 @@
   "minimum_temperature": 3000,
   "result": [
     {
-      "amount": 800,
+      "amount": 810,
       "id": "productivemetalworks:molten_heavy_core"
     }
   ]

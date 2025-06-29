@@ -165,7 +165,7 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
 
             // Process entity detection
             if (blockEntity.tickCounter % 20 == 0 && (Config.foundryCollectItems || Config.foundryDamageEntities)) {
-                var c1 = mb.topCorners().getFirst().below(mb.height() - 1);
+                var c1 = mb.topCorners().getFirst().below(mb.height());
                 var c2 = mb.topCorners().getSecond().below(mb.height() - 2);
 
                 level.getEntities(null, new AABB(c1.getX(), c1.getY(), c1.getZ(), c2.getX(), c2.getY(), c2.getZ())).forEach(entity -> {
@@ -321,7 +321,7 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
                 var fluid = tank.getFluidHandler().getFluidInTank(0);
                 if (!fluid.isEmpty()) {
                     if (fluidFuel.isEmpty()) {
-                        fluidFuel  = fluid.copy();
+                        fluidFuel = fluid.copy();
                     } else if (fluidFuel.is(fluid.getFluid())) {
                         fluidFuel.grow(fluid.getAmount());
                     }
@@ -592,13 +592,16 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
         }
 
         public IFoundryFuel getFoundryFuel(Level level, FoundryControllerBlockEntity blockEntity) {
-            var coilPos = new BlockPos(
-                    (blockEntity.getMultiblockData().topCorners().getFirst().getX() + blockEntity.getMultiblockData().topCorners().getSecond().getX()) / 2,
-                    blockEntity.getMultiblockData().topCorners().getFirst().getY() - blockEntity.getMultiblockData().height(),
-                    (blockEntity.getMultiblockData().topCorners().getFirst().getZ() + blockEntity.getMultiblockData().topCorners().getSecond().getZ()) / 2
-            );
-
-            return new PowerFuel(blockEntity.getPower(), level.getBlockState(coilPos).getBlock());
+            var mb = blockEntity.getMultiblockData();
+            if (mb != null) {
+                var coilPos = new BlockPos(
+                        (blockEntity.getMultiblockData().topCorners().getFirst().getX() + blockEntity.getMultiblockData().topCorners().getSecond().getX()) / 2,
+                        blockEntity.getMultiblockData().topCorners().getFirst().getY() - blockEntity.getMultiblockData().height(),
+                        (blockEntity.getMultiblockData().topCorners().getFirst().getZ() + blockEntity.getMultiblockData().topCorners().getSecond().getZ()) / 2
+                );
+                return new PowerFuel(blockEntity.getPower(), level.getBlockState(coilPos).getBlock());
+            }
+            return new PowerFuel(blockEntity.getPower(), MetalworksRegistrator.POWERED_HEATING_COIL.get());
         }
     }
 

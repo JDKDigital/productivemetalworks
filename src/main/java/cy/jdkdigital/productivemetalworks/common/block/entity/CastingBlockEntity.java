@@ -131,8 +131,19 @@ public class CastingBlockEntity extends CapabilityBlockEntity
         }
 
         @Override
-        public FluidStack drain(int maxDrain, FluidAction action) {
+        public @NotNull FluidStack drain(int maxDrain, FluidAction action) {
+            if (CastingBlockEntity.this.isCooling()) {
+                return FluidStack.EMPTY;
+            }
             return super.drain(maxDrain, action);
+        }
+
+        @Override
+        public @NotNull FluidStack drain(FluidStack resource, FluidAction action) {
+            if (CastingBlockEntity.this.isCooling()) {
+                return FluidStack.EMPTY;
+            }
+            return super.drain(resource, action);
         }
 
         @Override

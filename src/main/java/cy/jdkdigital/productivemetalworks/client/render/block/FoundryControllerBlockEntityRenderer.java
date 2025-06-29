@@ -70,15 +70,15 @@ public class FoundryControllerBlockEntityRenderer implements BlockEntityRenderer
 
             // Render inventory
             if (Config.foundryRenderInventory) {
-                var bb = new BoundingBox(
-                        Math.min(c1.getX(), c2.getX()),
-                        Math.min(c1.getY() + 1, c2.below(multiBlockData.height()).getY()),
-                        Math.min(c1.getZ(), c2.getZ()),
-                        Math.max(c1.getX(), c2.getX()),
-                        Math.max(c1.getY() + 1, c2.below(multiBlockData.height()).getY()),
-                        Math.max(c1.getZ(), c2.getZ())
+                var aabb = new BoundingBox(
+                        Math.min(c1.getX(), c2.getX()) + 1,
+                        c1.below(multiBlockData.height()-1).getY(),
+                        Math.min(c1.getZ(), c2.getZ()) + 1,
+                        Math.max(c1.getX(), c2.getX()) - 1,
+                        c1.getY(),
+                        Math.max(c1.getZ(), c2.getZ()) - 1
                 );
-                var positions = BlockPos.betweenClosedStream(bb.inflatedBy(-1)).map(BlockPos::immutable).toList();
+                var positions = BlockPos.betweenClosedStream(aabb).map(BlockPos::immutable).toList();
                 for (int slot = 0; slot < blockEntity.getItemHandler().getSlots(); slot++) {
                     ItemStack output = blockEntity.getItemHandler().getStackInSlot(slot);
                     if (!output.isEmpty() && slot < positions.size()) {

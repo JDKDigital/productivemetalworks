@@ -1,3 +1,36 @@
+1.21.1-1.9.5
+
+- Fixed entity melting. Many rabbits were harmed in the testing of this release.
+
+
+1.21.1-1.9.4
+
+- Fixed alloy bee casting recipes
+
+
+1.21.1-1.9.3
+
+- Fix multiblock detection
+
+
+1.21.1-1.9.2
+
+- Fixed a crash when rendering items in a 1x1 foundry
+- Fixed incorrect heating coil position calculations
+
+
+1.21.1-1.9.1
+
+- Fixed inconsistencies in molten heavy core recipes
+
+
+1.21.1-1.9.0
+
+- Added ponders (Satherov)
+- Improved pipe connectivity
+- Added alloy bee casting recipes (Productive Bees)
+
+
 1.21.1-1.8.0
 
 - Added Molten Heavy Core

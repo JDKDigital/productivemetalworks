@@ -58,7 +58,7 @@ public class ModTags
         public static final TagKey<Fluid> MOLTEN_REDSTONE = FluidTags.create(ResourceLocation.fromNamespaceAndPath("c", "molten_redstone"));
         public static final TagKey<Fluid> MOLTEN_OBSIDIAN = FluidTags.create(ResourceLocation.fromNamespaceAndPath("c", "molten_obsidian"));
         public static final TagKey<Fluid> MOLTEN_GLASS = FluidTags.create(ResourceLocation.fromNamespaceAndPath("c", "molten_glass"));
-        public static final TagKey<Fluid> MOLTEN_EMERALD = FluidTags.create(ResourceLocation.fromNamespaceAndPath("c", "dmolten_emerald"));
+        public static final TagKey<Fluid> MOLTEN_EMERALD = FluidTags.create(ResourceLocation.fromNamespaceAndPath("c", "molten_emerald"));
         public static final TagKey<Fluid> MOLTEN_DIAMOND = FluidTags.create(ResourceLocation.fromNamespaceAndPath("c", "molten_diamond"));
         public static final TagKey<Fluid> MOLTEN_LAPIS = FluidTags.create(ResourceLocation.fromNamespaceAndPath("c", "molten_lapis"));
         public static final TagKey<Fluid> MOLTEN_QUARTZ = FluidTags.create(ResourceLocation.fromNamespaceAndPath("c", "molten_quartz"));
