@@ -1,3 +1,9 @@
+1.21.1-1.9.6
+
+- Added melting recipes for Constantan
+- New textures for casting blocks and controller front (by cBoone)
+
+
 1.21.1-1.9.5
 
 - Fixed entity melting. Many rabbits were harmed in the testing of this release.
