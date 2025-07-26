@@ -419,6 +419,8 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/ender_eye"));
         ItemCastingRecipeBuilder.of(SizedFluidIngredient.of(MetalworksRegistrator.MOLTEN_HEAVY_CORE.get(), 810), Items.HEAVY_CORE.getDefaultInstance())
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/heavy_core"));
+        BlockCastingRecipeBuilder.of(Tags.Items.CHESTS, SizedFluidIngredient.of(MetalworksRegistrator.MOLTEN_SHULKER_SHELL.get(), 200), Items.SHULKER_BOX.getDefaultInstance(), true)
+                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/shulker_box"));
 
         // Casts
         ItemCastingRecipeBuilder.of(Tags.Items.INGOTS, SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_STEEL, 360), MetalworksRegistrator.CAST_INGOT.get().getDefaultInstance(), true)

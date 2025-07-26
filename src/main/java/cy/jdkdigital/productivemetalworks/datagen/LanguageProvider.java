@@ -82,6 +82,7 @@ public class LanguageProvider extends net.neoforged.neoforge.common.data.Languag
         add("productivebees.ingredient.description.steel_bee", "To acquire this bee, look up the crafting recipe for its spawn egg.");
 
         add("gui." + ProductiveMetalworks.MODID + ".temperature", "Temperature: %s C");
+        add("gui." + ProductiveMetalworks.MODID + ".required_fuel", "Required fuel: %s");
 
         ProductiveMetalworks.ITEMS.getEntries().forEach(registryObject -> {
             if (registryObject.get() instanceof BucketItem) {

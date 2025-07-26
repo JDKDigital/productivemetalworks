@@ -222,6 +222,7 @@ public class MetalworksRegistrator
                 .noCollission()
                 .liquid()
                 .replaceable()
+                .lightLevel(value -> 15)
         ), false);
 
         return MOLTEN;

@@ -1,7 +1,20 @@
+
+- Fixed dupe bug with foundryCoolingModifier
+
+
+1.21.1-1.10.0
+
+- Constant redstone signal will now keep taps open
+- Remove limit on what items can be used as a cast in casting table
+- Added fuel requirement to item tooltip in foundry screen
+- Made molten metals give off light
+
+
 1.21.1-1.9.6
 
 - Added melting recipes for Constantan
 - New textures for casting blocks and controller front (by cBoone)
+- Added Ukranian translation (by WajtEvie)
 
 
 1.21.1-1.9.5

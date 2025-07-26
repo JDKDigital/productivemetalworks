@@ -171,7 +171,7 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
                 level.getEntities(null, new AABB(c1.getX(), c1.getY(), c1.getZ(), c2.getX(), c2.getY(), c2.getZ())).forEach(entity -> {
                     // Item entities can be picked up when there's room in the item handler
                     if (Config.foundryCollectItems) {
-                        if (entity instanceof ItemEntity item) {
+                        if (entity instanceof ItemEntity item && !item.isRemoved()) {
                             var groundStack = item.getItem();
                             for (int slot = 0; slot < blockEntity.itemHandler.getSlots(); slot++) {
                                 if (blockEntity.itemHandler.getItem(slot).isEmpty()) {
@@ -237,7 +237,7 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
         }
     }
 
-    private int getSpeedModifier() {
+    public int getSpeedModifier() {
         return 1 + this.getUpgradeCount(LibItems.UPGRADE_TIME.get()) + 2 * this.getUpgradeCount(LibItems.UPGRADE_TIME_2.get());
     }
 

@@ -4,12 +4,14 @@ import com.mojang.datafixers.util.Pair;
 import cy.jdkdigital.productivelib.util.FluidContainerUtil;
 import cy.jdkdigital.productivemetalworks.ProductiveMetalworks;
 import cy.jdkdigital.productivemetalworks.common.block.entity.FoundryControllerBlockEntity;
+import cy.jdkdigital.productivemetalworks.common.datamap.FuelMap;
 import cy.jdkdigital.productivemetalworks.common.menu.FoundryControllerContainer;
 import cy.jdkdigital.productivemetalworks.network.MoveFoundryFluidData;
+import cy.jdkdigital.productivemetalworks.recipe.ItemMeltingRecipe;
 import cy.jdkdigital.productivemetalworks.registry.ModTags;
-import cy.jdkdigital.productivemetalworks.util.CoilType;
-import cy.jdkdigital.productivemetalworks.util.FluidHelper;
-import cy.jdkdigital.productivemetalworks.util.TickingSlotInventoryHandler;
+import cy.jdkdigital.productivemetalworks.util.*;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
@@ -17,8 +19,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.network.PacketDistributor;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -146,6 +151,37 @@ public class FoundryControllerScreen extends AbstractContainerScreen<FoundryCont
                 nextFluidOffset += (int) fluidHeight;
             }
         }
+    }
+
+    @Override
+    protected @NotNull List<Component> getTooltipFromContainerItem(ItemStack stack) {
+        List<Component> tooltips = super.getTooltipFromContainerItem(stack);
+
+        if (!stack.isEmpty()) {
+            FoundryControllerBlockEntity.IMelterProcessor melter = switch (this.menu.blockEntity.getCoilType()) {
+                case UNKNOWN -> null;
+                case CoilType.FLUID -> new FoundryControllerBlockEntity.LiquidMelter();
+                case CoilType.ENERGY -> new FoundryControllerBlockEntity.EnergyMelter();
+            };
+            if (melter != null) {
+                FuelMap fuelData = melter.getFoundryFuel(this.menu.blockEntity.getLevel(), this.menu.blockEntity).getFuelData();
+                if (fuelData != null) {
+                    RecipeHolder<ItemMeltingRecipe> recipe = RecipeHelper.getItemMeltingRecipe(Minecraft.getInstance().level, stack, fuelData);
+                    if (recipe != null) {
+                        int speedModifier = this.menu.blockEntity.getSpeedModifier();
+                        // Sum total fluid amount that would be melted
+                        int totalProducedFluid = recipe.value().result.stream().map(FluidStack::getAmount).reduce(Integer::sum).orElse(0);
+
+                        // Look at the fuel required for this recipe melt
+                        int requiredFuel = (int) (totalProducedFluid * fuelData.consumption() * speedModifier);
+                        boolean hasEnough = requiredFuel <= (this.menu.blockEntity.getCoilType().equals(CoilType.ENERGY) ? this.menu.blockEntity.getPower() : this.menu.blockEntity.getFuel().getAmount());
+                        tooltips.add(tooltips.size() - 1, Component.translatable("gui.productivemetalworks.required_fuel", requiredFuel + (this.menu.blockEntity.getCoilType().equals(CoilType.ENERGY) ? " FE" : " mb")).withStyle(hasEnough ? ChatFormatting.GREEN : ChatFormatting.RED));
+                    }
+                }
+            }
+        }
+
+        return tooltips;
     }
 
     @Override

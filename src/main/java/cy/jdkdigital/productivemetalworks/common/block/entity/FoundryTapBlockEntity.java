@@ -1,6 +1,7 @@
 package cy.jdkdigital.productivemetalworks.common.block.entity;
 
 import cy.jdkdigital.productivelib.common.block.entity.AbstractBlockEntity;
+import cy.jdkdigital.productivemetalworks.ProductiveMetalworks;
 import cy.jdkdigital.productivemetalworks.registry.MetalworksRegistrator;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -18,18 +19,25 @@ public class FoundryTapBlockEntity extends AbstractBlockEntity
 {
     public boolean isActive = false;
     public int fluidId = 0;
+    private int activationCounter = 0;
     public FoundryTapBlockEntity(BlockPos pos, BlockState blockState) {
         super(MetalworksRegistrator.FOUNDRY_TAP_BLOCK_ENTITY.get(), pos, blockState);
     }
 
     public static void serverTick(Level level, BlockPos blockPos, BlockState blockState, FoundryTapBlockEntity blockEntity) {
+        // Every 10 ticks check for redstone signal and turn on
+        if (!blockEntity.isActive && ++blockEntity.activationCounter%10 == 0 && level.hasNeighborSignal(blockPos)) {
+            blockEntity.setActive(true);
+            blockEntity.activationCounter = 0;
+        }
+
         // Transfer fluid when active from connected fluid container to fluid container below
         if (blockEntity.isActive) {
             var direction = blockState.getValue(BlockStateProperties.HORIZONTAL_FACING);
-            var source = level.getCapability(Capabilities.FluidHandler.BLOCK, blockPos.relative(direction.getOpposite()), direction);
+            var drainSource = level.getCapability(Capabilities.FluidHandler.BLOCK, blockPos.relative(direction.getOpposite()), direction);
             var destination = level.getCapability(Capabilities.FluidHandler.BLOCK, blockPos.below(), Direction.UP);
-            if (source != null && destination != null && !FluidUtil.tryFluidTransfer(destination, source, 10, false).isEmpty()) {
-                FluidUtil.tryFluidTransfer(destination, source, 10, true);
+            if (drainSource != null && destination != null && !FluidUtil.tryFluidTransfer(destination, drainSource, 10, false).isEmpty()) {
+                FluidUtil.tryFluidTransfer(destination, drainSource, 10, true);
                 int fId = BuiltInRegistries.FLUID.getId(destination.getFluidInTank(0).getFluid());
                 if (blockEntity.fluidId != fId) {
                     blockEntity.fluidId = fId;
@@ -43,11 +51,11 @@ public class FoundryTapBlockEntity extends AbstractBlockEntity
         }
     }
 
-    public void toggleActive() {
+    public void setActive(boolean isActive) {
         var dir = getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING);
         if (level != null && level.getCapability(Capabilities.FluidHandler.BLOCK, getBlockPos().relative(dir.getOpposite()), dir) != null) {
-            this.isActive = !this.isActive;
-            if (!this.isActive) {
+            this.isActive = isActive;
+            if (!isActive) {
                 this.fluidId = 0;
             }
             if (level != null) {

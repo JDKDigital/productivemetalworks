@@ -2,6 +2,7 @@ package cy.jdkdigital.productivemetalworks.common.block;
 
 import com.mojang.serialization.MapCodec;
 import cy.jdkdigital.productivelib.common.block.IMultiBlockPeripheral;
+import cy.jdkdigital.productivemetalworks.ProductiveMetalworks;
 import cy.jdkdigital.productivemetalworks.common.block.entity.FoundryTapBlockEntity;
 import cy.jdkdigital.productivemetalworks.registry.MetalworksRegistrator;
 import net.minecraft.core.BlockPos;
@@ -88,7 +89,7 @@ public class FoundryTapBlock extends BaseEntityBlock implements IMultiBlockPerip
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         if (level.getBlockEntity(pos) instanceof FoundryTapBlockEntity blockEntity) {
             if (!level.isClientSide) {
-                blockEntity.toggleActive();
+                blockEntity.setActive(!blockEntity.isActive);
             }
             return InteractionResult.sidedSuccess(level.isClientSide);
         }
@@ -98,10 +99,8 @@ public class FoundryTapBlock extends BaseEntityBlock implements IMultiBlockPerip
     @Override
     protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
         if (level.getBlockEntity(pos) instanceof FoundryTapBlockEntity blockEntity) {
-            boolean hasSignal = level.hasNeighborSignal(pos) || level.hasNeighborSignal(pos.above());
-            if (hasSignal) {
-                blockEntity.toggleActive();
-            }
+            boolean hasSignal = level.hasNeighborSignal(pos);
+            blockEntity.setActive(hasSignal);
         }
     }
 }

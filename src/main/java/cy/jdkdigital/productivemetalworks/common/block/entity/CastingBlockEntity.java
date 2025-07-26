@@ -209,7 +209,7 @@ public class CastingBlockEntity extends CapabilityBlockEntity
                         // insert item but disable pulling and picking the item when coolingTime > 0
                         var resultItem = recipe.getResultItem(level, fluid);
                         castingTableBlock.itemHandler.setStackInSlot(0, resultItem);
-                        castingTableBlock.coolingTime = (int) (recipe.getFluidAmount(level, fluid) / Config.foundryCoolingModifier);
+                        castingTableBlock.coolingTime = Math.max(1, (int) (recipe.getFluidAmount(level, fluid) / Config.foundryCoolingModifier));
                         castingTableBlock.maxAmount = recipe.getFluidAmount(level, fluid);
                         castingTableBlock.sync(serverLevel);
                     }

@@ -122,8 +122,7 @@ public class CastingTableBlock extends BaseEntityBlock
                 level.getBlockEntity(pos) instanceof CastingBlockEntity blockEntity &&
                 blockEntity.canAcceptCast() // no fluid
         ) {
-            boolean isTable = state.is(MetalworksRegistrator.CASTING_TABLE);
-            if (level instanceof ServerLevel serverLevel && (!isTable || !(stack.getItem() instanceof BlockItem))) {
+            if (level instanceof ServerLevel serverLevel) {
                 var clonedStack = stack.copy();
                 clonedStack.setCount(1);
                 blockEntity.castInv.insertItem(0, clonedStack, false);

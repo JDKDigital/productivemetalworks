@@ -5,6 +5,7 @@ import net.minecraft.advancements.Criterion;
 import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -35,6 +36,10 @@ public class BlockCastingRecipeBuilder implements RecipeBuilder
     }
 
     public static BlockCastingRecipeBuilder of(ItemStack cast, SizedFluidIngredient fluid, ItemStack result, boolean consumeCast) {
+        return of(Ingredient.of(cast), fluid, result, consumeCast);
+    }
+
+    public static BlockCastingRecipeBuilder of(TagKey<Item> cast, SizedFluidIngredient fluid, ItemStack result, boolean consumeCast) {
         return of(Ingredient.of(cast), fluid, result, consumeCast);
     }
 
