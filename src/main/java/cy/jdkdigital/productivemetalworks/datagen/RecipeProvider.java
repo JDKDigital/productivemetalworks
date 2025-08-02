@@ -730,7 +730,7 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
     }
 
     private static void addBeeEggRecipe(String inputBee, TagKey<Fluid> fluid, String outputBee, RecipeOutput recipeOutput) {
-        ItemCastingRecipeBuilder.of(ComponentIngredient.of(getBeeSpawnEgg("productivebees:" + inputBee)), SizedFluidIngredient.of(fluid,710), getBeeSpawnEgg("productivebees:" + outputBee), true)
+        ItemCastingRecipeBuilder.of(ComponentIngredient.of(getBeeSpawnEgg("productivebees:" + inputBee)), SizedFluidIngredient.of(fluid,810), getBeeSpawnEgg("productivebees:" + outputBee), true)
                 .save(recipeOutput.withConditions(new ModLoadedCondition("productivebees"))
                                 .withConditions(new LazyCondition(new BeeExistsCondition(ResourceLocation.parse("productivebees:" + inputBee))))
                                 .withConditions(new LazyCondition(new BeeExistsCondition(ResourceLocation.parse("productivebees:" + outputBee)))),

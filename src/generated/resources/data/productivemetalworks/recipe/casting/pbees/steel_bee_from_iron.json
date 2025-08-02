@@ -32,7 +32,7 @@
   },
   "consume_cast": true,
   "fluid": {
-    "amount": 710,
+    "amount": 810,
     "tag": "c:molten_steel"
   },
   "result": {
