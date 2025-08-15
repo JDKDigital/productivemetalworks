@@ -357,5 +357,7 @@
   "productivemetalworks.unit.scrap.multiple": "%s Scraps",
   "productivemetalworks.unit.scrap.single": "%s Scrap",
   "productivemetalworks.unit.shell.multiple": "%s Shells",
-  "productivemetalworks.unit.shell.single": "%s Shell"
+  "productivemetalworks.unit.shell.single": "%s Shell",
+
+  "productivemetalworks.devices.foundry_controller": "Foundry Controller"
 }
