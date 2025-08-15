@@ -31,7 +31,7 @@ public class EventHandler
 
         switch (upgradeType.getPath()) {
             case "upgrade_time", "upgrade_time_2", "upgrade_stability" -> {
-                event.addValidBlock(Component.literal("Foundry Controller"));
+                event.addValidBlock(Component.translatable("productivemetalworks.devices.foundry_controller"));
             }
         }
     }
