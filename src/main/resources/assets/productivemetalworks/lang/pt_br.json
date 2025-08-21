@@ -211,6 +211,7 @@
   "fluid_type.productivemetalworks.molten_uranium": "Urânio Derretido",
   "fluid_type.productivemetalworks.molten_wax": "Cera Derretida",
   "fluid_type.productivemetalworks.molten_zinc": "Zinco Derretido",
+  "gui.productivemetalworks.required_fuel": "Combustível necessário: %s",
   "gui.productivemetalworks.temperature": "Temperatura: %s °C",
   "item.productivemetalworks.fire_brick": "Tijolo Refratário",
   "item.productivemetalworks.gear_cast": "Molde de Peça",
@@ -356,5 +357,7 @@
   "productivemetalworks.unit.scrap.multiple": "%s Sucatas",
   "productivemetalworks.unit.scrap.single": "%s Sucata",
   "productivemetalworks.unit.shell.multiple": "%s Cascos",
-  "productivemetalworks.unit.shell.single": "%s Casco"
+  "productivemetalworks.unit.shell.single": "%s Casco",
+  
+  "productivemetalworks.devices.foundry_controller": "Controlador de Fundição"
 }
