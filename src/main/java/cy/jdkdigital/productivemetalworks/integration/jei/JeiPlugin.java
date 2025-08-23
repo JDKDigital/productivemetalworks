@@ -64,12 +64,6 @@ public class JeiPlugin implements IModPlugin
         registration.addRecipeCatalyst(MetalworksRegistrator.CASTING_BASIN.get(), BLOCK_CASTING);
     }
 
-//    @Override
-//    public void registerIngredients(IModIngredientRegistration registration) {
-//        List<Entity> ingredients = BuiltInRegistries.ENTITY_TYPE.holders().filter(entityTypeReference -> entityTypeReference.getData(MetalworksRegistrator.ENTITY_MELTING_MAP) != null).map(entityTypeReference -> entityTypeReference.value()).toList();
-//        registration.register(ENTITY_INGREDIENT, new ArrayList<>(ingredients), new EntityIngredientHelper(), new EntityIngredientRenderer());
-//    }
-
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
         RecipeManager recipeManager = Minecraft.getInstance().level.getRecipeManager();

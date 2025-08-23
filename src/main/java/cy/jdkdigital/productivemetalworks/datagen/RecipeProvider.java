@@ -861,7 +861,7 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
         BlockCastingRecipeBuilder.of(SizedFluidIngredient.of(menrilResin, 1000), menrilBlock.getDefaultInstance())
                 .save(recipeOutput.withConditions(new ModLoadedCondition("integrateddynamics")), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/id/crystalized_menril_block"));
         // menril chunk
-        ItemCastingRecipeBuilder.of(MetalworksRegistrator.CAST_NUGGET.get().getDefaultInstance(), SizedFluidIngredient.of(menrilResin, 1000), menrilChunk.getDefaultInstance())
+        ItemCastingRecipeBuilder.of(MetalworksRegistrator.CAST_NUGGET.get().getDefaultInstance(), SizedFluidIngredient.of(menrilResin, 100), menrilChunk.getDefaultInstance())
                 .save(recipeOutput.withConditions(new ModLoadedCondition("integrateddynamics")), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/id/crystalized_menril_chunk"));
 
         var chorusBlock = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("integrateddynamics", "crystalized_chorus_block"));
