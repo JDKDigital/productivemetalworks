@@ -1073,6 +1073,7 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
     private void vanillaCopperComp(RecipeOutput recipeOutput) {
         // empty string = normal copper
         // we do not redeclare the melting for the normal copper block
+        // melting copper items
         for (String copperState : new String[]{"", "exposed_", "weathered_", "oxidized_", "waxed_", "waxed_exposed_", "waxed_weathered_", "waxed_oxidized_"}) {
             String copperBlockName = copperState.equals("waxed_") ? "copper_block" : "copper";
             if (!copperState.isEmpty()) {
@@ -1080,7 +1081,6 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
                 ItemMeltingRecipeBuilder.of(Ingredient.of(copperBlock), new FluidStack(MetalworksRegistrator.MOLTEN_COPPER.get(), 810))
                         .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/" + copperState + copperBlockName));
             }
-
             var chiseledCopper = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("minecraft", copperState + "chiseled_copper"));
             ItemMeltingRecipeBuilder.of(Ingredient.of(chiseledCopper), new FluidStack(MetalworksRegistrator.MOLTEN_COPPER.get(), 202))
                     .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/" + copperState + "chiseled_copper"));
@@ -1123,6 +1123,13 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
                 ))
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/spyglass"));
 
+        // melting iron items
+        ItemMeltingRecipeBuilder.of(Ingredient.of(Items.IRON_BARS), new FluidStack(MetalworksRegistrator.MOLTEN_IRON.get(), 33))
+                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/iron_bars"));
+        ItemMeltingRecipeBuilder.of(Ingredient.of(Items.IRON_TRAPDOOR), new FluidStack(MetalworksRegistrator.MOLTEN_IRON.get(), 360))
+                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/iron_trapdoor"));
+        ItemMeltingRecipeBuilder.of(Ingredient.of(Items.IRON_DOOR), new FluidStack(MetalworksRegistrator.MOLTEN_IRON.get(), 180))
+                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/iron_door"));
     }
 
     private static void itemMeltingRecipe(TagKey<Item> tag, FluidStack output, RecipeOutput recipeOutput) {
