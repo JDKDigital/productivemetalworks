@@ -7,7 +7,7 @@
   "minimum_temperature": 1000,
   "result": [
     {
-      "amount": 202,
+      "amount": 101,
       "id": "productivemetalworks:molten_copper"
     }
   ]

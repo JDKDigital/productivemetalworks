@@ -7,8 +7,16 @@
   "minimum_temperature": 1000,
   "result": [
     {
-      "amount": 1440,
+      "amount": 607,
       "id": "productivemetalworks:molten_copper"
+    },
+    {
+      "amount": 25,
+      "id": "productivemetalworks:molten_redstone"
+    },
+    {
+      "amount": 100,
+      "id": "productivemetalworks:molten_blaze"
     }
   ]
 }

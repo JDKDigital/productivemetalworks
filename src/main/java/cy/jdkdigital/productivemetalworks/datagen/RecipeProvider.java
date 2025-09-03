@@ -1098,7 +1098,7 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
                     .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/" + copperState + "cut_copper_stairs"));
 
             var cutCopperSlab = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("minecraft", copperState + "cut_copper_slab"));
-            ItemMeltingRecipeBuilder.of(Ingredient.of(cutCopperSlab), new FluidStack(MetalworksRegistrator.MOLTEN_COPPER.get(), 202))
+            ItemMeltingRecipeBuilder.of(Ingredient.of(cutCopperSlab), new FluidStack(MetalworksRegistrator.MOLTEN_COPPER.get(), 101))
                     .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/" + copperState + "cut_copper_slab"));
 
             var copperDoor = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("minecraft", copperState + "copper_door"));
@@ -1110,8 +1110,14 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
                     .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/" + copperState + "copper_trapdoor"));
 
             var copperBulb = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("minecraft", copperState + "copper_bulb"));
-            ItemMeltingRecipeBuilder.of(Ingredient.of(copperBulb), new FluidStack(MetalworksRegistrator.MOLTEN_COPPER.get(), 1440))
-                    .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/" + copperState + "copper_bulb"));
+            ItemMeltingRecipeBuilder.of(
+                    Ingredient.of(copperBulb),
+                    List.of(
+                        new FluidStack(MetalworksRegistrator.MOLTEN_COPPER.get(), 607),
+                        new FluidStack(MetalworksRegistrator.MOLTEN_REDSTONE.get(), 25),
+                        new FluidStack(MetalworksRegistrator.MOLTEN_BLAZE.get(), 100)
+                    )
+            ).save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/" + copperState + "copper_bulb"));
         }
         ItemMeltingRecipeBuilder.of(Ingredient.of(Items.LIGHTNING_ROD), new FluidStack(MetalworksRegistrator.MOLTEN_COPPER.get(), 270))
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/lightning_rod"));
@@ -1119,9 +1125,9 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
                 Ingredient.of(Items.SPYGLASS),
                 List.of(
                         new FluidStack(MetalworksRegistrator.MOLTEN_COPPER.get(), 180),
-                        new FluidStack(MetalworksRegistrator.MOLTEN_AMETHYST.get(), 90)
-                ))
-                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/spyglass"));
+                        new FluidStack(MetalworksRegistrator.MOLTEN_AMETHYST.get(), 100)
+                )
+        ).save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/spyglass"));
 
         // melting iron items
         ItemMeltingRecipeBuilder.of(Ingredient.of(Items.IRON_BARS), new FluidStack(MetalworksRegistrator.MOLTEN_IRON.get(), 33))
