@@ -46,6 +46,10 @@ public class CastingBlockEntity extends CapabilityBlockEntity
             }
             CastingBlockEntity.this.setChanged();
         }
+
+        public int getSlotLimit(int slot) {
+            return 1;
+        }
     };
 
     // result item inventory, with cap

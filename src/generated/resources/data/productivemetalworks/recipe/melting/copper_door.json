@@ -1,8 +1,31 @@
 {
   "type": "productivemetalworks:item_melting",
-  "ingredient": {
-    "item": "minecraft:copper_door"
-  },
+  "ingredient": [
+    {
+      "item": "minecraft:copper_door"
+    },
+    {
+      "item": "minecraft:exposed_copper_door"
+    },
+    {
+      "item": "minecraft:weathered_copper_door"
+    },
+    {
+      "item": "minecraft:oxidized_copper_door"
+    },
+    {
+      "item": "minecraft:waxed_copper_door"
+    },
+    {
+      "item": "minecraft:waxed_exposed_copper_door"
+    },
+    {
+      "item": "minecraft:waxed_weathered_copper_door"
+    },
+    {
+      "item": "minecraft:waxed_oxidized_copper_door"
+    }
+  ],
   "maximum_temperature": 0,
   "minimum_temperature": 1000,
   "result": [

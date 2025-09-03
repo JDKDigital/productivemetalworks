@@ -2,7 +2,9 @@
 
 - Fixed slots not melting after chunk reload
 - Fixed client lag when having unmeltable items in a foundry
+- Added melting recipes for misc copper and iron items (WeeskyBDW)
 - Ingot casts can be made with a brick
+- Limit cast inventory stack size to 1
 
 
 1.21.1-1.10.1

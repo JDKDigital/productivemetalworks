@@ -1,13 +1,36 @@
 {
   "type": "productivemetalworks:item_melting",
-  "ingredient": {
-    "item": "minecraft:cut_copper"
-  },
+  "ingredient": [
+    {
+      "item": "minecraft:cut_copper"
+    },
+    {
+      "item": "minecraft:exposed_cut_copper"
+    },
+    {
+      "item": "minecraft:weathered_cut_copper"
+    },
+    {
+      "item": "minecraft:oxidized_cut_copper"
+    },
+    {
+      "item": "minecraft:waxed_cut_copper"
+    },
+    {
+      "item": "minecraft:waxed_exposed_cut_copper"
+    },
+    {
+      "item": "minecraft:waxed_weathered_cut_copper"
+    },
+    {
+      "item": "minecraft:waxed_oxidized_cut_copper"
+    }
+  ],
   "maximum_temperature": 0,
   "minimum_temperature": 1000,
   "result": [
     {
-      "amount": 202,
+      "amount": 200,
       "id": "productivemetalworks:molten_copper"
     }
   ]

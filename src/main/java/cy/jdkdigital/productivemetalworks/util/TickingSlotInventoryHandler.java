@@ -80,14 +80,16 @@ abstract public class TickingSlotInventoryHandler extends InventoryHandlerHelper
 
     public void tick(int t) {
         for (int slot = 0; slot < tickers.size(); slot++) {
-            Pair<Integer, Integer> pair = tickers.get(slot);
-            if (pair.getSecond() > 0 && pair.getFirst() > 0) {
-                tickers.set(slot, Pair.of(Math.max(pair.getFirst() - t, 0), pair.getSecond()));
-            }
+            if (slot < size()) {
+                Pair<Integer, Integer> pair = tickers.get(slot);
+                if (pair.getSecond() > 0 && pair.getFirst() > 0) {
+                    tickers.set(slot, Pair.of(Math.max(pair.getFirst() - t, 0), pair.getSecond()));
+                }
 
-            if (pair.getSecond() == 0 && getStackInSlot(slot).isEmpty()) {
-                // if the stack is not empty and there's no valid ticker, reset it
-                recalculate(slot);
+                if (pair.getSecond() == 0 && getStackInSlot(slot).isEmpty()) {
+                    // if the stack is not empty and there's no valid ticker, reset it
+                    recalculate(slot);
+                }
             }
         }
     }
