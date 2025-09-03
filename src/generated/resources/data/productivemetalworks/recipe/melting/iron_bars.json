@@ -1,0 +1,14 @@
+{
+  "type": "productivemetalworks:item_melting",
+  "ingredient": {
+    "item": "minecraft:iron_bars"
+  },
+  "maximum_temperature": 0,
+  "minimum_temperature": 1000,
+  "result": [
+    {
+      "amount": 33,
+      "id": "productivemetalworks:molten_iron"
+    }
+  ]
+}
