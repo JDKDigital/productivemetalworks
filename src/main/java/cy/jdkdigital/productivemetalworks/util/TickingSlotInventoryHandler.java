@@ -79,20 +79,29 @@ abstract public class TickingSlotInventoryHandler extends InventoryHandlerHelper
     }
 
     public void tick(int t) {
-        for (int i = 0; i < tickers.size(); i++) {
-            Pair<Integer, Integer> pair = tickers.get(i);
+        for (int slot = 0; slot < tickers.size(); slot++) {
+            Pair<Integer, Integer> pair = tickers.get(slot);
             if (pair.getSecond() > 0 && pair.getFirst() > 0) {
-                tickers.set(i, Pair.of(Math.max(pair.getFirst() - t, 0), pair.getSecond()));
+                tickers.set(slot, Pair.of(Math.max(pair.getFirst() - t, 0), pair.getSecond()));
+            }
+
+            if (pair.getSecond() == 0 && getStackInSlot(slot).isEmpty()) {
+                // if the stack is not empty and there's no valid ticker, reset it
+                recalculate(slot);
             }
         }
     }
 
     public void recalculate() {
-        for (int i = 0; i < tickers.size(); i++) {
-            Pair<Integer, Integer> pair = tickers.get(i);
-            int time = getTimeInSlot(getStackInSlot(i));
-            tickers.set(i, Pair.of(Math.max(time - (pair.getSecond() - pair.getFirst()), 0), time));
+        for (int slot = 0; slot < tickers.size(); slot++) {
+            recalculate(slot);
         }
+    }
+
+    public void recalculate(int slot) {
+        Pair<Integer, Integer> pair = tickers.get(slot);
+        int time = getTimeInSlot(getStackInSlot(slot));
+        tickers.set(slot, Pair.of(Math.max(time - (pair.getSecond() - pair.getFirst()), 0), time));
     }
 
     public Pair<Integer, Integer> getTicker(int slot) {
@@ -104,7 +113,10 @@ abstract public class TickingSlotInventoryHandler extends InventoryHandlerHelper
         CompoundTag nbt = super.serializeNBT(provider);
         for (int slot = 0; slot < Math.min(size(), tickers.size()); slot++) {
             // Save the amount of time that has passed
-            nbt.putInt("ticker" + slot, tickers.get(slot).getSecond() - tickers.get(slot).getFirst());
+            if (tickers.get(slot).getSecond() > 0) {
+                nbt.putInt("t" + slot + "_passed", tickers.get(slot).getFirst());
+                nbt.putInt("t" + slot + "_total", tickers.get(slot).getSecond());
+            }
         }
         return nbt;
     }
@@ -114,9 +126,9 @@ abstract public class TickingSlotInventoryHandler extends InventoryHandlerHelper
         super.deserializeNBT(provider, nbt);
         initTickers();
         for (int slot = 0; slot < size(); slot++) {
-            if (nbt.contains("ticker" + slot) && slot < tickers.size()) {
-                int time = getTimeInSlot(getStackInSlot(slot));
-                tickers.set(slot, Pair.of(time - nbt.getInt("ticker" + slot), time));
+            if (nbt.contains("t" + slot + "_total") && slot < tickers.size()) {
+                int time = nbt.getInt("t" + slot + "_total");
+                tickers.set(slot, Pair.of(nbt.getInt("t" + slot + "_passed"), time));
             }
         }
     }

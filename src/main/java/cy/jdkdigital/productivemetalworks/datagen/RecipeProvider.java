@@ -425,6 +425,8 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
         // Casts
         ItemCastingRecipeBuilder.of(Tags.Items.INGOTS, SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_STEEL, 360), MetalworksRegistrator.CAST_INGOT.get().getDefaultInstance(), true)
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/cast/ingot"));
+        ItemCastingRecipeBuilder.of(Ingredient.of(Items.BRICK), SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_STEEL, 360), MetalworksRegistrator.CAST_INGOT.get().getDefaultInstance(), true)
+                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/cast/ingot_brick"));
         ItemCastingRecipeBuilder.of(Tags.Items.NUGGETS, SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_STEEL, 360), MetalworksRegistrator.CAST_NUGGET.get().getDefaultInstance(), true)
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/cast/nugget"));
         ItemCastingRecipeBuilder.of(Tags.Items.GEMS, SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_STEEL, 360), MetalworksRegistrator.CAST_GEM.get().getDefaultInstance(), true)

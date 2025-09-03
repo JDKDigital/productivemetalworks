@@ -11,7 +11,7 @@
   },
   "consume_cast": false,
   "fluid": {
-    "amount": 1000,
+    "amount": 100,
     "fluid": "integrateddynamics:menril_resin"
   },
   "result": {

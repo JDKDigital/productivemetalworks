@@ -79,11 +79,11 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
         return coilType;
     }
 
-    protected TickingSlotInventoryHandler itemHandler = new TickingSlotInventoryHandler(200, this)
+    protected TickingSlotInventoryHandler itemHandler = new TickingSlotInventoryHandler(1024, this)
     {
         @Override
         protected int getTimeInSlot(ItemStack stack) {
-            if (this.blockEntity instanceof FoundryControllerBlockEntity fbe) {
+            if (!stack.isEmpty() && this.blockEntity instanceof FoundryControllerBlockEntity fbe) {
                 IMelterProcessor melter = switch (fbe.coilType) {
                     case UNKNOWN -> null;
                     case CoilType.FLUID -> new LiquidMelter();
@@ -94,6 +94,7 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
                     var fuelData = melter.getFoundryFuel(pLevel, fbe).getFuelData();
                     if (fuelData != null) {
                         RecipeHolder<ItemMeltingRecipe> recipe = RecipeHelper.getItemMeltingRecipe(pLevel, stack, fuelData);
+
                         if (recipe != null) {
                             return recipe.value().result.stream().map(FluidStack::getAmount).reduce(Integer::sum).orElse(0);
                         }
@@ -492,7 +493,6 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
 
                 // Look at the fuel required for this recipe melt
                 int requiredFuel = (int) (totalProducedFluid * fuelData.consumption() * speedModifier);
-
                 // Do not proceed if fuel required would exceed total capacity
                 if (requiredFuel + consumedFuel.getAmount() > availableFuel.getAmount()) {
                     continue;
