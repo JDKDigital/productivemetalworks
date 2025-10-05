@@ -58,8 +58,11 @@ public class JeiPlugin implements IModPlugin
 
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
-        registration.addRecipeCatalyst(MetalworksRegistrator.FOUNDRY_CONTROLLERS.get(DyeColor.BLACK).get(), ITEM_MELTING);
-        registration.addRecipeCatalyst(MetalworksRegistrator.FOUNDRY_CONTROLLERS.get(DyeColor.BLACK).get(), FLUID_ALLOYING);
+        MetalworksRegistrator.FOUNDRY_CONTROLLERS.forEach((dyeColor, controller) -> {
+            registration.addRecipeCatalyst(controller.get(), ITEM_MELTING);
+            registration.addRecipeCatalyst(controller.get(), FLUID_ALLOYING);
+            registration.addRecipeCatalyst(controller.get(), ENTITY_MELTING);
+        });
         registration.addRecipeCatalyst(MetalworksRegistrator.CASTING_TABLE.get(), ITEM_CASTING);
         registration.addRecipeCatalyst(MetalworksRegistrator.CASTING_BASIN.get(), BLOCK_CASTING);
     }

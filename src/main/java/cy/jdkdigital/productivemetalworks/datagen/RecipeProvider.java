@@ -404,6 +404,8 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/storage_blocks/glowstone"));
         ItemCastingRecipeBuilder.of(MetalworksRegistrator.CAST_GEM.get().getDefaultInstance(), SizedFluidIngredient.of(MetalworksRegistrator.MOLTEN_QUARTZ.get(), 100), Items.QUARTZ.getDefaultInstance())
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/gems/quartz"));
+        BlockCastingRecipeBuilder.of(SizedFluidIngredient.of(MetalworksRegistrator.MOLTEN_QUARTZ.get(), 400), Items.QUARTZ_BLOCK.getDefaultInstance())
+                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/gems/quartz_block"));
         ItemCastingRecipeBuilder.of(MetalworksRegistrator.CAST_GEM.get().getDefaultInstance(), SizedFluidIngredient.of(MetalworksRegistrator.MOLTEN_AMETHYST.get(), 100), Items.AMETHYST_SHARD.getDefaultInstance())
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/gems/amethyst"));
         BlockCastingRecipeBuilder.of(SizedFluidIngredient.of(MetalworksRegistrator.MOLTEN_AMETHYST.get(), 400), Items.AMETHYST_BLOCK.getDefaultInstance())

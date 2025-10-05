@@ -25,9 +25,11 @@ import cy.jdkdigital.productivemetalworks.util.TickingSlotInventoryHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.MenuProvider;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
@@ -250,13 +252,17 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
 
             recipeProcessList.forEach(fluidAlloyingRecipe -> {
                 int speed = fluidAlloyingRecipe.value().speed;
+                // Determine if the result of the recipe will increase the total amount of fluids, if it does there have to be a capacity check before processing.
+                boolean addsFluidAmount = fluidAlloyingRecipe.value().result.getAmount() > fluidAlloyingRecipe.value().fluids.stream().mapToInt(SizedFluidIngredient::amount).sum();
+                // First try to alloy with speed modifier
                 boolean canDrainFullSpeed = fluidAlloyingRecipe.value().fluids.stream().map(f -> new SizedFluidIngredient(f.ingredient(), f.amount() * speed)).noneMatch(fluid -> fluidHandler.drain(fluid, IFluidHandler.FluidAction.SIMULATE).isEmpty());
-                if (canDrainFullSpeed && fluidHandler.fill(new FluidStack(fluidAlloyingRecipe.value().result.getFluid(), fluidAlloyingRecipe.value().result.getAmount() * speed), IFluidHandler.FluidAction.SIMULATE) > 0) {
+                if (canDrainFullSpeed && (!addsFluidAmount || fluidHandler.fill(new FluidStack(fluidAlloyingRecipe.value().result.getFluid(), fluidAlloyingRecipe.value().result.getAmount() * speed), IFluidHandler.FluidAction.SIMULATE) > 0)) {
                     fluidAlloyingRecipe.value().fluids.forEach(fluid -> fluidHandler.drain(fluid, IFluidHandler.FluidAction.EXECUTE));
                     fluidHandler.fill(fluidAlloyingRecipe.value().result, IFluidHandler.FluidAction.EXECUTE);
                 } else {
+                    // if there's no room for a modified output, try with less
                     boolean canDrain = fluidAlloyingRecipe.value().fluids.stream().noneMatch(fluid -> fluidHandler.drain(fluid, IFluidHandler.FluidAction.SIMULATE).isEmpty());
-                    if (canDrain && fluidHandler.fill(fluidAlloyingRecipe.value().result, IFluidHandler.FluidAction.SIMULATE) > 0) {
+                    if (canDrain && (!addsFluidAmount || fluidHandler.fill(fluidAlloyingRecipe.value().result, IFluidHandler.FluidAction.SIMULATE) > 0)) {
                         fluidAlloyingRecipe.value().fluids.forEach(fluid -> fluidHandler.drain(fluid, IFluidHandler.FluidAction.EXECUTE));
                         fluidHandler.fill(fluidAlloyingRecipe.value().result, IFluidHandler.FluidAction.EXECUTE);
                     }

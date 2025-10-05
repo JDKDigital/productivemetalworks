@@ -1,3 +1,13 @@
+1.21.1-1.12.0
+
+- Added custom damage type and death messages for foundry entity damage
+- Added casting recipes for Epic Knights steel
+- Added quartz block casting recipe
+- Fluid alloying can now happen even when the foundry is full as long as the resulting fluid amount is not higher than the consumed fluids
+- Recipe lookups in JEI now works for all controllers
+- Entity melting recipes will now be shown when looking up uses for foundry controller
+
+
 1.21.1-1.11.0
 
 - Fixed slots not melting after chunk reload
