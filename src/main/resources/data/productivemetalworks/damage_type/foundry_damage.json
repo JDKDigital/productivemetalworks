@@ -1,0 +1,7 @@
+{
+  "message_id": "productivemetalworks.foundry_damage",
+  "scaling": "never",
+  "exhaustion": 0.1,
+  "effects": "burning",
+  "death_message_type": "productivemetalworks:foundry"
+}

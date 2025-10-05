@@ -189,7 +189,10 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
                     if (Config.foundryDamageEntities) {
                         // Other entities take damage if there's heat
                         if (entity instanceof LivingEntity livingEntity && (blockEntity.getFluidHandler().totalFluidAmount() > 0 || blockEntity.getFuel().getAmount() > 0)) {
-                            livingEntity.hurt(level.damageSources().hotFloor(), 2.0f);
+                            livingEntity.hurt(new DamageSource(
+                                    level.registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(MetalworksRegistrator.FOUNDRY_DAMAGE),
+                                    null, null, null
+                            ), 20.0f);
                             var meltingFluid = livingEntity.getType().builtInRegistryHolder().getData(MetalworksRegistrator.ENTITY_MELTING_MAP);
                             if (meltingFluid != null) {
                                 blockEntity.fluidHandler.fill(meltingFluid.fluid(), IFluidHandler.FluidAction.EXECUTE);

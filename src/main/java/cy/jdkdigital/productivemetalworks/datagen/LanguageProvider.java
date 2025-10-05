@@ -21,6 +21,24 @@ public class LanguageProvider extends net.neoforged.neoforge.common.data.Languag
         add(ProductiveMetalworks.MODID + ".message.foundry_formed", "Foundry structure assembled");
         add(ProductiveMetalworks.MODID + ".message.foundry_invalid", "Foundry structure invalid. %s");
 
+        add("death.attack.productivemetalworks.foundry_damage", "%1$s melted away");
+        add("death.attack.productivemetalworks.foundry_damage.1", "%1$s melted away");
+        add("death.attack.productivemetalworks.foundry_damage.player.1", "%1$s melted away while playing hide and sear with %2$s");
+        add("death.attack.productivemetalworks.foundry_damage.2", "%1$s discovered a suspicious hot spring");
+        add("death.attack.productivemetalworks.foundry_damage.player.2", "%1$s discovered a suspicious hot spring while frolicking with %2$s");
+        add("death.attack.productivemetalworks.foundry_damage.3", "%1$s became a tasty molten treat");
+        add("death.attack.productivemetalworks.foundry_damage.player.3", "%1$s became a tasty molten treat while on a picnic with %2$s");
+        add("death.attack.productivemetalworks.foundry_damage.4", "%1$s got overcooked");
+        add("death.attack.productivemetalworks.foundry_damage.player.4", "%1$s got overcooked while camping with %2$s");
+        add("death.attack.productivemetalworks.foundry_damage.5", "%1$s was roasted for too long");
+        add("death.attack.productivemetalworks.foundry_damage.player.5", "%1$s got roasted by %2$s");
+        add("death.attack.productivemetalworks.foundry_damage.6", "%1$s was sautéed in a foundry");
+        add("death.attack.productivemetalworks.foundry_damage.player.6", "%2$s watched as %1$s was sautéed in a foundry");
+        add("death.attack.productivemetalworks.foundry_damage.7", "Roast In Peace %1$s");
+        add("death.attack.productivemetalworks.foundry_damage.player.7", "%2$s settled a beef with %1$s");
+        add("death.attack.productivemetalworks.foundry_damage.8", "What did the gravy say to %1$s? \"You complete meat\"");
+        add("death.attack.productivemetalworks.foundry_damage.player.8", "%2$s sent %1$s to the pit of grill-spair");
+
         // Units
         add(ProductiveMetalworks.MODID + ".unit.leftover", "%s mb");
         add(ProductiveMetalworks.MODID + ".unit.hunk.single", "%s Hunk");

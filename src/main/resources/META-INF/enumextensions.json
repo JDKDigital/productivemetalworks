@@ -1,0 +1,13 @@
+{
+  "entries": [
+    {
+      "enum": "net/minecraft/world/damagesource/DeathMessageType",
+      "name": "PRODUCTIVEMETALWORKS_FOUNDRY",
+      "constructor": "(Ljava/lang/String;Lnet/neoforged/neoforge/common/damagesource/IDeathMessageProvider;)V",
+      "parameters": {
+        "class": "cy/jdkdigital/productivemetalworks/util/EnumParams",
+        "method": "getDamageTypesParameter"
+      }
+    }
+  ]
+}
