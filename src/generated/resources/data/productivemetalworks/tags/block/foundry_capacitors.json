@@ -1,20 +1,20 @@
 {
   "values": [
-    "productivemetalworks:green_foundry_capacitor",
-    "productivemetalworks:cyan_foundry_capacitor",
-    "productivemetalworks:white_foundry_capacitor",
-    "productivemetalworks:black_foundry_capacitor",
-    "productivemetalworks:lime_foundry_capacitor",
     "productivemetalworks:blue_foundry_capacitor",
-    "productivemetalworks:brown_foundry_capacitor",
     "productivemetalworks:red_foundry_capacitor",
-    "productivemetalworks:magenta_foundry_capacitor",
-    "productivemetalworks:pink_foundry_capacitor",
-    "productivemetalworks:yellow_foundry_capacitor",
+    "productivemetalworks:black_foundry_capacitor",
     "productivemetalworks:purple_foundry_capacitor",
     "productivemetalworks:gray_foundry_capacitor",
-    "productivemetalworks:light_gray_foundry_capacitor",
+    "productivemetalworks:cyan_foundry_capacitor",
+    "productivemetalworks:brown_foundry_capacitor",
+    "productivemetalworks:yellow_foundry_capacitor",
+    "productivemetalworks:lime_foundry_capacitor",
+    "productivemetalworks:orange_foundry_capacitor",
     "productivemetalworks:light_blue_foundry_capacitor",
-    "productivemetalworks:orange_foundry_capacitor"
+    "productivemetalworks:light_gray_foundry_capacitor",
+    "productivemetalworks:magenta_foundry_capacitor",
+    "productivemetalworks:white_foundry_capacitor",
+    "productivemetalworks:pink_foundry_capacitor",
+    "productivemetalworks:green_foundry_capacitor"
   ]
 }

@@ -80,10 +80,11 @@ public class LanguageProvider extends net.neoforged.neoforge.common.data.Languag
 
         add("config.jade.plugin_productivemetalworks.casting", "Productive Metalworks");
 
+        add(ProductiveMetalworks.MODID + ".devices.foundry_controller", "Foundry");
         add("productivebees.information.upgrade.upgrade_stability", "Disables fluid alloying in the Foundry.");
-        add("productivemetalworks.information.upgrade.upgrade_stability", "Disables fluid alloying in the Foundry.");
-        add("productivemetalworks.information.upgrade.upgrade_time", "Can be installed in machines for faster processing.\nMultiple upgrades can be installed for a greater time decrease.");
-        add("productivemetalworks.information.upgrade.upgrade_time_2", "It's twice as good as the other one.");
+        add(ProductiveMetalworks.MODID + ".information.upgrade.upgrade_stability", "Disables fluid alloying in the Foundry.");
+        add(ProductiveMetalworks.MODID + ".information.upgrade.upgrade_time", "Can be installed in machines for faster processing.\nMultiple upgrades can be installed for a greater time decrease.");
+        add(ProductiveMetalworks.MODID + ".information.upgrade.upgrade_time_2", "It's twice as good as the other one.");
 
         add("productivebees.ingredient.description.soul_lava_bee", "To acquire this bee, look up the crafting recipe for its spawn egg.");
         add("productivebees.ingredient.description.allthemodium_bee", "To acquire this bee, look up the crafting recipe for its spawn egg.");

@@ -83,6 +83,6 @@ public class DataMapProvider extends net.neoforged.neoforge.common.data.DataMapP
         units.add(ResourceLocation.parse("allthemodium:molten_allthemodium"), metalUnits, false, new ModLoadedCondition("allthemodium"));
         units.add(ResourceLocation.parse("allthemodium:molten_vibranium"), metalUnits, false, new ModLoadedCondition("allthemodium"));
         units.add(ResourceLocation.parse("allthemodium:molten_unobtainium"), metalUnits, false, new ModLoadedCondition("allthemodium"));
-        units.add(ResourceLocation.parse("integrateddynamics:menril_resin"), new UnitMap(List.of(new UnitMap.Unit(100, "chunk"), new UnitMap.Unit(1000, "block"))), false, new ModLoadedCondition("integrateddynamics"));
+        units.add(ResourceLocation.parse("integrateddynamics:menril_resin"), new UnitMap(List.of(new UnitMap.Unit(100, "chunk"), new UnitMap.Unit(900, "block"))), false, new ModLoadedCondition("integrateddynamics"));
     }
 }

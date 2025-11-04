@@ -3,7 +3,7 @@
   "cast": {
     "item": "minecraft:glass_bottle"
   },
-  "consume_cast": false,
+  "consume_cast": true,
   "fluid": {
     "amount": 250,
     "tag": "c:honey"

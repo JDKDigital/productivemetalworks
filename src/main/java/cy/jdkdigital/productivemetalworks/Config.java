@@ -28,6 +28,10 @@ public class Config
             .comment("Number of mb per block volume")
             .defineInRange("foundryFluidCapacityPerBlockVolume", 1000, 1, Integer.MAX_VALUE);
 
+    private static final ModConfigSpec.IntValue FOUNDRY_TANK_TICK_RATE = BUILDER
+            .comment("How many ticks between attempts at sharing fluid with tanks below it")
+            .defineInRange("foundryTankTickRate", 21, 1, Integer.MAX_VALUE);
+
     private static final ModConfigSpec.BooleanValue FOUNDRY_DAMAGE_ENTITIES = BUILDER
             .comment("Should an active foundry damage entities inside it")
             .define("foundryDamageEntities", true);
@@ -51,6 +55,7 @@ public class Config
     public static int foundryMaxCircumference;
     public static int foundryMaxHeight;
     public static int foundryFluidCapacityPerBlockVolume;
+    public static int foundryTankTickRate;
     public static boolean foundryDamageEntities;
     public static boolean foundryCollectItems;
     public static boolean foundryRenderInventory;
@@ -63,6 +68,7 @@ public class Config
         foundryMaxCircumference = FOUNDRY_MAX_CIRCUMFERENCE.get();
         foundryMaxHeight = FOUNDRY_MAX_HEIGHT.get();
         foundryFluidCapacityPerBlockVolume = FOUNDRY_FLUID_CAPACITY_PER_BLOCK_VOLUME.get();
+        foundryTankTickRate = FOUNDRY_TANK_TICK_RATE.get();
         foundryDamageEntities = FOUNDRY_DAMAGE_ENTITIES.get();
         foundryCollectItems = FOUNDRY_COLLECT_ITEMS.get();
         foundryRenderInventory = FOUNDRY_RENDER_INVENTORY.get();

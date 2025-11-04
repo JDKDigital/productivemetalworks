@@ -192,7 +192,7 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
                             livingEntity.hurt(new DamageSource(
                                     level.registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(MetalworksRegistrator.FOUNDRY_DAMAGE),
                                     null, null, null
-                            ), 20.0f);
+                            ), 4.0f);
                             var meltingFluid = livingEntity.getType().builtInRegistryHolder().getData(MetalworksRegistrator.ENTITY_MELTING_MAP);
                             if (meltingFluid != null) {
                                 blockEntity.fluidHandler.fill(meltingFluid.fluid(), IFluidHandler.FluidAction.EXECUTE);
@@ -254,14 +254,19 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
             List<RecipeHolder<FluidAlloyingRecipe>> recipeProcessList = RecipeHelper.getAlloyRecipes(level, fluidHandler);
 
             recipeProcessList.forEach(fluidAlloyingRecipe -> {
-                int speed = fluidAlloyingRecipe.value().speed;
+                int speed = fluidAlloyingRecipe.value().speed * (1 + getUpgradeCount(LibItems.UPGRADE_TIME.get()) + (getUpgradeCount(LibItems.UPGRADE_TIME_2.get()) * 2));
                 // Determine if the result of the recipe will increase the total amount of fluids, if it does there have to be a capacity check before processing.
                 boolean addsFluidAmount = fluidAlloyingRecipe.value().result.getAmount() > fluidAlloyingRecipe.value().fluids.stream().mapToInt(SizedFluidIngredient::amount).sum();
                 // First try to alloy with speed modifier
-                boolean canDrainFullSpeed = fluidAlloyingRecipe.value().fluids.stream().map(f -> new SizedFluidIngredient(f.ingredient(), f.amount() * speed)).noneMatch(fluid -> fluidHandler.drain(fluid, IFluidHandler.FluidAction.SIMULATE).isEmpty());
-                if (canDrainFullSpeed && (!addsFluidAmount || fluidHandler.fill(new FluidStack(fluidAlloyingRecipe.value().result.getFluid(), fluidAlloyingRecipe.value().result.getAmount() * speed), IFluidHandler.FluidAction.SIMULATE) > 0)) {
-                    fluidAlloyingRecipe.value().fluids.forEach(fluid -> fluidHandler.drain(fluid, IFluidHandler.FluidAction.EXECUTE));
-                    fluidHandler.fill(fluidAlloyingRecipe.value().result, IFluidHandler.FluidAction.EXECUTE);
+                boolean canAlloyFullSpeed = fluidAlloyingRecipe.value().fluids.stream().map(f -> new SizedFluidIngredient(f.ingredient(), f.amount() * speed)).noneMatch(fluid -> fluidHandler.drain(fluid, IFluidHandler.FluidAction.SIMULATE).isEmpty());
+                if (canAlloyFullSpeed && (!addsFluidAmount || fluidHandler.fill(new FluidStack(fluidAlloyingRecipe.value().result.getFluid(), fluidAlloyingRecipe.value().result.getAmount() * speed), IFluidHandler.FluidAction.SIMULATE) > 0)) {
+                    for (int i = 0; i < speed; i++) {
+                        boolean hasFluid = fluidAlloyingRecipe.value().fluids.stream().allMatch(fluid -> fluidHandler.drain(fluid, IFluidHandler.FluidAction.SIMULATE).getAmount() == fluid.amount());
+                        if (hasFluid) {
+                            fluidAlloyingRecipe.value().fluids.forEach(fluid -> fluidHandler.drain(fluid, IFluidHandler.FluidAction.EXECUTE));
+                            fluidHandler.fill(fluidAlloyingRecipe.value().result, IFluidHandler.FluidAction.EXECUTE);
+                        }
+                    }
                 } else {
                     // if there's no room for a modified output, try with less
                     boolean canDrain = fluidAlloyingRecipe.value().fluids.stream().noneMatch(fluid -> fluidHandler.drain(fluid, IFluidHandler.FluidAction.SIMULATE).isEmpty());

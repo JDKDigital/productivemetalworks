@@ -118,7 +118,9 @@ public class FoundryControllerBlock extends CapabilityContainerBlock implements 
                     player.openMenu(blockEntity, pos);
                 }
             } catch (InvalidStructureException ise) {
-                player.sendSystemMessage(Component.translatable(ProductiveMetalworks.MODID + ".message.foundry_invalid", ise.getMessage(), "" + level.getBlockState(ise.getPos())));
+                if (!level.isClientSide) {
+                    player.sendSystemMessage(Component.translatable(ProductiveMetalworks.MODID + ".message.foundry_invalid", ise.getMessage(), "" + level.getBlockState(ise.getPos())));
+                }
             }
         }
         return InteractionResult.sidedSuccess(level.isClientSide);

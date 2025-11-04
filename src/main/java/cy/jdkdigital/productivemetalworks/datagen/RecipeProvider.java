@@ -449,7 +449,7 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/misc/upgrade_stability"));
         BlockCastingRecipeBuilder.of(SizedFluidIngredient.of(ModTags.Fluids.HONEY, 1000), Items.HONEY_BLOCK.getDefaultInstance())
                 .save(recipeOutput.withConditions(new NotCondition(new FluidTagEmptyCondition(ModTags.Fluids.HONEY))), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/honey_block"));
-        ItemCastingRecipeBuilder.of(Items.GLASS_BOTTLE.getDefaultInstance(), SizedFluidIngredient.of(ModTags.Fluids.HONEY, 250), Items.HONEY_BOTTLE.getDefaultInstance())
+        ItemCastingRecipeBuilder.of(Items.GLASS_BOTTLE.getDefaultInstance(), SizedFluidIngredient.of(ModTags.Fluids.HONEY, 250), Items.HONEY_BOTTLE.getDefaultInstance(), true)
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/misc/honey_bottle"));
         ItemCastingRecipeBuilder.of(Items.CARROT.getDefaultInstance(), SizedFluidIngredient.of(ModTags.Fluids.MOLTEN_GOLD, 80), Items.GOLDEN_CARROT.getDefaultInstance(), true)
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/misc/golden_carrot"));
@@ -853,7 +853,7 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
         var menrilChunk = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("integrateddynamics", "crystalized_menril_chunk"));
         var menrilResin = BuiltInRegistries.FLUID.get(ResourceLocation.fromNamespaceAndPath("integrateddynamics", "menril_resin"));
         // menril block
-        ItemMeltingRecipeBuilder.of(Ingredient.of(menrilBlock), new FluidStack(menrilResin, 1000))
+        ItemMeltingRecipeBuilder.of(Ingredient.of(menrilBlock), new FluidStack(menrilResin, 900))
                 .save(recipeOutput.withConditions(new ModLoadedCondition("integrateddynamics")), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/id/crystalized_menril_block"));
         // menril chunk
         ItemMeltingRecipeBuilder.of(Ingredient.of(menrilChunk), new FluidStack(menrilResin, 100))
@@ -866,7 +866,7 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
                 .save(recipeOutput.withConditions(new ModLoadedCondition("integrateddynamics")), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/id/menril_planks"));
 
         // menril block
-        BlockCastingRecipeBuilder.of(SizedFluidIngredient.of(menrilResin, 1000), menrilBlock.getDefaultInstance())
+        BlockCastingRecipeBuilder.of(SizedFluidIngredient.of(menrilResin, 900), menrilBlock.getDefaultInstance())
                 .save(recipeOutput.withConditions(new ModLoadedCondition("integrateddynamics")), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/id/crystalized_menril_block"));
         // menril chunk
         ItemCastingRecipeBuilder.of(MetalworksRegistrator.CAST_NUGGET.get().getDefaultInstance(), SizedFluidIngredient.of(menrilResin, 100), menrilChunk.getDefaultInstance())

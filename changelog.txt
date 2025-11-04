@@ -1,4 +1,20 @@
-1.21.1-1.12.0
+1.21.1-1.13.1
+
+- Fixed alloying speed
+- Fixed a menril duping
+
+
+1.21.1-1.13.0
+
+- Alloying speed is now affected by speed upgrades
+- Using a fluid container on a foundry tank will fill all tanks in the same column
+- Increased foundry tank fluid sharing transfer rate
+- Added config for foundry tank tick rate
+- Allow certain blocks to be present in an empty multiblock structure, controlled by a tag
+- Improved multiblock detection to blame the correct block location for errors
+
+
+1.21.1-1.12.1
 
 - Added custom damage type and death messages for foundry entity damage
 - Added casting recipes for Epic Knights steel

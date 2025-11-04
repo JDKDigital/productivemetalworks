@@ -307,6 +307,7 @@
   "productivebees.ingredient.description.steel_bee": "To acquire this bee, look up the crafting recipe for its spawn egg.",
   "productivebees.ingredient.description.unobtainium_bee": "To acquire this bee, look up the crafting recipe for its spawn egg.",
   "productivebees.ingredient.description.vibranium_bee": "To acquire this bee, look up the crafting recipe for its spawn egg.",
+  "productivemetalworks.devices.foundry_controller": "Foundry",
   "productivemetalworks.information.upgrade.upgrade_stability": "Disables fluid alloying in the Foundry.",
   "productivemetalworks.information.upgrade.upgrade_time": "Can be installed in machines for faster processing.\nMultiple upgrades can be installed for a greater time decrease.",
   "productivemetalworks.information.upgrade.upgrade_time_2": "It's twice as good as the other one.",

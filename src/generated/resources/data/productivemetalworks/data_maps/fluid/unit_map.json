@@ -79,7 +79,7 @@
           "unit": "chunk"
         },
         {
-          "amount": 1000,
+          "amount": 900,
           "unit": "block"
         }
       ]

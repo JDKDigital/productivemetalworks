@@ -3,6 +3,7 @@ package cy.jdkdigital.productivemetalworks.common.block.entity;
 import cy.jdkdigital.productivelib.common.block.entity.FluidTankBlockEntity;
 import cy.jdkdigital.productivelib.common.block.entity.IMultiBlockPeripheralBlockEntity;
 import cy.jdkdigital.productivelib.util.ImmutableFluidStack;
+import cy.jdkdigital.productivemetalworks.Config;
 import cy.jdkdigital.productivemetalworks.registry.MetalworksRegistrator;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -40,8 +41,13 @@ public class FoundryTankBlockEntity extends FluidTankBlockEntity implements IMul
     @Override
     public void tickFluidTank(Level level, BlockPos blockPos, BlockState blockState, FluidTankBlockEntity fluidTankBlockEntity) {
         if (level.getBlockEntity(blockPos.below()) instanceof FoundryTankBlockEntity belowTank && belowTank.getFluidHandler().getSpace() > 0) {
-            FluidUtil.tryFluidTransfer(belowTank.getFluidHandler(), fluidTankBlockEntity.getFluidHandler(), 1000, true);
+            FluidUtil.tryFluidTransfer(belowTank.getFluidHandler(), fluidTankBlockEntity.getFluidHandler(), 4000, true);
         }
+    }
+
+    @Override
+    public int tankTickRate() {
+        return Config.foundryTankTickRate;
     }
 
     @Override
