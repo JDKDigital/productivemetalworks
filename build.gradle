@@ -156,6 +156,7 @@ dependencies {
     implementation "com.tterrag.registrate:Registrate:${registrate_version}"
 
     implementation "curse.maven:fusion-connected-textures-854949:6108307"
+    implementation "curse.maven:almost-unified-633823:6847936"
 
     implementation "curse.maven:jade-324717:5884231"
     implementation "curse.maven:productivebees-377897:6029033"

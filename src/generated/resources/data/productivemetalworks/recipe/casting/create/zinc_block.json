@@ -10,7 +10,7 @@
   "consume_cast": false,
   "fluid": {
     "amount": 810,
-    "fluid": "productivemetalworks:molten_zinc"
+    "tag": "c:molten_zinc"
   },
   "result": {
     "count": 1,

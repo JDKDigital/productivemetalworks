@@ -2,7 +2,7 @@
   "neoforge:conditions": [
     {
       "type": "neoforge:mod_loaded",
-      "modid": "mekanism"
+      "modid": "immersiveengineering"
     }
   ],
   "type": "productivemetalworks:item_casting",
@@ -12,10 +12,10 @@
   "consume_cast": false,
   "fluid": {
     "amount": 10,
-    "tag": "c:molten_steel"
+    "tag": "c:molten_lead"
   },
   "result": {
     "count": 1,
-    "id": "mekanism:nugget_steel"
+    "id": "immersiveengineering:nugget_lead"
   }
 }

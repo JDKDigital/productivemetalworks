@@ -12,7 +12,7 @@
   "consume_cast": false,
   "fluid": {
     "amount": 10,
-    "fluid": "productivemetalworks:molten_brass"
+    "tag": "c:molten_brass"
   },
   "result": {
     "count": 1,

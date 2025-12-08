@@ -10,7 +10,7 @@
   "consume_cast": false,
   "fluid": {
     "amount": 810,
-    "fluid": "productivemetalworks:molten_aluminum"
+    "tag": "c:molten_aluminum"
   },
   "result": {
     "count": 1,

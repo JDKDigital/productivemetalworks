@@ -4,6 +4,7 @@ import com.mojang.serialization.MapCodec;
 import cy.jdkdigital.productivemetalworks.common.block.entity.CastingBlockEntity;
 import cy.jdkdigital.productivemetalworks.registry.MetalworksRegistrator;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
@@ -87,30 +88,18 @@ public class CastingTableBlock extends BaseEntityBlock
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         if (level instanceof ServerLevel serverLevel && serverLevel.getBlockEntity(pos) instanceof CastingBlockEntity blockEntity) {
-            var itemInHand = player.getItemInHand(InteractionHand.MAIN_HAND);
             // Take output first, if there's no output grab the cast
             var outputItem = blockEntity.getItemHandler().getStackInSlot(0);
             if (outputItem.isEmpty()) {
                 outputItem = blockEntity.castInv.getStackInSlot(0);
             }
-            if (
-                    !outputItem.isEmpty() &&
-                    (
-                            itemInHand.isEmpty() ||
-                            (ItemStack.isSameItemSameComponents(itemInHand, outputItem) && itemInHand.getCount() < itemInHand.getMaxStackSize())
-                    ) &&
-                    blockEntity.getFluidHandler().getFluidAmount() == 0 &&
-                    !blockEntity.isCooling()
-            ) {
-                if (!outputItem.isEmpty()) {
-                    if (itemInHand.isEmpty()) {
-                        player.setItemInHand(InteractionHand.MAIN_HAND, outputItem.copy());
-                    } else {
-                        itemInHand.grow(outputItem.getCount());
-                    }
-                    outputItem.shrink(outputItem.getMaxStackSize());
-                    blockEntity.sync(serverLevel);
+
+            if (!outputItem.isEmpty()) {
+                if (!player.getInventory().add(outputItem.copy())) {
+                    Block.popResourceFromFace(serverLevel, pos, Direction.UP, outputItem.copy());
                 }
+                outputItem.shrink(outputItem.getMaxStackSize());
+                blockEntity.sync(serverLevel);
             }
         }
         return InteractionResult.sidedSuccess(level.isClientSide);

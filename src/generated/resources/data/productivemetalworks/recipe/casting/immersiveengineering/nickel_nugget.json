@@ -12,7 +12,7 @@
   "consume_cast": false,
   "fluid": {
     "amount": 10,
-    "fluid": "productivemetalworks:molten_nickel"
+    "tag": "c:molten_nickel"
   },
   "result": {
     "count": 1,

@@ -10,10 +10,10 @@
   "consume_cast": false,
   "fluid": {
     "amount": 810,
-    "tag": "c:molten_electrum"
+    "tag": "c:molten_lead"
   },
   "result": {
     "count": 1,
-    "id": "immersiveengineering:storage_electrum"
+    "id": "immersiveengineering:storage_lead"
   }
 }

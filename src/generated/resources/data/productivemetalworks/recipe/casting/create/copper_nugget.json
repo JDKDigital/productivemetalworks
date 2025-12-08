@@ -12,7 +12,7 @@
   "consume_cast": false,
   "fluid": {
     "amount": 10,
-    "fluid": "productivemetalworks:molten_copper"
+    "tag": "c:molten_copper"
   },
   "result": {
     "count": 1,

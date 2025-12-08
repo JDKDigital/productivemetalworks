@@ -1,3 +1,9 @@
+1.21.1-1.13.2
+
+- Fixed fluid container interaction with tanks both filling and emptying at the same time
+- Fixed casting recipes using specific fluid instead of fluid tag
+
+
 1.21.1-1.13.1
 
 - Fixed alloying speed

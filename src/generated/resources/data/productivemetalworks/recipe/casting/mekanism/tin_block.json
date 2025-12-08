@@ -10,7 +10,7 @@
   "consume_cast": false,
   "fluid": {
     "amount": 810,
-    "fluid": "productivemetalworks:molten_tin"
+    "tag": "c:molten_tin"
   },
   "result": {
     "count": 1,

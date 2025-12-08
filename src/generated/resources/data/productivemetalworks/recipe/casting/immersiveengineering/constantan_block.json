@@ -10,7 +10,7 @@
   "consume_cast": false,
   "fluid": {
     "amount": 810,
-    "fluid": "productivemetalworks:molten_constantan"
+    "tag": "c:molten_constantan"
   },
   "result": {
     "count": 1,

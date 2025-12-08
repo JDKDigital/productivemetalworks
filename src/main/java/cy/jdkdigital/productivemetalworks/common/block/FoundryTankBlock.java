@@ -29,6 +29,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidUtil;
+import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -89,16 +90,36 @@ public class FoundryTankBlock extends BaseEntityBlock implements IMultiBlockPeri
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (level.getBlockEntity(pos) instanceof FoundryTankBlockEntity blockEntity && stack.getCapability(Capabilities.FluidHandler.ITEM) != null) {
             if (level instanceof ServerLevel) {
-                FluidUtil.interactWithFluidHandler(player, hand, blockEntity.getFluidHandler());
-                // Try to insert into tanks above and below
-                int j = 1;
+                var containerHasFluid = FluidUtil.getFluidHandler(player.getItemInHand(hand)).map(handler -> !handler.getFluidInTank(0).isEmpty()).orElse(false);
+                // Try to insert/extract into tanks above and below, start with the one being interacted with
+                int j = 0;
                 while (level.getBlockEntity(pos.below(j)) instanceof FoundryTankBlockEntity tank && j < 50) {
-                    FluidUtil.interactWithFluidHandler(player, hand, tank.getFluidHandler());
+                    if (containerHasFluid) {
+                        var fluidActionResult = FluidUtil.tryEmptyContainerAndStow(player.getItemInHand(hand), tank.getFluidHandler(), player.getCapability(Capabilities.ItemHandler.ENTITY), Integer.MAX_VALUE, player, true);
+                        if (fluidActionResult.isSuccess()) {
+                            player.setItemInHand(hand, fluidActionResult.getResult());
+                        }
+                    } else {
+                        var fluidActionResult = FluidUtil.tryFillContainerAndStow(player.getItemInHand(hand), tank.getFluidHandler(), player.getCapability(Capabilities.ItemHandler.ENTITY), Integer.MAX_VALUE, player, true);
+                        if (fluidActionResult.isSuccess()) {
+                            player.setItemInHand(hand, fluidActionResult.getResult());
+                        }
+                    }
                     j++;
                 }
                 int i = 1;
                 while (level.getBlockEntity(pos.above(i)) instanceof FoundryTankBlockEntity tank && i < 50) {
-                    FluidUtil.interactWithFluidHandler(player, hand, tank.getFluidHandler());
+                    if (containerHasFluid) {
+                        var fluidActionResult = FluidUtil.tryEmptyContainerAndStow(player.getItemInHand(hand), tank.getFluidHandler(), player.getCapability(Capabilities.ItemHandler.ENTITY), Integer.MAX_VALUE, player, true);
+                        if (fluidActionResult.isSuccess()) {
+                            player.setItemInHand(hand, fluidActionResult.getResult());
+                        }
+                    } else {
+                        var fluidActionResult = FluidUtil.tryFillContainerAndStow(player.getItemInHand(hand), tank.getFluidHandler(), player.getCapability(Capabilities.ItemHandler.ENTITY), Integer.MAX_VALUE, player, true);
+                        if (fluidActionResult.isSuccess()) {
+                            player.setItemInHand(hand, fluidActionResult.getResult());
+                        }
+                    }
                     i++;
                 }
             }

@@ -12,7 +12,7 @@
   "consume_cast": false,
   "fluid": {
     "amount": 90,
-    "fluid": "productivemetalworks:molten_gold"
+    "tag": "c:molten_gold"
   },
   "result": {
     "count": 1,
