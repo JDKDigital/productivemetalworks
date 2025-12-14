@@ -9,7 +9,6 @@ import cy.jdkdigital.productivelib.registry.LibItems;
 import cy.jdkdigital.productivelib.util.MultiBlockDetector;
 import cy.jdkdigital.productivelib.util.MultiFluidTank;
 import cy.jdkdigital.productivemetalworks.Config;
-import cy.jdkdigital.productivemetalworks.ProductiveMetalworks;
 import cy.jdkdigital.productivemetalworks.common.block.FoundryControllerBlock;
 import cy.jdkdigital.productivemetalworks.common.block.IHeatingCoilBlock;
 import cy.jdkdigital.productivemetalworks.common.datamap.FuelMap;

@@ -134,6 +134,7 @@ configurations {
 
 dependencies {
     implementation "local.libs:productivelib-${lib_version}"
+    implementation "local.libs:productivebees-1.21.1-13.12.0"
     jarJar(group: 'cy.jdkdigital.productivelib', name: 'productivelib', version: "${lib_version_range}") {
         transitive(false)
     }
@@ -159,7 +160,7 @@ dependencies {
     implementation "curse.maven:almost-unified-633823:6847936"
 
     implementation "curse.maven:jade-324717:5884231"
-    implementation "curse.maven:productivebees-377897:6029033"
+//    implementation "curse.maven:productivebees-377897:6029033"
     implementation "curse.maven:ato-405593:6118610"
     implementation "curse.maven:mekanism-268560:6018306"
     implementation "curse.maven:ender-io-64578:6050753"

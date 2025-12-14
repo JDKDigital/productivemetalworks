@@ -1,3 +1,8 @@
+1.21.1-1.14.0
+
+- Upgrade item tooltip updates
+
+
 1.21.1-1.13.2
 
 - Fixed fluid container interaction with tanks both filling and emptying at the same time

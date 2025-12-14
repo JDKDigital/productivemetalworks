@@ -18,22 +18,16 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import javax.annotation.Nonnull;
 import java.util.Objects;
 
-public class FoundryControllerContainer extends AbstractContainer
+public class FoundryControllerContainer extends AbstractContainer<FoundryControllerBlockEntity>
 {
     public static int COLUMNS = 4;
-    private final Inventory playerInventory;
-    public final FoundryControllerBlockEntity blockEntity;
-
-//    static final SimpleContainer CONTAINER = new SimpleContainer(15);
 
     public FoundryControllerContainer(final int windowId, final Inventory playerInventory, final FriendlyByteBuf data) {
         this(windowId, playerInventory, getBlockEntity(playerInventory, data));
     }
 
     public FoundryControllerContainer(final int windowId, final Inventory playerInventory, final FoundryControllerBlockEntity blockEntity) {
-        super(MetalworksRegistrator.FOUNDRY_CONTROLLER_CONTAINER.get(), windowId);
-        this.playerInventory = playerInventory;
-        this.blockEntity = blockEntity;
+        super(MetalworksRegistrator.FOUNDRY_CONTROLLER_CONTAINER.get(), blockEntity, windowId);
 
         // Energy
 //        addDataSlot(new DataSlot()
@@ -124,13 +118,13 @@ public class FoundryControllerContainer extends AbstractContainer
         });
 
         int rowCount = calculateRowCount(0);
-        int leftover = this.blockEntity.getItemHandler().getSlots()%COLUMNS;
+        int leftover = this.getBlockEntity().getItemHandler().getSlots()%COLUMNS;
         if (rowCount > 0) {
-            addSlotBox(this.blockEntity.getItemHandler(), 0, 80, 17, COLUMNS, 18, rowCount, 18);
+            addSlotBox(this.getBlockEntity().getItemHandler(), 0, 80, 17, COLUMNS, 18, rowCount, 18);
         }
-        addSlotRange(this.blockEntity.getItemHandler(), rowCount * COLUMNS, 80, 17 + rowCount * 18, leftover, 18);
+        addSlotRange(this.getBlockEntity().getItemHandler(), rowCount * COLUMNS, 80, 17 + rowCount * 18, leftover, 18);
 
-        addSlotBox(this.blockEntity.getUpgradeHandler(), 0, 178, 8, 1, 18, 4, 18);
+        addSlotBox(this.getBlockEntity().getUpgradeHandler(), 0, 178, 8, 1, 18, 4, 18);
 
         layoutPlayerInventorySlots(playerInventory, 0, 8, 84);
     }
@@ -144,16 +138,6 @@ public class FoundryControllerContainer extends AbstractContainer
         throw new IllegalStateException("Block entity is not correct for Foundry Controller Container!");
     }
 
-    @Override
-    public boolean stillValid(@Nonnull final Player player) {
-        return blockEntity.getBlockState().getValue(BlockStateProperties.ATTACHED) && blockEntity.getMultiblockData() != null && player.distanceToSqr((double)blockEntity.getBlockPos().getX() + 0.5, (double)blockEntity.getBlockPos().getY() + 0.5, (double)blockEntity.getBlockPos().getZ() + 0.5) <= 64.0 && !blockEntity.isRemoved();
-    }
-
-    @Override
-    protected BlockEntity getBlockEntity() {
-        return blockEntity;
-    }
-
     public float subtractInputFromScroll(float scrollOffs, double input) {
         return Mth.clamp(scrollOffs - (float)(input / (double)this.calculateRowCount(0)), 0.0F, 1.0F);
     }
@@ -162,7 +146,7 @@ public class FoundryControllerContainer extends AbstractContainer
         int offsetRow = this.getRowIndexForScroll(scrollOffs);
 
         this.slots.forEach(slot -> {
-            if (slot instanceof ManualSlotItemHandler mSlot && mSlot.getItemHandler().equals(this.blockEntity.getItemHandler())) {
+            if (slot instanceof ManualSlotItemHandler mSlot && mSlot.getItemHandler().equals(this.getBlockEntity().getItemHandler())) {
                 // disable slots above and below the shown rows
                 if (slot.index < offsetRow * FoundryControllerContainer.COLUMNS || slot.index > offsetRow * FoundryControllerContainer.COLUMNS + 11) {
                     mSlot.disable();
@@ -175,7 +159,7 @@ public class FoundryControllerContainer extends AbstractContainer
     }
 
     public int calculateRowCount(int offset) {
-        return Mth.positiveCeilDiv(this.blockEntity.getItemHandler().getSlots() - (offset * FoundryControllerContainer.COLUMNS), FoundryControllerContainer.COLUMNS);
+        return Mth.positiveCeilDiv(this.getBlockEntity().getItemHandler().getSlots() - (offset * FoundryControllerContainer.COLUMNS), FoundryControllerContainer.COLUMNS);
     }
 
     public int getRowIndexForScroll(float scrollOffs) {
