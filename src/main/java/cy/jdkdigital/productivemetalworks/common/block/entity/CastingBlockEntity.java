@@ -40,6 +40,14 @@ public class CastingBlockEntity extends CapabilityBlockEntity
     // cast inventory, no cap
     public ItemStackHandler castInv = new ItemStackHandler(1) {
         @Override
+        public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate) {
+            if (CastingBlockEntity.this.isCooling() || CastingBlockEntity.this.fluidHandler.getFluidAmount() > 0) {
+                return ItemStack.EMPTY;
+            }
+            return super.extractItem(slot, amount, simulate);
+        }
+
+        @Override
         protected void onContentsChanged(int slot) {
             if (CastingBlockEntity.this.level instanceof ServerLevel serverLevel) {
                 CastingBlockEntity.this.sync(serverLevel);
@@ -62,7 +70,7 @@ public class CastingBlockEntity extends CapabilityBlockEntity
 
         @Override
         public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate) {
-            if (CastingBlockEntity.this.isCooling()) {
+            if (CastingBlockEntity.this.isCooling() || CastingBlockEntity.this.fluidHandler.getFluidAmount() > 0) {
                 return ItemStack.EMPTY;
             }
             return super.extractItem(slot, amount, simulate);

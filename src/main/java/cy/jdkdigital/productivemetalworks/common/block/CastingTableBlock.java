@@ -87,7 +87,7 @@ public class CastingTableBlock extends BaseEntityBlock
 
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
-        if (level instanceof ServerLevel serverLevel && serverLevel.getBlockEntity(pos) instanceof CastingBlockEntity blockEntity) {
+        if (level instanceof ServerLevel serverLevel && serverLevel.getBlockEntity(pos) instanceof CastingBlockEntity blockEntity && !blockEntity.isCooling() && blockEntity.getFluidHandler().getFluidAmount() == 0) {
             // Take output first, if there's no output grab the cast
             var outputItem = blockEntity.getItemHandler().getStackInSlot(0);
             if (outputItem.isEmpty()) {

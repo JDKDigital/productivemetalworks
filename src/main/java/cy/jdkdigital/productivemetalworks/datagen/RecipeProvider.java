@@ -535,6 +535,7 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
         mekanismCompat(recipeOutput);
         immersiveCompat(recipeOutput);
         createCompat(recipeOutput);
+        createIronworksCompat(recipeOutput);
         georeCompat(recipeOutput);
         vanillaCopperComp(recipeOutput);
     }
@@ -1039,6 +1040,46 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider im
                 .save(recipeOutput.withConditions(new ModLoadedCondition("create")), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/create/bar_of_chocolate"));
         ItemCastingRecipeBuilder.of(Items.SWEET_BERRIES.getDefaultInstance(), SizedFluidIngredient.of(chocolateFluid, 250), BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("create", "chocolate_glazed_berries")).getDefaultInstance())
                 .save(recipeOutput.withConditions(new ModLoadedCondition("create")), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/create/chocolate_glazed_berries"));
+    }
+
+    private void createIronworksCompat(RecipeOutput recipeOutput) {
+        for (String resource : new String[]{"tin", "bronze", "steel"}) {
+            var fluid = BuiltInRegistries.FLUID.get(ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "molten_" + resource));
+            var fluidTag = FluidTags.create(ResourceLocation.fromNamespaceAndPath("c", "molten_" + resource));
+
+            var crushedItem = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("create_ironworks", "crushed_raw_" + resource));
+            var blockItem = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("create_ironworks", resource + "_block"));
+            var ingotItem = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("create_ironworks", resource + "_ingot"));
+            var nuggetItem = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("create_ironworks", resource + "_nugget"));
+            var plateItem = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("create_ironworks", resource + "_sheet"));
+
+            // Melt Crushed Raw Ore
+            if (!crushedItem.equals(Items.AIR)) {
+                ItemMeltingRecipeBuilder.of(Ingredient.of(crushedItem), new FluidStack(fluid, 90))
+                        .save(recipeOutput.withConditions(new ModLoadedCondition("create_ironworks")), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "melting/create_ironworks/crushed_raw_" + resource));
+            }
+
+            // Cast block
+            if (!blockItem.equals(Items.AIR)) {
+                BlockCastingRecipeBuilder.of(SizedFluidIngredient.of(fluidTag, 810), blockItem.getDefaultInstance())
+                        .save(recipeOutput.withConditions(new ModLoadedCondition("create_ironworks")), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/create_ironworks/" + resource + "_block"));
+            }
+            // Cast ingot
+            if (!ingotItem.equals(Items.AIR)) {
+                ItemCastingRecipeBuilder.of(MetalworksRegistrator.CAST_INGOT.get().getDefaultInstance(), SizedFluidIngredient.of(fluidTag, 90), ingotItem.getDefaultInstance())
+                        .save(recipeOutput.withConditions(new ModLoadedCondition("create_ironworks")), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/create_ironworks/" + resource + "_ingot"));
+            }
+            // Cast nugget
+            if (!nuggetItem.equals(Items.AIR)) {
+                ItemCastingRecipeBuilder.of(MetalworksRegistrator.CAST_NUGGET.get().getDefaultInstance(), SizedFluidIngredient.of(fluidTag, 10), nuggetItem.getDefaultInstance())
+                        .save(recipeOutput.withConditions(new ModLoadedCondition("create_ironworks")), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/create_ironworks/" + resource + "_nugget"));
+            }
+            // Cast Sheet
+            if (!plateItem.equals(Items.AIR)) {
+                ItemCastingRecipeBuilder.of(MetalworksRegistrator.CAST_PLATE.get().getDefaultInstance(), SizedFluidIngredient.of(fluidTag, 90), plateItem.getDefaultInstance())
+                        .save(recipeOutput.withConditions(new ModLoadedCondition("create_ironworks")), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "casting/create_ironworks/" + resource + "_sheet"));
+            }
+        }
     }
 
     private void georeCompat(RecipeOutput recipeOutput) {
