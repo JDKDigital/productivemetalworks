@@ -137,7 +137,7 @@ dependencies {
     jarJar(group: 'cy.jdkdigital.productivelib', name: 'productivelib', version: "${lib_version_range}") {
         transitive(false)
     }
-    jarJar(group: 'net.createmod.ponder', name: 'Ponder-NeoForge-1.21.1', version: "${ponder_version}") {
+    jarJar(group: 'net.createmod.ponder', name: 'ponder-neoforge', version: "${ponder_version}") {
         transitive(false)
     }
     jarJar(group: 'dev.engine-room.flywheel', name: 'flywheel-neoforge-1.21.1', version: "${flywheel_version}") {
@@ -168,8 +168,8 @@ dependencies {
     implementation "curse.maven:allthemodium-364466:6135138"
     implementation "curse.maven:geckolib-388172:6027599"
     implementation "curse.maven:ftb-materials-1124942:6117436"
-    implementation "curse.maven:silent-gear-297039:6872305"
-    implementation "curse.maven:silent-lib-242998:5730272"
+    implementation "curse.maven:silent-gear-297039:7870014"
+    implementation "curse.maven:silent-lib-242998:6565251"
     implementation "curse.maven:architectury-api-419699:5786327"
     implementation "curse.maven:integrated-dynamics-236307:6125873"
     implementation "curse.maven:common-capabilities-247007:6059616"
