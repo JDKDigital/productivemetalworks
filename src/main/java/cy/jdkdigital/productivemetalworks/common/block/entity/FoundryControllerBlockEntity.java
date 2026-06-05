@@ -7,7 +7,6 @@ import cy.jdkdigital.productivelib.common.block.entity.InventoryHandlerHelper;
 import cy.jdkdigital.productivelib.exception.InvalidStructureException;
 import cy.jdkdigital.productivelib.registry.LibItems;
 import cy.jdkdigital.productivelib.util.MultiBlockDetector;
-import cy.jdkdigital.productivelib.util.MultiFluidTank;
 import cy.jdkdigital.productivemetalworks.Config;
 import cy.jdkdigital.productivemetalworks.common.block.FoundryControllerBlock;
 import cy.jdkdigital.productivemetalworks.common.block.IHeatingCoilBlock;
@@ -17,15 +16,10 @@ import cy.jdkdigital.productivemetalworks.recipe.FluidAlloyingRecipe;
 import cy.jdkdigital.productivemetalworks.recipe.ItemMeltingRecipe;
 import cy.jdkdigital.productivemetalworks.registry.MetalworksRegistrator;
 import cy.jdkdigital.productivemetalworks.registry.ModTags;
-import cy.jdkdigital.productivemetalworks.util.CoilType;
-import cy.jdkdigital.productivemetalworks.util.IFoundryFuel;
-import cy.jdkdigital.productivemetalworks.util.RecipeHelper;
-import cy.jdkdigital.productivemetalworks.util.TickingSlotInventoryHandler;
+import cy.jdkdigital.productivemetalworks.util.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.damagesource.DamageSource;
@@ -41,18 +35,19 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.ticks.TickPriority;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.IItemHandlerModifiable;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Objects;
 
 public class FoundryControllerBlockEntity extends FluidTankBlockEntity implements IUpgradeableBlockEntity, IMultiBlockControllerBlockEntity, MenuProvider
 {
@@ -64,12 +59,12 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
     // used clientside for rendering fuel in gui screen
     public FluidStack fuel = FluidStack.EMPTY;
 
-    public MultiFluidTank fluidHandler = new MultiFluidTank(20, 90000)
+    public ModFluidTank fluidHandler = new ModFluidTank(20, 90000)
     {
         @Override
-        protected void onContentsChanged(boolean hasChangedFluid) {
-            super.onContentsChanged(hasChangedFluid);
-            if (hasChangedFluid && FoundryControllerBlockEntity.this.level instanceof ServerLevel serverLevel) {
+        protected void onContentsChanged() {
+            super.onContentsChanged();
+            if (FoundryControllerBlockEntity.this.level instanceof ServerLevel serverLevel) {
                 FoundryControllerBlockEntity.this.sync(serverLevel);
             }
             FoundryControllerBlockEntity.this.setChanged();
@@ -97,7 +92,7 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
                         RecipeHolder<ItemMeltingRecipe> recipe = RecipeHelper.getItemMeltingRecipe(pLevel, stack, fuelData);
 
                         if (recipe != null) {
-                            return recipe.value().result.stream().map(FluidStack::getAmount).reduce(Integer::sum).orElse(0);
+                            return recipe.value().result.stream().map(FluidStackTemplate::getAmount).reduce(Integer::sum).orElse(0);
                         }
                     }
                 }
@@ -106,7 +101,7 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
         }
 
         @Override
-        public int getSlotLimit(int slot) {
+        protected int getCapacity(int index, ItemResource resource) {
             return 1;
         }
 
@@ -121,7 +116,7 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
         }
 
         @Override
-        public boolean isItemValid(int slot, @NotNull ItemStack stack) {
+        public boolean isItemValid(int slot, @NotNull ItemStack stack, boolean fromAutomation) {
             return true;
         }
 
@@ -131,14 +126,15 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
         }
 
         @Override
-        protected void onContentsChanged(int slot) {
+        protected void onContentsChanged(int index, ItemStack previousContents) {
+            super.onContentsChanged(index, previousContents);
             if (FoundryControllerBlockEntity.this.level instanceof ServerLevel serverLevel) {
                 FoundryControllerBlockEntity.this.sync(serverLevel);
             }
         }
     };
 
-    protected IItemHandlerModifiable upgradeHandler = new InventoryHandlerHelper.UpgradeHandler(4, this, List.of(
+    protected ResourceHandler<ItemResource> upgradeHandler = new InventoryHandlerHelper.UpgradeHandler(4, this, List.of(
             LibItems.UPGRADE_TIME.get(),
             LibItems.UPGRADE_TIME_2.get(),
             LibItems.UPGRADE_STABILITY.get()
@@ -149,7 +145,7 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
     }
 
     @Override
-    public IItemHandlerModifiable getUpgradeHandler() {
+    public ResourceHandler<ItemResource> getUpgradeHandler() {
         return upgradeHandler;
     }
 
@@ -175,7 +171,7 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
                     if (Config.foundryCollectItems) {
                         if (entity instanceof ItemEntity item && !item.isRemoved()) {
                             var groundStack = item.getItem();
-                            for (int slot = 0; slot < blockEntity.itemHandler.getSlots(); slot++) {
+                            for (int slot = 0; slot < blockEntity.itemHandler.size(); slot++) {
                                 if (blockEntity.itemHandler.getItem(slot).isEmpty()) {
                                     var clonedStack = groundStack.copy();
                                     clonedStack.setCount(1);
@@ -187,14 +183,14 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
                     }
                     if (Config.foundryDamageEntities) {
                         // Other entities take damage if there's heat
-                        if (entity instanceof LivingEntity livingEntity && (blockEntity.getFluidHandler().totalFluidAmount() > 0 || blockEntity.getFuel().getAmount() > 0)) {
-                            livingEntity.hurt(new DamageSource(
+                        if (entity instanceof LivingEntity livingEntity && level instanceof ServerLevel serverLevel && (blockEntity.getFluidHandler().totalFluidAmount() > 0 || blockEntity.getFuel().getAmount() > 0)) {
+                            livingEntity.hurtServer(serverLevel, new DamageSource(
                                     level.registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(MetalworksRegistrator.FOUNDRY_DAMAGE),
                                     null, null, null
                             ), 4.0f);
                             var meltingFluid = livingEntity.getType().builtInRegistryHolder().getData(MetalworksRegistrator.ENTITY_MELTING_MAP);
                             if (meltingFluid != null) {
-                                blockEntity.fluidHandler.fill(meltingFluid.fluid(), IFluidHandler.FluidAction.EXECUTE);
+                                blockEntity.fluidHandler.fill(meltingFluid.fluid().create(), true);
                             }
                         }
                     }
@@ -257,21 +253,21 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
                 // Determine if the result of the recipe will increase the total amount of fluids, if it does there have to be a capacity check before processing.
                 boolean addsFluidAmount = fluidAlloyingRecipe.value().result.getAmount() > fluidAlloyingRecipe.value().fluids.stream().mapToInt(SizedFluidIngredient::amount).sum();
                 // First try to alloy with speed modifier
-                boolean canAlloyFullSpeed = fluidAlloyingRecipe.value().fluids.stream().map(f -> new SizedFluidIngredient(f.ingredient(), f.amount() * speed)).noneMatch(fluid -> fluidHandler.drain(fluid, IFluidHandler.FluidAction.SIMULATE).isEmpty());
-                if (canAlloyFullSpeed && (!addsFluidAmount || fluidHandler.fill(new FluidStack(fluidAlloyingRecipe.value().result.getFluid(), fluidAlloyingRecipe.value().result.getAmount() * speed), IFluidHandler.FluidAction.SIMULATE) > 0)) {
+                boolean canAlloyFullSpeed = fluidAlloyingRecipe.value().fluids.stream().map(f -> new SizedFluidIngredient(f.ingredient(), f.amount() * speed)).noneMatch(fluid -> fluidHandler.drain(fluid, false).isEmpty());
+                if (canAlloyFullSpeed && (!addsFluidAmount || fluidHandler.fill(new FluidStack(fluidAlloyingRecipe.value().result.getFluid(), fluidAlloyingRecipe.value().result.getAmount() * speed), false) > 0)) {
                     for (int i = 0; i < speed; i++) {
-                        boolean hasFluid = fluidAlloyingRecipe.value().fluids.stream().allMatch(fluid -> fluidHandler.drain(fluid, IFluidHandler.FluidAction.SIMULATE).getAmount() == fluid.amount());
+                        boolean hasFluid = fluidAlloyingRecipe.value().fluids.stream().allMatch(fluid -> fluidHandler.drain(fluid, false).getAmount() == fluid.amount());
                         if (hasFluid) {
-                            fluidAlloyingRecipe.value().fluids.forEach(fluid -> fluidHandler.drain(fluid, IFluidHandler.FluidAction.EXECUTE));
-                            fluidHandler.fill(fluidAlloyingRecipe.value().result, IFluidHandler.FluidAction.EXECUTE);
+                            fluidAlloyingRecipe.value().fluids.forEach(fluid -> fluidHandler.drain(fluid, true));
+                            fluidHandler.fill(fluidAlloyingRecipe.value().result.create(), true);
                         }
                     }
                 } else {
                     // if there's no room for a modified output, try with less
-                    boolean canDrain = fluidAlloyingRecipe.value().fluids.stream().noneMatch(fluid -> fluidHandler.drain(fluid, IFluidHandler.FluidAction.SIMULATE).isEmpty());
-                    if (canDrain && (!addsFluidAmount || fluidHandler.fill(fluidAlloyingRecipe.value().result, IFluidHandler.FluidAction.SIMULATE) > 0)) {
-                        fluidAlloyingRecipe.value().fluids.forEach(fluid -> fluidHandler.drain(fluid, IFluidHandler.FluidAction.EXECUTE));
-                        fluidHandler.fill(fluidAlloyingRecipe.value().result, IFluidHandler.FluidAction.EXECUTE);
+                    boolean canDrain = fluidAlloyingRecipe.value().fluids.stream().noneMatch(fluid -> fluidHandler.drain(fluid, false).isEmpty());
+                    if (canDrain && (!addsFluidAmount || fluidHandler.fill(fluidAlloyingRecipe.value().result.create(), false) > 0)) {
+                        fluidAlloyingRecipe.value().fluids.forEach(fluid -> fluidHandler.drain(fluid, true));
+                        fluidHandler.fill(fluidAlloyingRecipe.value().result.create(), true);
                     }
                 }
             });
@@ -284,12 +280,12 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
     }
 
     @Override
-    public IItemHandler getItemHandler() {
+    public ResourceHandler<ItemResource> getItemHandler() {
         return itemHandler;
     }
 
     @Override
-    public MultiFluidTank getFluidHandler() {
+    public ModFluidTank getFluidHandler() {
         return fluidHandler;
     }
 
@@ -300,27 +296,25 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
     }
 
     @Override
-    public void savePacketNBT(CompoundTag tag, HolderLookup.Provider provider) {
-        super.savePacketNBT(tag, provider);
+    public void savePacketNBT(ValueOutput output) {
+        super.savePacketNBT(output);
 
         if (this.getMultiblockData() != null) {
-            tag.put("multiData", this.getMultiblockData().serializeNBT(provider));
+            output.putChild("multiData", this.getMultiblockData());
         }
-        tag.putString("coilType", coilType.name());
+        output.putString("coilType", coilType.name());
     }
 
     @Override
-    public void loadPacketNBT(CompoundTag tag, HolderLookup.Provider provider) {
-        super.loadPacketNBT(tag, provider);
+    public void loadPacketNBT(ValueInput input) {
+        super.loadPacketNBT(input);
 
-        if (tag.contains("multiData")) {
+        input.child("multiData").ifPresent(child -> {
             var data = new MultiBlockDetector.MultiBlockData(null, null, List.of(), 0, 0);
-            data.deserializeNBT(provider, Objects.requireNonNull(tag.get("multiData")));
+            data.deserialize(child);
             setMultiBlockData(data);
-        }
-        if (tag.contains("coilType")) {
-            this.coilType = CoilType.valueOf(tag.getString("coilType"));
-        }
+        });
+        input.getString("coilType").ifPresent(name -> this.coilType = CoilType.valueOf(name));
     }
 
     public FluidStack getFuel() {
@@ -354,7 +348,7 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
         int power = 0;
         for (BlockPos pos : mb.peripherals()) {
             if (level.getBlockEntity(pos) instanceof FoundryCapacitorBlockEntity capacitor) {
-                power += capacitor.energyHandler.getEnergyStored();
+                power += capacitor.energyHandler.getAmountAsInt();
             }
         }
         return power;
@@ -369,7 +363,7 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
         int power = 0;
         for (BlockPos pos : mb.peripherals()) {
             if (level.getBlockEntity(pos) instanceof FoundryCapacitorBlockEntity capacitor) {
-                power += capacitor.energyHandler.getMaxEnergyStored();
+                power += capacitor.energyHandler.getCapacityAsInt();
             }
         }
         return power;
@@ -377,8 +371,8 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
 
     void addRecipeResult(List<FluidStack> result) {
         for (FluidStack fluidStack : result) {
-            if (this.fluidHandler.fill(fluidStack, IFluidHandler.FluidAction.SIMULATE) == fluidStack.getAmount()) {
-                this.fluidHandler.fill(fluidStack, IFluidHandler.FluidAction.EXECUTE);
+            if (this.fluidHandler.fill(fluidStack, false) == fluidStack.getAmount()) {
+                this.fluidHandler.fill(fluidStack, true);
             }
         }
     }
@@ -490,7 +484,7 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
                 }
 
                 // Get item in Slot
-                var item = blockEntity.getItemHandler().getStackInSlot(slot);
+                var item = blockEntity.itemHandler.getStackInSlot(slot);
                 if (item.isEmpty()) {
                     continue;
                 }
@@ -502,7 +496,7 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
                 }
 
                 // Sum total fluid amount that would be melted
-                int totalProducedFluid = recipe.value().result.stream().map(FluidStack::getAmount).reduce(Integer::sum).orElse(0);
+                int totalProducedFluid = recipe.value().result.stream().map(FluidStackTemplate::getAmount).reduce(Integer::sum).orElse(0);
 
                 // Look at the fuel required for this recipe melt
                 int requiredFuel = (int) (totalProducedFluid * fuelData.consumption() * speedModifier);
@@ -522,7 +516,7 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
                 hasChanged = true;
 
                 // Melt every result into the tank
-                blockEntity.addRecipeResult(recipe.value().result);
+                blockEntity.addRecipeResult(recipe.value().result.stream().map(FluidStackTemplate::create).toList());
             }
             return hasChanged;
         }
@@ -552,7 +546,7 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
             if (hasChanged) {
                 for (BlockPos blockPos : mb.peripherals()) {
                     if (!consumedFuel.isEmpty() && level.getBlockEntity(blockPos) instanceof FoundryTankBlockEntity tankBlockEntity) {
-                        var drainedFluid = tankBlockEntity.getFluidHandler().drain(new FluidStack(fuelStack.getFluid(), consumedFuel.getAmount()), IFluidHandler.FluidAction.EXECUTE);
+                        var drainedFluid = tankBlockEntity.getFluidHandler().drain(new FluidStack(fuelStack.getFluid(), consumedFuel.getAmount()), true);
                         consumedFuel.shrink(drainedFluid.getAmount());
                     }
                 }
@@ -596,8 +590,11 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
             if (hasChanged) {
                 for (BlockPos blockPos : mb.peripherals()) {
                     if (!consumedFuel.isEmpty() && level.getBlockEntity(blockPos) instanceof FoundryCapacitorBlockEntity capacitorBlockEntity) {
-                        int drainedPower = capacitorBlockEntity.energyHandler.extractEnergy(consumedFuel.getAmount(), false);
-                        consumedFuel.shrink(drainedPower);
+                        try (Transaction tx = Transaction.openRoot()) {
+                            int drainedPower = capacitorBlockEntity.energyHandler.extract(consumedFuel.getAmount(), tx);
+                            tx.commit();
+                            consumedFuel.shrink(drainedPower);
+                        }
                     }
                 }
                 blockEntity.sync(level);
