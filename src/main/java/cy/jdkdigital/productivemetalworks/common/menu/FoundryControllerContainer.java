@@ -8,19 +8,19 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerData;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
-import javax.annotation.Nonnull;
 import java.util.Objects;
 
 public class FoundryControllerContainer extends AbstractContainer<FoundryControllerBlockEntity>
 {
     public static int COLUMNS = 4;
+
+    // Menu-slot index range [0, mainSlotEnd) backed by the controller's main item handler.
+    // ManualSlotItemHandler no longer exposes its backing handler in 26.1, so the scroll logic
+    // identifies the scrollable rows by this range instead.
+    private int mainSlotEnd = 0;
 
     public FoundryControllerContainer(final int windowId, final Inventory playerInventory, final FriendlyByteBuf data) {
         this(windowId, playerInventory, getBlockEntity(playerInventory, data));
@@ -88,7 +88,7 @@ public class FoundryControllerContainer extends AbstractContainer<FoundryControl
             public void set(int i, int value) {
                 FluidStack fluid = blockEntity.fluidHandler.getFluidInTank(i);
                 if (fluid.isEmpty()) {
-                    blockEntity.fluidHandler.fill(new FluidStack(BuiltInRegistries.FLUID.byId(value), 1), IFluidHandler.FluidAction.EXECUTE);
+                    blockEntity.fluidHandler.fill(new FluidStack(BuiltInRegistries.FLUID.byId(value), 1), true);
                 }
             }
 
@@ -118,11 +118,12 @@ public class FoundryControllerContainer extends AbstractContainer<FoundryControl
         });
 
         int rowCount = calculateRowCount(0);
-        int leftover = this.getBlockEntity().getItemHandler().getSlots()%COLUMNS;
+        int leftover = this.getBlockEntity().getItemHandler().size()%COLUMNS;
         if (rowCount > 0) {
             addSlotBox(this.getBlockEntity().getItemHandler(), 0, 80, 17, COLUMNS, 18, rowCount, 18);
         }
         addSlotRange(this.getBlockEntity().getItemHandler(), rowCount * COLUMNS, 80, 17 + rowCount * 18, leftover, 18);
+        this.mainSlotEnd = this.slots.size();
 
         addSlotBox(this.getBlockEntity().getUpgradeHandler(), 0, 178, 8, 1, 18, 4, 18);
 
@@ -146,7 +147,7 @@ public class FoundryControllerContainer extends AbstractContainer<FoundryControl
         int offsetRow = this.getRowIndexForScroll(scrollOffs);
 
         this.slots.forEach(slot -> {
-            if (slot instanceof ManualSlotItemHandler mSlot && mSlot.getItemHandler().equals(this.getBlockEntity().getItemHandler())) {
+            if (slot instanceof ManualSlotItemHandler mSlot && slot.index < this.mainSlotEnd) {
                 // disable slots above and below the shown rows
                 if (slot.index < offsetRow * FoundryControllerContainer.COLUMNS || slot.index > offsetRow * FoundryControllerContainer.COLUMNS + 11) {
                     mSlot.disable();
@@ -159,7 +160,7 @@ public class FoundryControllerContainer extends AbstractContainer<FoundryControl
     }
 
     public int calculateRowCount(int offset) {
-        return Mth.positiveCeilDiv(this.getBlockEntity().getItemHandler().getSlots() - (offset * FoundryControllerContainer.COLUMNS), FoundryControllerContainer.COLUMNS);
+        return Mth.positiveCeilDiv(this.getBlockEntity().getItemHandler().size() - (offset * FoundryControllerContainer.COLUMNS), FoundryControllerContainer.COLUMNS);
     }
 
     public int getRowIndexForScroll(float scrollOffs) {

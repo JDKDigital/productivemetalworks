@@ -6,16 +6,13 @@
     }
   ],
   "type": "productivemetalworks:item_casting",
-  "cast": {
-    "item": "productivemetalworks:gear_cast"
-  },
+  "cast": "productivemetalworks:gear_cast",
   "consume_cast": false,
   "fluid": {
     "amount": 360,
-    "tag": "c:molten_brass"
+    "ingredient": "#c:molten_brass"
   },
   "result": {
-    "count": 1,
     "id": "alltheores:brass_gear"
   }
 }

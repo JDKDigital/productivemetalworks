@@ -9,16 +9,13 @@
     }
   ],
   "type": "productivemetalworks:item_casting",
-  "cast": {
-    "tag": "c:gears"
-  },
+  "cast": "#c:gears",
   "consume_cast": true,
   "fluid": {
     "amount": 360,
-    "tag": "c:molten_steel"
+    "ingredient": "#c:molten_steel"
   },
   "result": {
-    "count": 1,
     "id": "productivemetalworks:gear_cast"
   }
 }

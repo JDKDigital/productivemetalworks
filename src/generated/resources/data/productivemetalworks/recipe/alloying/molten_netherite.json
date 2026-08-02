@@ -1,29 +1,13 @@
 {
-  "neoforge:conditions": [
-    {
-      "type": "neoforge:not",
-      "value": {
-        "type": "productivelib:fluid_tag_empty",
-        "tag": "c:molten_ancient_debris"
-      }
-    },
-    {
-      "type": "neoforge:not",
-      "value": {
-        "type": "productivelib:fluid_tag_empty",
-        "tag": "c:molten_gold"
-      }
-    }
-  ],
   "type": "productivemetalworks:fluid_alloying",
   "fluids": [
     {
       "amount": 40,
-      "tag": "c:molten_ancient_debris"
+      "ingredient": "#c:molten_ancient_debris"
     },
     {
       "amount": 36,
-      "tag": "c:molten_gold"
+      "ingredient": "#c:molten_gold"
     }
   ],
   "result": {

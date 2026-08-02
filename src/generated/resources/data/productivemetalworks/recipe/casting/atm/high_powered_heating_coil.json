@@ -6,16 +6,13 @@
     }
   ],
   "type": "productivemetalworks:block_casting",
-  "cast": {
-    "item": "productivemetalworks:powered_heating_coil"
-  },
+  "cast": "productivemetalworks:powered_heating_coil",
   "consume_cast": true,
   "fluid": {
     "amount": 1000,
-    "fluid": "allthemodium:soul_lava"
+    "ingredient": "allthemodium:soul_lava"
   },
   "result": {
-    "count": 1,
     "id": "productivemetalworks:high_powered_heating_coil"
   }
 }

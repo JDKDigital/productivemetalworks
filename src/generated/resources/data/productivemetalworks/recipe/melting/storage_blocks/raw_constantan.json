@@ -9,9 +9,7 @@
     }
   ],
   "type": "productivemetalworks:item_melting",
-  "ingredient": {
-    "tag": "c:storage_blocks/raw_constantan"
-  },
+  "ingredient": "#c:storage_blocks/raw_constantan",
   "maximum_temperature": 0,
   "minimum_temperature": 1000,
   "result": [

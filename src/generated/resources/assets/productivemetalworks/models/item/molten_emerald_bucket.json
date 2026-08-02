@@ -1,5 +1,0 @@
-{
-  "parent": "neoforge:item/bucket_drip",
-  "fluid": "productivemetalworks:molten_emerald",
-  "loader": "neoforge:fluid_container"
-}

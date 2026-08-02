@@ -9,9 +9,7 @@
     }
   ],
   "type": "productivemetalworks:item_melting",
-  "ingredient": {
-    "tag": "c:nuggets/steel"
-  },
+  "ingredient": "#c:nuggets/steel",
   "maximum_temperature": 0,
   "minimum_temperature": 1000,
   "result": [

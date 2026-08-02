@@ -1,15 +1,12 @@
 {
   "type": "productivemetalworks:item_casting",
-  "cast": {
-    "item": "productivemetalworks:ingot_cast"
-  },
+  "cast": "productivemetalworks:ingot_cast",
   "consume_cast": false,
   "fluid": {
     "amount": 90,
-    "tag": "c:molten_netherite"
+    "ingredient": "#c:molten_netherite"
   },
   "result": {
-    "count": 1,
     "id": "minecraft:netherite_ingot"
   }
 }

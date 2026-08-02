@@ -1,8 +1,6 @@
 {
-  "parent": "minecraft:block/orientable",
+  "parent": "minecraft:block/cube_all",
   "textures": {
-    "front": "productivemetalworks:block/white_fire_bricks",
-    "side": "productivemetalworks:block/white_fire_bricks",
-    "top": "productivemetalworks:block/white_fire_bricks"
+    "all": "productivemetalworks:block/white_fire_bricks"
   }
 }

@@ -2,12 +2,9 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "productivemetalworks:gray_foundry_tank"
-    }
+    "productivemetalworks:gray_foundry_tank"
   ],
   "result": {
-    "count": 1,
     "id": "productivemetalworks:gray_foundry_tank"
   }
 }

@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "environment": "productivemetalworks:foundry_melts_raw_iron_added_before_fuel_env",
+  "function": "productivemetalworks:foundry_melts_raw_iron_added_before_fuel",
+  "structure": "productivemetalworks:empty_7x7",
+  "max_ticks": 600,
+  "required": true,
+  "setup_ticks": 0
+}

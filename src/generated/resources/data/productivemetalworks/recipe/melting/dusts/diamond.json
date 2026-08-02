@@ -9,9 +9,7 @@
     }
   ],
   "type": "productivemetalworks:item_melting",
-  "ingredient": {
-    "tag": "c:dusts/diamond"
-  },
+  "ingredient": "#c:dusts/diamond",
   "maximum_temperature": 0,
   "minimum_temperature": 1000,
   "result": [

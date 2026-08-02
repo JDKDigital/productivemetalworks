@@ -1,0 +1,27 @@
+{
+  "values": [
+    {
+      "id": "#c:foods/raw_meat",
+      "required": false
+    },
+    {
+      "id": "#c:ingots/meat",
+      "required": false
+    },
+    {
+      "id": "#c:nuggets/meat",
+      "required": false
+    },
+    {
+      "id": "#c:waxes",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/wax",
+      "required": false
+    },
+    "minecraft:honeycomb",
+    "minecraft:honeycomb_block",
+    "minecraft:honey_block"
+  ]
+}

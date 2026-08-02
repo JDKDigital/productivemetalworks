@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "O": {
-      "tag": "c:sands"
-    },
-    "X": {
-      "item": "minecraft:clay_ball"
-    }
+    "O": "#c:sands",
+    "X": "minecraft:clay_ball"
   },
   "pattern": [
     "XOX",

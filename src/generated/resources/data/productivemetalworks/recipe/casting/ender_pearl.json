@@ -1,15 +1,12 @@
 {
   "type": "productivemetalworks:item_casting",
-  "cast": {
-    "item": "productivemetalworks:gem_cast"
-  },
+  "cast": "productivemetalworks:gem_cast",
   "consume_cast": false,
   "fluid": {
     "amount": 100,
-    "fluid": "productivemetalworks:molten_ender"
+    "ingredient": "productivemetalworks:molten_ender"
   },
   "result": {
-    "count": 1,
     "id": "minecraft:ender_pearl"
   }
 }

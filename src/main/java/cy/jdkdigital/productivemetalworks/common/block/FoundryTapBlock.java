@@ -2,7 +2,6 @@ package cy.jdkdigital.productivemetalworks.common.block;
 
 import com.mojang.serialization.MapCodec;
 import cy.jdkdigital.productivelib.common.block.IMultiBlockPeripheral;
-import cy.jdkdigital.productivemetalworks.ProductiveMetalworks;
 import cy.jdkdigital.productivemetalworks.common.block.entity.FoundryTapBlockEntity;
 import cy.jdkdigital.productivemetalworks.registry.MetalworksRegistrator;
 import net.minecraft.core.BlockPos;
@@ -21,6 +20,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -82,22 +82,22 @@ public class FoundryTapBlock extends BaseEntityBlock implements IMultiBlockPerip
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
-        return level.isClientSide ? null : createTickerHelper(blockEntityType, MetalworksRegistrator.FOUNDRY_TAP_BLOCK_ENTITY.get(), FoundryTapBlockEntity::serverTick);
+        return level.isClientSide() ? null : createTickerHelper(blockEntityType, MetalworksRegistrator.FOUNDRY_TAP_BLOCK_ENTITY.get(), FoundryTapBlockEntity::serverTick);
     }
 
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         if (level.getBlockEntity(pos) instanceof FoundryTapBlockEntity blockEntity) {
-            if (!level.isClientSide) {
+            if (!level.isClientSide()) {
                 blockEntity.setActive(!blockEntity.isActive);
             }
-            return InteractionResult.sidedSuccess(level.isClientSide);
+            return InteractionResult.SUCCESS;
         }
         return super.useWithoutItem(state, level, pos, player, hitResult);
     }
 
     @Override
-    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
+    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, @Nullable Orientation orientation, boolean isMoving) {
         if (level.getBlockEntity(pos) instanceof FoundryTapBlockEntity blockEntity) {
             boolean hasSignal = level.hasNeighborSignal(pos);
             blockEntity.setActive(hasSignal);

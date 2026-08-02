@@ -1,0 +1,12 @@
+{
+  "type": "productivemetalworks:item_casting",
+  "cast": "productivemetalworks:nugget_cast",
+  "consume_cast": false,
+  "fluid": {
+    "amount": 10,
+    "ingredient": "#c:molten_copper"
+  },
+  "result": {
+    "id": "minecraft:copper_nugget"
+  }
+}

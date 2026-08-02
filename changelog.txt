@@ -1,3 +1,21 @@
+26.1.2-1.16.4
+
+- Added meltable item tags (productivemetalworks:meltable, with metals/gems/organic subtags)
+
+
+26.1.2-1.16.3
+
+- Removed recipe warnings
+- Fixed casting recipes that consume their cast (e.g. capacitor)
+- Fixed fluid buckets placing a block when used on a drain
+- Fixed block casts and results rendering too small in the basin
+
+
+26.1.2-1.16.2
+
+- Fixed casting bee eggs
+
+
 26.1.2-1.16.1
 
 - Fixed crash (StackOverflow) when a hopper extracts from a casting block

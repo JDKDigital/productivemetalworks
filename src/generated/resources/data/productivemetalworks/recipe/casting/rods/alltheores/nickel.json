@@ -6,16 +6,13 @@
     }
   ],
   "type": "productivemetalworks:item_casting",
-  "cast": {
-    "item": "productivemetalworks:rod_cast"
-  },
+  "cast": "productivemetalworks:rod_cast",
   "consume_cast": false,
   "fluid": {
     "amount": 45,
-    "tag": "c:molten_nickel"
+    "ingredient": "#c:molten_nickel"
   },
   "result": {
-    "count": 1,
     "id": "alltheores:nickel_rod"
   }
 }

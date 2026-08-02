@@ -3,7 +3,7 @@ package cy.jdkdigital.productivemetalworks.datagen;
 import cy.jdkdigital.productivemetalworks.ProductiveMetalworks;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.storage.loot.predicates.AnyOfCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.neoforged.neoforge.common.data.GlobalLootModifierProvider;
@@ -26,7 +26,7 @@ public class LootModifierProvider extends GlobalLootModifierProvider
     private LootItemCondition[] lootTableConditions(String... rLoc) {
         var list = new ArrayList<LootItemCondition>();
         for (String s : rLoc) {
-            list.add(LootTableIdCondition.builder(ResourceLocation.parse(s)).build());
+            list.add(LootTableIdCondition.builder(Identifier.parse(s)).build());
         }
         return list.toArray(new LootItemCondition[0]);
     }
@@ -34,7 +34,7 @@ public class LootModifierProvider extends GlobalLootModifierProvider
     private LootItemCondition[] anyOfConditions(String... rLoc) {
         var list = new ArrayList<LootItemCondition.Builder>();
         for (String s : rLoc) {
-            list.add(LootTableIdCondition.builder(ResourceLocation.parse(s)));
+            list.add(LootTableIdCondition.builder(Identifier.parse(s)));
         }
         return List.of(AnyOfCondition.anyOf(list.toArray(new LootItemCondition.Builder[0])).build()).toArray(new LootItemCondition[0]);
     }

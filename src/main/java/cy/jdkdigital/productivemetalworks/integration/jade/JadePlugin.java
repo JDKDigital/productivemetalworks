@@ -13,11 +13,11 @@ public class JadePlugin implements IWailaPlugin
 {
     @Override
     public void register(IWailaCommonRegistration registration) {
-        registration.registerBlockDataProvider(CastingTableProvider.INSTANCE, CastingBlockEntity.class);
+        registration.registerBlockDataProvider(CastingTableServerProvider.INSTANCE, CastingBlockEntity.class);
     }
 
     @Override
     public void registerClient(IWailaClientRegistration registration) {
-        registration.registerBlockComponent(CastingTableProvider.INSTANCE, CastingTableBlock.class);
+        registration.registerBlockComponent(CastingTableClientProvider.INSTANCE, CastingTableBlock.class);
     }
 }

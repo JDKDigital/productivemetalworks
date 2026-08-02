@@ -1,15 +1,12 @@
 {
   "type": "productivemetalworks:item_casting",
-  "cast": {
-    "item": "productivemetalworks:nugget_cast"
-  },
+  "cast": "productivemetalworks:nugget_cast",
   "consume_cast": false,
   "fluid": {
     "amount": 10,
-    "tag": "c:molten_iron"
+    "ingredient": "#c:molten_iron"
   },
   "result": {
-    "count": 1,
     "id": "minecraft:iron_nugget"
   }
 }

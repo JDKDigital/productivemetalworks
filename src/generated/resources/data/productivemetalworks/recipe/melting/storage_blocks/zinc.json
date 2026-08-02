@@ -9,9 +9,7 @@
     }
   ],
   "type": "productivemetalworks:item_melting",
-  "ingredient": {
-    "tag": "c:storage_blocks/zinc"
-  },
+  "ingredient": "#c:storage_blocks/zinc",
   "maximum_temperature": 0,
   "minimum_temperature": 1000,
   "result": [

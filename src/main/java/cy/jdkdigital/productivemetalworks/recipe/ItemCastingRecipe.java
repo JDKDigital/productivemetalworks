@@ -4,26 +4,41 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import cy.jdkdigital.productivemetalworks.registry.MetalworksRegistrator;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeInput;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.ItemStackTemplate;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 
+import java.util.Optional;
+
 public class ItemCastingRecipe implements ICastingRecipe
 {
-    public final Ingredient cast;
+    public static final MapCodec<ItemCastingRecipe> MAP_CODEC = RecordCodecBuilder.mapCodec(
+            builder -> builder.group(
+                            Ingredient.CODEC.optionalFieldOf("cast").forGetter(recipe -> recipe.cast),
+                            SizedFluidIngredient.CODEC.fieldOf("fluid").forGetter(recipe -> recipe.fluid),
+                            ItemStackTemplate.CODEC.fieldOf("result").forGetter(recipe -> recipe.result),
+                            Codec.BOOL.fieldOf("consume_cast").orElse(false).forGetter(recipe -> recipe.consumeCast)
+                    )
+                    .apply(builder, ItemCastingRecipe::new)
+    );
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, ItemCastingRecipe> STREAM_CODEC = StreamCodec.of(
+            ItemCastingRecipe::toNetwork, ItemCastingRecipe::fromNetwork
+    );
+
+    public static final RecipeSerializer<ItemCastingRecipe> SERIALIZER = new RecipeSerializer<>(MAP_CODEC, STREAM_CODEC);
+
+    public final Optional<Ingredient> cast;
     public final SizedFluidIngredient fluid;
-    public final ItemStack result;
+    public final ItemStackTemplate result;
     public final boolean consumeCast;
 
-    public ItemCastingRecipe(Ingredient cast, SizedFluidIngredient fluid, ItemStack result, boolean consumeCast) {
+    public ItemCastingRecipe(Optional<Ingredient> cast, SizedFluidIngredient fluid, ItemStackTemplate result, boolean consumeCast) {
         this.cast = cast;
         this.fluid = fluid;
         this.result = result;
@@ -42,7 +57,8 @@ public class ItemCastingRecipe implements ICastingRecipe
 
     @Override
     public boolean matches(ItemStack cast, FluidStack fluid, boolean matchFluidAmount, Level level) {
-        return this.cast.test(cast) && (matchFluidAmount ? this.fluid.test(fluid) : this.fluid.ingredient().test(fluid));
+        boolean castMatches = this.cast.isEmpty() ? cast.isEmpty() : this.cast.get().test(cast);
+        return castMatches && (matchFluidAmount ? this.fluid.test(fluid) : this.fluid.ingredient().test(fluid));
     }
 
     @Override
@@ -51,13 +67,38 @@ public class ItemCastingRecipe implements ICastingRecipe
     }
 
     @Override
-    public ItemStack assemble(RecipeInput input, HolderLookup.Provider registries) {
-        return this.result.copy();
+    public ItemStack assemble(RecipeInput input) {
+        return this.result.create();
     }
 
     @Override
-    public boolean canCraftInDimensions(int width, int height) {
+    public ItemStack getResultItem(Level level, FluidStack containedFluid) {
+        return this.result.create();
+    }
+
+    @Override
+    public RecipeSerializer<? extends ICastingRecipe> getSerializer() {
+        return MetalworksRegistrator.ITEM_CASTING.get();
+    }
+
+    @Override
+    public RecipeType<? extends ICastingRecipe> getType() {
+        return MetalworksRegistrator.ITEM_CASTING_TYPE.get();
+    }
+
+    @Override
+    public String group() {
+        return "";
+    }
+
+    @Override
+    public boolean showNotification() {
         return false;
+    }
+
+    @Override
+    public PlacementInfo placementInfo() {
+        return PlacementInfo.NOT_PLACEABLE;
     }
 
     @Override
@@ -66,60 +107,19 @@ public class ItemCastingRecipe implements ICastingRecipe
     }
 
     @Override
-    public ItemStack getResultItem(Level level, FluidStack containedFluid) {
-        return getResultItem(level.registryAccess());
+    public RecipeBookCategory recipeBookCategory() {
+        return RecipeBookCategories.CRAFTING_MISC;
     }
 
-    @Override
-    public ItemStack getResultItem(HolderLookup.Provider registries) {
-        return this.result.copy();
+    public static ItemCastingRecipe fromNetwork(RegistryFriendlyByteBuf buffer) {
+        return new ItemCastingRecipe(buffer.readBoolean() ? Optional.of(Ingredient.CONTENTS_STREAM_CODEC.decode(buffer)) : Optional.empty(), SizedFluidIngredient.STREAM_CODEC.decode(buffer), ItemStackTemplate.STREAM_CODEC.decode(buffer), buffer.readBoolean());
     }
 
-    @Override
-    public RecipeSerializer<?> getSerializer() {
-        return MetalworksRegistrator.ITEM_CASTING.get();
-    }
-
-    @Override
-    public RecipeType<?> getType() {
-        return MetalworksRegistrator.ITEM_CASTING_TYPE.get();
-    }
-
-    public static class Serializer implements RecipeSerializer<ItemCastingRecipe>
-    {
-        private static final MapCodec<ItemCastingRecipe> CODEC = RecordCodecBuilder.mapCodec(
-                builder -> builder.group(
-                                Ingredient.CODEC.fieldOf("cast").orElse(Ingredient.EMPTY).forGetter(recipe -> recipe.cast),
-                                SizedFluidIngredient.FLAT_CODEC.fieldOf("fluid").forGetter(recipe -> recipe.fluid),
-                                ItemStack.CODEC.fieldOf("result").forGetter(recipe -> recipe.result),
-                                Codec.BOOL.fieldOf("consume_cast").orElse(false).forGetter(recipe -> recipe.consumeCast)
-                        )
-                        .apply(builder, ItemCastingRecipe::new)
-        );
-
-        public static final StreamCodec<RegistryFriendlyByteBuf, ItemCastingRecipe> STREAM_CODEC = StreamCodec.of(
-                ItemCastingRecipe.Serializer::toNetwork, ItemCastingRecipe.Serializer::fromNetwork
-        );
-
-        @Override
-        public MapCodec<ItemCastingRecipe> codec() {
-            return CODEC;
-        }
-
-        @Override
-        public StreamCodec<RegistryFriendlyByteBuf, ItemCastingRecipe> streamCodec() {
-            return STREAM_CODEC;
-        }
-
-        public static ItemCastingRecipe fromNetwork(RegistryFriendlyByteBuf buffer) {
-            return new ItemCastingRecipe(Ingredient.CONTENTS_STREAM_CODEC.decode(buffer), SizedFluidIngredient.STREAM_CODEC.decode(buffer), ItemStack.STREAM_CODEC.decode(buffer), buffer.readBoolean());
-        }
-
-        public static void toNetwork(RegistryFriendlyByteBuf buffer, ItemCastingRecipe recipe) {
-            Ingredient.CONTENTS_STREAM_CODEC.encode(buffer, recipe.cast);
-            SizedFluidIngredient.STREAM_CODEC.encode(buffer, recipe.fluid);
-            ItemStack.STREAM_CODEC.encode(buffer, recipe.result);
-            buffer.writeBoolean(recipe.consumeCast);
-        }
+    public static void toNetwork(RegistryFriendlyByteBuf buffer, ItemCastingRecipe recipe) {
+        buffer.writeBoolean(recipe.cast.isPresent());
+        recipe.cast.ifPresent(c -> Ingredient.CONTENTS_STREAM_CODEC.encode(buffer, c));
+        SizedFluidIngredient.STREAM_CODEC.encode(buffer, recipe.fluid);
+        ItemStackTemplate.STREAM_CODEC.encode(buffer, recipe.result);
+        buffer.writeBoolean(recipe.consumeCast);
     }
 }

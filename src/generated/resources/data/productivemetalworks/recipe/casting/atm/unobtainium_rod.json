@@ -6,16 +6,13 @@
     }
   ],
   "type": "productivemetalworks:item_casting",
-  "cast": {
-    "item": "productivemetalworks:rod_cast"
-  },
+  "cast": "productivemetalworks:rod_cast",
   "consume_cast": false,
   "fluid": {
     "amount": 135,
-    "fluid": "allthemodium:molten_unobtainium"
+    "ingredient": "allthemodium:molten_unobtainium"
   },
   "result": {
-    "count": 1,
     "id": "allthemodium:unobtainium_rod"
   }
 }

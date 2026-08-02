@@ -9,9 +9,7 @@
     }
   ],
   "type": "productivemetalworks:item_melting",
-  "ingredient": {
-    "tag": "c:ingots/silver"
-  },
+  "ingredient": "#c:ingots/silver",
   "maximum_temperature": 0,
   "minimum_temperature": 1000,
   "result": [

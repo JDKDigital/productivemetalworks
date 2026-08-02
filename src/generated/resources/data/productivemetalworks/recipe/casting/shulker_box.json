@@ -1,15 +1,12 @@
 {
   "type": "productivemetalworks:block_casting",
-  "cast": {
-    "tag": "c:chests"
-  },
+  "cast": "#c:chests",
   "consume_cast": true,
   "fluid": {
     "amount": 200,
-    "fluid": "productivemetalworks:molten_shulker_shell"
+    "ingredient": "productivemetalworks:molten_shulker_shell"
   },
   "result": {
-    "count": 1,
     "id": "minecraft:shulker_box"
   }
 }

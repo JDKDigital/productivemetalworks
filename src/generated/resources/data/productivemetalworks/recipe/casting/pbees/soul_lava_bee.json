@@ -19,13 +19,13 @@
       "type": "productivelib:lazy",
       "value": {
         "type": "productivebees:bee_exists",
-        "bee": "productivebees:soul_lava"
+        "bee": "productivebees:atm/soul_lava"
       }
     }
   ],
   "type": "productivemetalworks:item_casting",
   "cast": {
-    "type": "productivebees:component",
+    "neoforge:ingredient_type": "productivebees:component",
     "components": {
       "minecraft:entity_data": {
         "type": "productivebees:ghostly",
@@ -37,16 +37,15 @@
   "consume_cast": true,
   "fluid": {
     "amount": 1000,
-    "fluid": "allthemodium:soul_lava"
+    "ingredient": "allthemodium:soul_lava"
   },
   "result": {
     "components": {
       "minecraft:entity_data": {
-        "type": "productivebees:soul_lava",
+        "type": "productivebees:atm/soul_lava",
         "id": "productivebees:configurable_bee"
       }
     },
-    "count": 1,
     "id": "productivebees:spawn_egg_configurable_bee"
   }
 }

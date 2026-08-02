@@ -1,15 +1,12 @@
 {
   "type": "productivemetalworks:block_casting",
-  "cast": {
-    "item": "productivemetalworks:orange_fire_bricks"
-  },
+  "cast": "productivemetalworks:orange_fire_bricks",
   "consume_cast": true,
   "fluid": {
     "amount": 1000,
-    "fluid": "productivemetalworks:molten_redstone"
+    "ingredient": "productivemetalworks:molten_redstone"
   },
   "result": {
-    "count": 1,
     "id": "productivemetalworks:orange_foundry_capacitor"
   }
 }

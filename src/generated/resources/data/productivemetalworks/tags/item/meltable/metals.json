@@ -1,0 +1,1055 @@
+{
+  "values": [
+    {
+      "id": "#c:storage_blocks/iron",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/raw_iron",
+      "required": false
+    },
+    {
+      "id": "#c:ores/iron",
+      "required": false
+    },
+    {
+      "id": "#c:ingots/iron",
+      "required": false
+    },
+    {
+      "id": "#c:nuggets/iron",
+      "required": false
+    },
+    {
+      "id": "#c:raw_materials/iron",
+      "required": false
+    },
+    {
+      "id": "#c:dusts/iron",
+      "required": false
+    },
+    {
+      "id": "#c:gears/iron",
+      "required": false
+    },
+    {
+      "id": "#c:rods/iron",
+      "required": false
+    },
+    {
+      "id": "#c:plates/iron",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/copper",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/raw_copper",
+      "required": false
+    },
+    {
+      "id": "#c:ores/copper",
+      "required": false
+    },
+    {
+      "id": "#c:ingots/copper",
+      "required": false
+    },
+    {
+      "id": "#c:nuggets/copper",
+      "required": false
+    },
+    {
+      "id": "#c:raw_materials/copper",
+      "required": false
+    },
+    {
+      "id": "#c:dusts/copper",
+      "required": false
+    },
+    {
+      "id": "#c:gears/copper",
+      "required": false
+    },
+    {
+      "id": "#c:rods/copper",
+      "required": false
+    },
+    {
+      "id": "#c:plates/copper",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/gold",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/raw_gold",
+      "required": false
+    },
+    {
+      "id": "#c:ores/gold",
+      "required": false
+    },
+    {
+      "id": "#c:ingots/gold",
+      "required": false
+    },
+    {
+      "id": "#c:nuggets/gold",
+      "required": false
+    },
+    {
+      "id": "#c:raw_materials/gold",
+      "required": false
+    },
+    {
+      "id": "#c:dusts/gold",
+      "required": false
+    },
+    {
+      "id": "#c:gears/gold",
+      "required": false
+    },
+    {
+      "id": "#c:rods/gold",
+      "required": false
+    },
+    {
+      "id": "#c:plates/gold",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/netherite",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/raw_netherite",
+      "required": false
+    },
+    {
+      "id": "#c:ores/netherite",
+      "required": false
+    },
+    {
+      "id": "#c:ingots/netherite",
+      "required": false
+    },
+    {
+      "id": "#c:nuggets/netherite",
+      "required": false
+    },
+    {
+      "id": "#c:raw_materials/netherite",
+      "required": false
+    },
+    {
+      "id": "#c:dusts/netherite",
+      "required": false
+    },
+    {
+      "id": "#c:gears/netherite",
+      "required": false
+    },
+    {
+      "id": "#c:rods/netherite",
+      "required": false
+    },
+    {
+      "id": "#c:plates/netherite",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/aluminum",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/raw_aluminum",
+      "required": false
+    },
+    {
+      "id": "#c:ores/aluminum",
+      "required": false
+    },
+    {
+      "id": "#c:ingots/aluminum",
+      "required": false
+    },
+    {
+      "id": "#c:nuggets/aluminum",
+      "required": false
+    },
+    {
+      "id": "#c:raw_materials/aluminum",
+      "required": false
+    },
+    {
+      "id": "#c:dusts/aluminum",
+      "required": false
+    },
+    {
+      "id": "#c:gears/aluminum",
+      "required": false
+    },
+    {
+      "id": "#c:rods/aluminum",
+      "required": false
+    },
+    {
+      "id": "#c:plates/aluminum",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/lead",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/raw_lead",
+      "required": false
+    },
+    {
+      "id": "#c:ores/lead",
+      "required": false
+    },
+    {
+      "id": "#c:ingots/lead",
+      "required": false
+    },
+    {
+      "id": "#c:nuggets/lead",
+      "required": false
+    },
+    {
+      "id": "#c:raw_materials/lead",
+      "required": false
+    },
+    {
+      "id": "#c:dusts/lead",
+      "required": false
+    },
+    {
+      "id": "#c:gears/lead",
+      "required": false
+    },
+    {
+      "id": "#c:rods/lead",
+      "required": false
+    },
+    {
+      "id": "#c:plates/lead",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/nickel",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/raw_nickel",
+      "required": false
+    },
+    {
+      "id": "#c:ores/nickel",
+      "required": false
+    },
+    {
+      "id": "#c:ingots/nickel",
+      "required": false
+    },
+    {
+      "id": "#c:nuggets/nickel",
+      "required": false
+    },
+    {
+      "id": "#c:raw_materials/nickel",
+      "required": false
+    },
+    {
+      "id": "#c:dusts/nickel",
+      "required": false
+    },
+    {
+      "id": "#c:gears/nickel",
+      "required": false
+    },
+    {
+      "id": "#c:rods/nickel",
+      "required": false
+    },
+    {
+      "id": "#c:plates/nickel",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/osmium",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/raw_osmium",
+      "required": false
+    },
+    {
+      "id": "#c:ores/osmium",
+      "required": false
+    },
+    {
+      "id": "#c:ingots/osmium",
+      "required": false
+    },
+    {
+      "id": "#c:nuggets/osmium",
+      "required": false
+    },
+    {
+      "id": "#c:raw_materials/osmium",
+      "required": false
+    },
+    {
+      "id": "#c:dusts/osmium",
+      "required": false
+    },
+    {
+      "id": "#c:gears/osmium",
+      "required": false
+    },
+    {
+      "id": "#c:rods/osmium",
+      "required": false
+    },
+    {
+      "id": "#c:plates/osmium",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/platinum",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/raw_platinum",
+      "required": false
+    },
+    {
+      "id": "#c:ores/platinum",
+      "required": false
+    },
+    {
+      "id": "#c:ingots/platinum",
+      "required": false
+    },
+    {
+      "id": "#c:nuggets/platinum",
+      "required": false
+    },
+    {
+      "id": "#c:raw_materials/platinum",
+      "required": false
+    },
+    {
+      "id": "#c:dusts/platinum",
+      "required": false
+    },
+    {
+      "id": "#c:gears/platinum",
+      "required": false
+    },
+    {
+      "id": "#c:rods/platinum",
+      "required": false
+    },
+    {
+      "id": "#c:plates/platinum",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/silver",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/raw_silver",
+      "required": false
+    },
+    {
+      "id": "#c:ores/silver",
+      "required": false
+    },
+    {
+      "id": "#c:ingots/silver",
+      "required": false
+    },
+    {
+      "id": "#c:nuggets/silver",
+      "required": false
+    },
+    {
+      "id": "#c:raw_materials/silver",
+      "required": false
+    },
+    {
+      "id": "#c:dusts/silver",
+      "required": false
+    },
+    {
+      "id": "#c:gears/silver",
+      "required": false
+    },
+    {
+      "id": "#c:rods/silver",
+      "required": false
+    },
+    {
+      "id": "#c:plates/silver",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/tin",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/raw_tin",
+      "required": false
+    },
+    {
+      "id": "#c:ores/tin",
+      "required": false
+    },
+    {
+      "id": "#c:ingots/tin",
+      "required": false
+    },
+    {
+      "id": "#c:nuggets/tin",
+      "required": false
+    },
+    {
+      "id": "#c:raw_materials/tin",
+      "required": false
+    },
+    {
+      "id": "#c:dusts/tin",
+      "required": false
+    },
+    {
+      "id": "#c:gears/tin",
+      "required": false
+    },
+    {
+      "id": "#c:rods/tin",
+      "required": false
+    },
+    {
+      "id": "#c:plates/tin",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/uranium",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/raw_uranium",
+      "required": false
+    },
+    {
+      "id": "#c:ores/uranium",
+      "required": false
+    },
+    {
+      "id": "#c:ingots/uranium",
+      "required": false
+    },
+    {
+      "id": "#c:nuggets/uranium",
+      "required": false
+    },
+    {
+      "id": "#c:raw_materials/uranium",
+      "required": false
+    },
+    {
+      "id": "#c:dusts/uranium",
+      "required": false
+    },
+    {
+      "id": "#c:gears/uranium",
+      "required": false
+    },
+    {
+      "id": "#c:rods/uranium",
+      "required": false
+    },
+    {
+      "id": "#c:plates/uranium",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/zinc",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/raw_zinc",
+      "required": false
+    },
+    {
+      "id": "#c:ores/zinc",
+      "required": false
+    },
+    {
+      "id": "#c:ingots/zinc",
+      "required": false
+    },
+    {
+      "id": "#c:nuggets/zinc",
+      "required": false
+    },
+    {
+      "id": "#c:raw_materials/zinc",
+      "required": false
+    },
+    {
+      "id": "#c:dusts/zinc",
+      "required": false
+    },
+    {
+      "id": "#c:gears/zinc",
+      "required": false
+    },
+    {
+      "id": "#c:rods/zinc",
+      "required": false
+    },
+    {
+      "id": "#c:plates/zinc",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/iridium",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/raw_iridium",
+      "required": false
+    },
+    {
+      "id": "#c:ores/iridium",
+      "required": false
+    },
+    {
+      "id": "#c:ingots/iridium",
+      "required": false
+    },
+    {
+      "id": "#c:nuggets/iridium",
+      "required": false
+    },
+    {
+      "id": "#c:raw_materials/iridium",
+      "required": false
+    },
+    {
+      "id": "#c:dusts/iridium",
+      "required": false
+    },
+    {
+      "id": "#c:gears/iridium",
+      "required": false
+    },
+    {
+      "id": "#c:rods/iridium",
+      "required": false
+    },
+    {
+      "id": "#c:plates/iridium",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/steel",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/raw_steel",
+      "required": false
+    },
+    {
+      "id": "#c:ores/steel",
+      "required": false
+    },
+    {
+      "id": "#c:ingots/steel",
+      "required": false
+    },
+    {
+      "id": "#c:nuggets/steel",
+      "required": false
+    },
+    {
+      "id": "#c:raw_materials/steel",
+      "required": false
+    },
+    {
+      "id": "#c:dusts/steel",
+      "required": false
+    },
+    {
+      "id": "#c:gears/steel",
+      "required": false
+    },
+    {
+      "id": "#c:rods/steel",
+      "required": false
+    },
+    {
+      "id": "#c:plates/steel",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/invar",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/raw_invar",
+      "required": false
+    },
+    {
+      "id": "#c:ores/invar",
+      "required": false
+    },
+    {
+      "id": "#c:ingots/invar",
+      "required": false
+    },
+    {
+      "id": "#c:nuggets/invar",
+      "required": false
+    },
+    {
+      "id": "#c:raw_materials/invar",
+      "required": false
+    },
+    {
+      "id": "#c:dusts/invar",
+      "required": false
+    },
+    {
+      "id": "#c:gears/invar",
+      "required": false
+    },
+    {
+      "id": "#c:rods/invar",
+      "required": false
+    },
+    {
+      "id": "#c:plates/invar",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/electrum",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/raw_electrum",
+      "required": false
+    },
+    {
+      "id": "#c:ores/electrum",
+      "required": false
+    },
+    {
+      "id": "#c:ingots/electrum",
+      "required": false
+    },
+    {
+      "id": "#c:nuggets/electrum",
+      "required": false
+    },
+    {
+      "id": "#c:raw_materials/electrum",
+      "required": false
+    },
+    {
+      "id": "#c:dusts/electrum",
+      "required": false
+    },
+    {
+      "id": "#c:gears/electrum",
+      "required": false
+    },
+    {
+      "id": "#c:rods/electrum",
+      "required": false
+    },
+    {
+      "id": "#c:plates/electrum",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/bronze",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/raw_bronze",
+      "required": false
+    },
+    {
+      "id": "#c:ores/bronze",
+      "required": false
+    },
+    {
+      "id": "#c:ingots/bronze",
+      "required": false
+    },
+    {
+      "id": "#c:nuggets/bronze",
+      "required": false
+    },
+    {
+      "id": "#c:raw_materials/bronze",
+      "required": false
+    },
+    {
+      "id": "#c:dusts/bronze",
+      "required": false
+    },
+    {
+      "id": "#c:gears/bronze",
+      "required": false
+    },
+    {
+      "id": "#c:rods/bronze",
+      "required": false
+    },
+    {
+      "id": "#c:plates/bronze",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/brass",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/raw_brass",
+      "required": false
+    },
+    {
+      "id": "#c:ores/brass",
+      "required": false
+    },
+    {
+      "id": "#c:ingots/brass",
+      "required": false
+    },
+    {
+      "id": "#c:nuggets/brass",
+      "required": false
+    },
+    {
+      "id": "#c:raw_materials/brass",
+      "required": false
+    },
+    {
+      "id": "#c:dusts/brass",
+      "required": false
+    },
+    {
+      "id": "#c:gears/brass",
+      "required": false
+    },
+    {
+      "id": "#c:rods/brass",
+      "required": false
+    },
+    {
+      "id": "#c:plates/brass",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/enderium",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/raw_enderium",
+      "required": false
+    },
+    {
+      "id": "#c:ores/enderium",
+      "required": false
+    },
+    {
+      "id": "#c:ingots/enderium",
+      "required": false
+    },
+    {
+      "id": "#c:nuggets/enderium",
+      "required": false
+    },
+    {
+      "id": "#c:raw_materials/enderium",
+      "required": false
+    },
+    {
+      "id": "#c:dusts/enderium",
+      "required": false
+    },
+    {
+      "id": "#c:gears/enderium",
+      "required": false
+    },
+    {
+      "id": "#c:rods/enderium",
+      "required": false
+    },
+    {
+      "id": "#c:plates/enderium",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/lumium",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/raw_lumium",
+      "required": false
+    },
+    {
+      "id": "#c:ores/lumium",
+      "required": false
+    },
+    {
+      "id": "#c:ingots/lumium",
+      "required": false
+    },
+    {
+      "id": "#c:nuggets/lumium",
+      "required": false
+    },
+    {
+      "id": "#c:raw_materials/lumium",
+      "required": false
+    },
+    {
+      "id": "#c:dusts/lumium",
+      "required": false
+    },
+    {
+      "id": "#c:gears/lumium",
+      "required": false
+    },
+    {
+      "id": "#c:rods/lumium",
+      "required": false
+    },
+    {
+      "id": "#c:plates/lumium",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/signalum",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/raw_signalum",
+      "required": false
+    },
+    {
+      "id": "#c:ores/signalum",
+      "required": false
+    },
+    {
+      "id": "#c:ingots/signalum",
+      "required": false
+    },
+    {
+      "id": "#c:nuggets/signalum",
+      "required": false
+    },
+    {
+      "id": "#c:raw_materials/signalum",
+      "required": false
+    },
+    {
+      "id": "#c:dusts/signalum",
+      "required": false
+    },
+    {
+      "id": "#c:gears/signalum",
+      "required": false
+    },
+    {
+      "id": "#c:rods/signalum",
+      "required": false
+    },
+    {
+      "id": "#c:plates/signalum",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/constantan",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/raw_constantan",
+      "required": false
+    },
+    {
+      "id": "#c:ores/constantan",
+      "required": false
+    },
+    {
+      "id": "#c:ingots/constantan",
+      "required": false
+    },
+    {
+      "id": "#c:nuggets/constantan",
+      "required": false
+    },
+    {
+      "id": "#c:raw_materials/constantan",
+      "required": false
+    },
+    {
+      "id": "#c:dusts/constantan",
+      "required": false
+    },
+    {
+      "id": "#c:gears/constantan",
+      "required": false
+    },
+    {
+      "id": "#c:rods/constantan",
+      "required": false
+    },
+    {
+      "id": "#c:plates/constantan",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/refined_glowstone",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/raw_refined_glowstone",
+      "required": false
+    },
+    {
+      "id": "#c:ores/refined_glowstone",
+      "required": false
+    },
+    {
+      "id": "#c:ingots/refined_glowstone",
+      "required": false
+    },
+    {
+      "id": "#c:nuggets/refined_glowstone",
+      "required": false
+    },
+    {
+      "id": "#c:raw_materials/refined_glowstone",
+      "required": false
+    },
+    {
+      "id": "#c:dusts/refined_glowstone",
+      "required": false
+    },
+    {
+      "id": "#c:gears/refined_glowstone",
+      "required": false
+    },
+    {
+      "id": "#c:rods/refined_glowstone",
+      "required": false
+    },
+    {
+      "id": "#c:plates/refined_glowstone",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/refined_obsidian",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/raw_refined_obsidian",
+      "required": false
+    },
+    {
+      "id": "#c:ores/refined_obsidian",
+      "required": false
+    },
+    {
+      "id": "#c:ingots/refined_obsidian",
+      "required": false
+    },
+    {
+      "id": "#c:nuggets/refined_obsidian",
+      "required": false
+    },
+    {
+      "id": "#c:raw_materials/refined_obsidian",
+      "required": false
+    },
+    {
+      "id": "#c:dusts/refined_obsidian",
+      "required": false
+    },
+    {
+      "id": "#c:gears/refined_obsidian",
+      "required": false
+    },
+    {
+      "id": "#c:rods/refined_obsidian",
+      "required": false
+    },
+    {
+      "id": "#c:plates/refined_obsidian",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/obsidian",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/raw_obsidian",
+      "required": false
+    },
+    {
+      "id": "#c:ores/obsidian",
+      "required": false
+    },
+    {
+      "id": "#c:ingots/obsidian",
+      "required": false
+    },
+    {
+      "id": "#c:nuggets/obsidian",
+      "required": false
+    },
+    {
+      "id": "#c:raw_materials/obsidian",
+      "required": false
+    },
+    {
+      "id": "#c:dusts/obsidian",
+      "required": false
+    },
+    {
+      "id": "#c:gears/obsidian",
+      "required": false
+    },
+    {
+      "id": "#c:rods/obsidian",
+      "required": false
+    },
+    {
+      "id": "#c:plates/obsidian",
+      "required": false
+    },
+    "minecraft:ancient_debris",
+    "minecraft:netherite_scrap",
+    "minecraft:iron_bars",
+    "minecraft:iron_door",
+    "minecraft:iron_trapdoor",
+    "minecraft:iron_horse_armor",
+    "minecraft:golden_horse_armor",
+    "minecraft:lightning_rod",
+    "minecraft:clock",
+    "minecraft:compass",
+    "minecraft:heavy_core"
+  ]
+}

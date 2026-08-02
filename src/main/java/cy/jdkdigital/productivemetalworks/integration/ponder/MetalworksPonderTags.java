@@ -1,23 +1,21 @@
 package cy.jdkdigital.productivemetalworks.integration.ponder;
 
+import cy.jdkdigital.productivemetalworks.ProductiveMetalworks;
+import cy.jdkdigital.productivemetalworks.registry.MetalworksRegistrator;
+import net.createmod.ponder.api.registration.PonderTagRegistrationHelper;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.ItemLike;
 
-import net.createmod.ponder.api.registration.PonderTagRegistrationHelper;
-
-import cy.jdkdigital.productivemetalworks.ProductiveMetalworks;
-import cy.jdkdigital.productivemetalworks.registry.MetalworksRegistrator;
-
 public class MetalworksPonderTags {
 
-    public static final ResourceLocation FOUNDRY_CONTROLLER_BLOCKS = ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "foundry_controller_blocks");
-    public static final ResourceLocation FOUNDRY_BUILDING_BLOCKS = ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "foundry_building_blocks");
-    public static final ResourceLocation FOUNDRY_TANK_BLOCKS = ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "foundry_tank_blocks");
-    public static final ResourceLocation FOUNDRY_CASTING_BLOCKS = ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "foundry_casting_blocks");
+    public static final Identifier FOUNDRY_CONTROLLER_BLOCKS = Identifier.fromNamespaceAndPath(ProductiveMetalworks.MODID, "foundry_controller_blocks");
+    public static final Identifier FOUNDRY_BUILDING_BLOCKS = Identifier.fromNamespaceAndPath(ProductiveMetalworks.MODID, "foundry_building_blocks");
+    public static final Identifier FOUNDRY_TANK_BLOCKS = Identifier.fromNamespaceAndPath(ProductiveMetalworks.MODID, "foundry_tank_blocks");
+    public static final Identifier FOUNDRY_CASTING_BLOCKS = Identifier.fromNamespaceAndPath(ProductiveMetalworks.MODID, "foundry_casting_blocks");
 
-    public static void register(PonderTagRegistrationHelper<ResourceLocation> helper) {
+    public static void register(PonderTagRegistrationHelper<Identifier> helper) {
         PonderTagRegistrationHelper<ItemLike> HELPER = helper.withKeyFunction(item -> BuiltInRegistries.ITEM.getKey(item.asItem()));
 
         helper.registerTag(FOUNDRY_CONTROLLER_BLOCKS)

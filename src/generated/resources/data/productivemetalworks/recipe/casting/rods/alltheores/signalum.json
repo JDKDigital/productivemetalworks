@@ -6,16 +6,13 @@
     }
   ],
   "type": "productivemetalworks:item_casting",
-  "cast": {
-    "item": "productivemetalworks:rod_cast"
-  },
+  "cast": "productivemetalworks:rod_cast",
   "consume_cast": false,
   "fluid": {
     "amount": 45,
-    "tag": "c:molten_signalum"
+    "ingredient": "#c:molten_signalum"
   },
   "result": {
-    "count": 1,
     "id": "alltheores:signalum_rod"
   }
 }

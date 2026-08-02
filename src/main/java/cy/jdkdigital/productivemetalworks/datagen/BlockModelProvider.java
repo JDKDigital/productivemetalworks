@@ -1,306 +1,294 @@
 package cy.jdkdigital.productivemetalworks.datagen;
 
-import com.google.common.collect.Maps;
-import com.google.gson.JsonElement;
+import com.mojang.math.Quadrant;
 import cy.jdkdigital.productivemetalworks.ProductiveMetalworks;
 import cy.jdkdigital.productivemetalworks.common.block.HotLiquidBlock;
 import cy.jdkdigital.productivemetalworks.common.block.MeatBlock;
 import cy.jdkdigital.productivemetalworks.registry.MetalworksRegistrator;
+import net.minecraft.client.data.models.BlockModelGenerators;
+import net.minecraft.client.data.models.ItemModelGenerators;
+import net.minecraft.client.data.models.ModelProvider;
+import net.minecraft.client.data.models.MultiVariant;
+import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
+import net.minecraft.client.data.models.blockstates.PropertyDispatch;
+import net.minecraft.client.data.models.model.*;
+import net.minecraft.client.renderer.block.dispatch.Variant;
+import net.minecraft.client.renderer.block.dispatch.VariantMutator;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.data.CachedOutput;
-import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.models.blockstates.*;
-import net.minecraft.data.models.model.*;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.random.WeightedList;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.material.Fluid;
+import net.neoforged.neoforge.client.model.item.DynamicFluidContainerModel;
 
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
+import java.util.stream.Stream;
 
-public class BlockModelProvider implements DataProvider
+public class BlockModelProvider extends ModelProvider
 {
-    protected final PackOutput packOutput;
-
-    protected final Map<ResourceLocation, Supplier<JsonElement>> models = new HashMap<>();
+    private static final ModelTemplate CONTROLLER_BASE = baseModel("block/foundry_controller_base");
+    private static final ModelTemplate DRAIN_BASE = baseModel("block/foundry_drain_base");
+    private static final ModelTemplate TANK_BASE = baseModel("block/foundry_tank_base");
+    private static final ModelTemplate CAPACITOR_BASE = baseModel("block/foundry_capacitor_base");
+    private static final ModelTemplate WINDOW_BASE = baseModel("block/foundry_window_base");
 
     public BlockModelProvider(PackOutput packOutput) {
-        this.packOutput = packOutput;
+        super(packOutput, ProductiveMetalworks.MODID);
     }
 
     @Override
-    public CompletableFuture<?> run(CachedOutput cache) {
-        Map<Block, BlockStateGenerator> blockModels = Maps.newHashMap();
-        Consumer<BlockStateGenerator> blockStateOutput = (blockStateGenerator) -> {
-            Block block = blockStateGenerator.getBlock();
-            BlockStateGenerator blockstategenerator = blockModels.put(block, blockStateGenerator);
-            if (blockstategenerator != null) {
-                throw new IllegalStateException("Duplicate blockstate definition for " + block);
-            }
-        };
-        Map<ResourceLocation, Supplier<JsonElement>> itemModels = Maps.newHashMap();
-        BiConsumer<ResourceLocation, Supplier<JsonElement>> modelOutput = (resourceLocation, elementSupplier) -> {
-            Supplier<JsonElement> supplier = itemModels.put(resourceLocation, elementSupplier);
-            if (supplier != null) {
-                throw new IllegalStateException("Duplicate model definition for " + resourceLocation);
-            }
-        };
-
-        ModelGenerator generator = new ModelGenerator();
-        try {
-            generator.registerStatesAndModels(blockStateOutput, modelOutput);
-        } catch (Exception e) {
-            ProductiveMetalworks.LOGGER.error("Error registering states and models", e);
-        }
-
-        MetalworksRegistrator.FOUNDRY_CONTROLLERS.forEach((dyeColor, holder) -> {
-            addBlockItemParentModel(holder.get(), "", "_off", itemModels);
-        });
-        MetalworksRegistrator.FOUNDRY_DRAINS.forEach((dyeColor, holder) -> {
-            addBlockItemParentModel(holder.get(), "", "", itemModels);
-        });
-        MetalworksRegistrator.FOUNDRY_TANKS.forEach((dyeColor, holder) -> {
-            addBlockItemParentModel(holder.get(), "", "", itemModels);
-        });
-        MetalworksRegistrator.FOUNDRY_CAPACITORS.forEach((dyeColor, holder) -> {
-            addBlockItemParentModel(holder.get(), "", "", itemModels);
-        });
-        MetalworksRegistrator.FOUNDRY_WINDOWS.forEach((dyeColor, holder) -> {
-            addBlockItemParentModel(holder.get(), "", "", itemModels);
-        });
-        MetalworksRegistrator.FIRE_BRICKS.forEach((dyeColor, holder) -> {
-            addBlockItemParentModel(holder.get(), "", "", itemModels);
-        });
-        addBlockItemModel(MetalworksRegistrator.FOUNDRY_TAP.get(), "foundry_tap_base", itemModels);
-        addBlockItemParentModel(MetalworksRegistrator.FIRE_CLAY.get(), "", "", itemModels);
-        addBlockItemParentModel(MetalworksRegistrator.LIQUID_HEATING_COIL.get(), "", "_off", itemModels);
-        addBlockItemParentModel(MetalworksRegistrator.POWERED_HEATING_COIL.get(), "", "_off", itemModels);
-        addBlockItemParentModel(MetalworksRegistrator.HIGH_POWERED_HEATING_COIL.get(), "", "_off", itemModels);
-        addBlockItemModel(MetalworksRegistrator.CASTING_BASIN.get(), "casting_basin_base", itemModels);
-        addBlockItemModel(MetalworksRegistrator.CASTING_TABLE.get(), "casting_table_base", itemModels);
-        addBlockItemParentModel(MetalworksRegistrator.MEAT_BLOCK.get(), "", "", itemModels);
-
-        PackOutput.PathProvider blockstatePathProvider = packOutput.createPathProvider(PackOutput.Target.RESOURCE_PACK, "blockstates");
-        PackOutput.PathProvider modelPathProvider = packOutput.createPathProvider(PackOutput.Target.RESOURCE_PACK, "models");
-
-        List<CompletableFuture<?>> output = new ArrayList<>();
-        blockModels.forEach((block, supplier) -> {
-            output.add(DataProvider.saveStable(cache, supplier.get(), blockstatePathProvider.json(BuiltInRegistries.BLOCK.getKey(block))));
-        });
-        itemModels.forEach((rLoc, supplier) -> {
-            output.add(DataProvider.saveStable(cache, supplier.get(), modelPathProvider.json(rLoc)));
-        });
-
-        return CompletableFuture.allOf(output.toArray(CompletableFuture[]::new));
-    }
-
-    private void generateFlatItem(Item item, String prefix, BiConsumer<ResourceLocation, Supplier<JsonElement>> modelOutput) {
-        ModelTemplates.FLAT_ITEM.create(ModelLocationUtils.getModelLocation(item), getFlatItemTextureMap(item, prefix), modelOutput);
-    }
-
-    private static TextureMapping getFlatItemTextureMap(Item item, String prefix) {
-        return getFlatItemTextureMap(item, prefix, "");
-    }
-
-    private static TextureMapping getFlatItemTextureMap(Item item, String prefix, String suffix) {
-        return getFlatItemTextureMap(BuiltInRegistries.ITEM.getKey(item), prefix, suffix);
-    }
-
-    private static TextureMapping getFlatItemTextureMap(ResourceLocation resourceLocation, String prefix, String suffix) {
-        return (new TextureMapping()).put(TextureSlot.LAYER0, resourceLocation.withPrefix(prefix).withSuffix(suffix));
-    }
-
-    private void addItemModel(Item item, Supplier<JsonElement> supplier, Map<ResourceLocation, Supplier<JsonElement>> itemModels) {
-        if (item != null) {
-            ResourceLocation resourcelocation = ModelLocationUtils.getModelLocation(item);
-            if (!itemModels.containsKey(resourcelocation)) {
-                itemModels.put(resourcelocation, supplier);
-            }
-        }
-    }
-
-    private void addBlockItemModel(Block block, String base, Map<ResourceLocation, Supplier<JsonElement>> itemModels) {
-        Item item = Item.BY_BLOCK.get(block);
-        if (item != null) {
-            addItemModel(item, new DelegatedModel(ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "block/" + base)), itemModels);
-        }
-    }
-
-    private void addBlockItemParentModel(Block block, String prefix, String suffix, Map<ResourceLocation, Supplier<JsonElement>> itemModels) {
-        Item item = Item.BY_BLOCK.get(block);
-        if (item != null) {
-            var rl = BuiltInRegistries.BLOCK.getKey(block);
-            addItemParentModel(item, rl, "block/" + prefix, suffix, itemModels);
-        }
-    }
-
-    private void addItemParentModel(Item item, ResourceLocation rl, String prefix, String suffix, Map<ResourceLocation, Supplier<JsonElement>> itemModels) {
-        addItemModel(item, new DelegatedModel(ResourceLocation.fromNamespaceAndPath(rl.getNamespace(), prefix + rl.getPath() + suffix)), itemModels);
+    protected Stream<? extends Holder<Block>> getKnownBlocks() {
+        List<Holder<Block>> known = new ArrayList<>();
+        addBlocks(known, MetalworksRegistrator.FOUNDRY_CONTROLLERS.values());
+        addBlocks(known, MetalworksRegistrator.FOUNDRY_DRAINS.values());
+        addBlocks(known, MetalworksRegistrator.FOUNDRY_TANKS.values());
+        addBlocks(known, MetalworksRegistrator.FOUNDRY_CAPACITORS.values());
+        addBlocks(known, MetalworksRegistrator.FOUNDRY_WINDOWS.values());
+        addBlocks(known, MetalworksRegistrator.FIRE_BRICKS.values());
+        known.add(MetalworksRegistrator.FOUNDRY_TAP.get().builtInRegistryHolder());
+        known.add(MetalworksRegistrator.CASTING_BASIN.get().builtInRegistryHolder());
+        known.add(MetalworksRegistrator.CASTING_TABLE.get().builtInRegistryHolder());
+        known.add(MetalworksRegistrator.LIQUID_HEATING_COIL.get().builtInRegistryHolder());
+        known.add(MetalworksRegistrator.POWERED_HEATING_COIL.get().builtInRegistryHolder());
+        known.add(MetalworksRegistrator.HIGH_POWERED_HEATING_COIL.get().builtInRegistryHolder());
+        known.add(MetalworksRegistrator.FIRE_CLAY.get().builtInRegistryHolder());
+        known.add(MetalworksRegistrator.MEAT_BLOCK.get().builtInRegistryHolder());
+        ProductiveMetalworks.BLOCKS.getEntries().stream().filter(h -> h.get() instanceof HotLiquidBlock).forEach(h -> known.add(h.get().builtInRegistryHolder()));
+        return known.stream();
     }
 
     @Override
-    public String getName() {
-        return "Productive Metalworks Blockstate and Model generator";
+    protected Stream<? extends Holder<Item>> getKnownItems() {
+        List<Holder<Item>> known = new ArrayList<>();
+        ProductiveMetalworks.ITEMS.getEntries().forEach(h -> known.add(h.get().builtInRegistryHolder()));
+        return known.stream();
     }
 
-    static class ModelGenerator
-    {
-        Consumer<BlockStateGenerator> blockStateOutput;
-        BiConsumer<ResourceLocation, Supplier<JsonElement>> modelOutput;
+    private static void addBlocks(List<Holder<Block>> list, Iterable<? extends net.neoforged.neoforge.registries.DeferredHolder<Block, Block>> holders) {
+        holders.forEach(h -> list.add(h.get().builtInRegistryHolder()));
+    }
 
-        static ModelTemplate controllerBaseModel = new ModelTemplate(Optional.of(ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "block/foundry_controller_base")), Optional.empty(), TextureSlot.FRONT, TextureSlot.SIDE, TextureSlot.TOP);
-        static ModelTemplate drainBaseModel = new ModelTemplate(Optional.of(ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "block/foundry_drain_base")), Optional.empty(), TextureSlot.FRONT, TextureSlot.SIDE, TextureSlot.TOP);
-        static ModelTemplate tankBaseModel = new ModelTemplate(Optional.of(ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "block/foundry_tank_base")), Optional.empty(), TextureSlot.FRONT, TextureSlot.SIDE, TextureSlot.TOP);
-        static ModelTemplate capacitorBaseModel = new ModelTemplate(Optional.of(ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "block/foundry_capacitor_base")), Optional.empty(), TextureSlot.FRONT, TextureSlot.SIDE, TextureSlot.TOP);
-        static ModelTemplate windowBaseModel = new ModelTemplate(Optional.of(ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "block/foundry_window_base")), Optional.empty(), TextureSlot.FRONT, TextureSlot.SIDE, TextureSlot.TOP);
+    @Override
+    protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
+        // ===== Blockstates + block models =====
+        MetalworksRegistrator.FOUNDRY_CONTROLLERS.forEach((color, holder) ->
+                basedBlockOnOff(blockModels, holder.get(), CONTROLLER_BASE, color, "block/foundry_controller_front_on", "block/foundry_controller_front_off"));
+        MetalworksRegistrator.FOUNDRY_DRAINS.forEach((color, holder) ->
+                basedBlock(blockModels, holder.get(), DRAIN_BASE, color, "block/foundry_drain_front"));
+        MetalworksRegistrator.FOUNDRY_TANKS.forEach((color, holder) ->
+                basedBlock(blockModels, holder.get(), TANK_BASE, color, "block/" + color.getSerializedName() + "_foundry_tank_front"));
+        MetalworksRegistrator.FOUNDRY_CAPACITORS.forEach((color, holder) ->
+                basedBlock(blockModels, holder.get(), CAPACITOR_BASE, color, "block/" + color.getSerializedName() + "_foundry_capacitor_front"));
+        MetalworksRegistrator.FOUNDRY_WINDOWS.forEach((color, holder) ->
+                basedBlock(blockModels, holder.get(), WINDOW_BASE, color, "block/" + color.getSerializedName() + "_foundry_window_front"));
+        MetalworksRegistrator.FIRE_BRICKS.forEach((color, holder) -> {
+            // Fire bricks are a HorizontalDirectionalBlock but visually a single all-faces texture (e.g. black_fire_bricks.png),
+            // so model as CUBE_ALL; the facing variants below just keep the blockstate complete (rotation is a no-op visually).
+            Identifier model = ModelTemplates.CUBE_ALL.create(holder.get(), TextureMapping.cube(holder.get()), blockModels.modelOutput);
+            horizontalFacing(blockModels, holder.get(), model);
+        });
 
-        protected void registerStatesAndModels(Consumer<BlockStateGenerator> blockStateOutput, BiConsumer<ResourceLocation, Supplier<JsonElement>> modelOutput) {
-            this.blockStateOutput = blockStateOutput;
-            this.modelOutput = modelOutput;
+        horizontalFacing(blockModels, MetalworksRegistrator.FOUNDRY_TAP.get(), pmwId("block/foundry_tap_base"));
+        horizontalFacing(blockModels, MetalworksRegistrator.CASTING_BASIN.get(), pmwId("block/casting_basin_base"));
+        horizontalFacing(blockModels, MetalworksRegistrator.CASTING_TABLE.get(), pmwId("block/casting_table_base"));
 
-            MetalworksRegistrator.FOUNDRY_CONTROLLERS.forEach((dyeColor, holder) -> {
-                this.blockStateOutput.accept(createBasedBlockOnOff(holder.get(), controllerBaseModel, dyeColor, "block/foundry_controller_front_on", "block/foundry_controller_front_off"));
-            });
-            MetalworksRegistrator.FOUNDRY_DRAINS.forEach((dyeColor, holder) -> {
-                this.blockStateOutput.accept(createBasedBlock(holder.get(), drainBaseModel, dyeColor, "block/foundry_drain_front"));
-            });
-            MetalworksRegistrator.FOUNDRY_TANKS.forEach((dyeColor, holder) -> {
-                this.blockStateOutput.accept(createBasedBlock(holder.get(), tankBaseModel, dyeColor, "block/" + dyeColor.getSerializedName() + "_foundry_tank_front"));
-            });
-            MetalworksRegistrator.FOUNDRY_CAPACITORS.forEach((dyeColor, holder) -> {
-                this.blockStateOutput.accept(createBasedBlock(holder.get(), capacitorBaseModel, dyeColor, "block/" + dyeColor.getSerializedName() + "_foundry_capacitor_front"));
-            });
-            MetalworksRegistrator.FOUNDRY_WINDOWS.forEach((dyeColor, holder) -> {
-                this.blockStateOutput.accept(createBasedBlock(holder.get(), windowBaseModel, dyeColor, "block/" + dyeColor.getSerializedName() + "_foundry_window_front"));
-            });
-            MetalworksRegistrator.FIRE_BRICKS.forEach((dyeColor, holder) -> {
-                this.blockStateOutput.accept(createHorizontalFacingFullBlock(holder.get()));
-            });
-            this.blockStateOutput.accept(createHorizontalFacing(MetalworksRegistrator.FOUNDRY_TAP.get(), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "block/foundry_tap_base")));
-            this.blockStateOutput.accept(createHeatingCoil(MetalworksRegistrator.LIQUID_HEATING_COIL.get()));
-            this.blockStateOutput.accept(createHeatingCoil(MetalworksRegistrator.POWERED_HEATING_COIL.get()));
-            this.blockStateOutput.accept(createHeatingCoil(MetalworksRegistrator.HIGH_POWERED_HEATING_COIL.get()));
-            this.blockStateOutput.accept(createHorizontalFacing(MetalworksRegistrator.CASTING_BASIN.get(), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "block/casting_basin_base")));
-            this.blockStateOutput.accept(createHorizontalFacing(MetalworksRegistrator.CASTING_TABLE.get(), ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "block/casting_table_base")));
-            this.blockStateOutput.accept(createFullBlock(MetalworksRegistrator.FIRE_CLAY.get()));
-            this.blockStateOutput.accept(createSlicedPillarBlock(MetalworksRegistrator.MEAT_BLOCK.get()));
+        heatingCoil(blockModels, MetalworksRegistrator.LIQUID_HEATING_COIL.get());
+        heatingCoil(blockModels, MetalworksRegistrator.POWERED_HEATING_COIL.get());
+        heatingCoil(blockModels, MetalworksRegistrator.HIGH_POWERED_HEATING_COIL.get());
 
-            ProductiveMetalworks.BLOCKS.getEntries().stream().filter(h -> h.get() instanceof HotLiquidBlock).forEach(block -> {
-                this.blockStateOutput.accept(createSimpleBlock(block.get(), ModelTemplates.CUBE_ALL.create(block.get(), TextureMapping.cube(ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "block/fluid/molten_metal")), this.modelOutput)));
-            });
+        Identifier fireClayModel = ModelTemplates.CUBE_ALL.create(MetalworksRegistrator.FIRE_CLAY.get(), TextureMapping.cube(MetalworksRegistrator.FIRE_CLAY.get()), blockModels.modelOutput);
+        blockModels.blockStateOutput.accept(MultiVariantGenerator.dispatch(MetalworksRegistrator.FIRE_CLAY.get(), plainVariant(fireClayModel)));
+
+        slicedPillar(blockModels, MetalworksRegistrator.MEAT_BLOCK.get());
+
+        ProductiveMetalworks.BLOCKS.getEntries().stream().filter(h -> h.get() instanceof HotLiquidBlock).forEach(holder -> {
+            Identifier model = ModelTemplates.CUBE_ALL.create(holder.get(), TextureMapping.cube(new Material(pmwId("block/fluid/molten_metal"))), blockModels.modelOutput);
+            blockModels.blockStateOutput.accept(MultiVariantGenerator.dispatch(holder.get(), plainVariant(model)));
+        });
+
+        // ===== Item models =====
+        Set<Item> handled = new HashSet<>();
+
+        // Flat items.
+        flatItem(itemModels, handled, MetalworksRegistrator.CAST_INGOT.get());
+        flatItem(itemModels, handled, MetalworksRegistrator.CAST_NUGGET.get());
+        flatItem(itemModels, handled, MetalworksRegistrator.CAST_GEM.get());
+        flatItem(itemModels, handled, MetalworksRegistrator.CAST_GEAR.get());
+        flatItem(itemModels, handled, MetalworksRegistrator.CAST_ROD.get());
+        flatItem(itemModels, handled, MetalworksRegistrator.CAST_PLATE.get());
+        flatItem(itemModels, handled, MetalworksRegistrator.FIRE_BRICK.get());
+        flatItem(itemModels, handled, MetalworksRegistrator.MEAT_NUGGET.get());
+        flatItem(itemModels, handled, MetalworksRegistrator.MEAT_INGOT.get());
+        flatItem(itemModels, handled, MetalworksRegistrator.SHINY_MEAT_INGOT.get());
+
+        // Block items that parent a specific block model.
+        MetalworksRegistrator.FOUNDRY_CONTROLLERS.forEach((c, h) -> blockItemParent(blockModels, itemModels, handled, h.get(), "_off"));
+        MetalworksRegistrator.FOUNDRY_DRAINS.forEach((c, h) -> blockItemParent(blockModels, itemModels, handled, h.get(), ""));
+        MetalworksRegistrator.FOUNDRY_TANKS.forEach((c, h) -> blockItemParent(blockModels, itemModels, handled, h.get(), ""));
+        MetalworksRegistrator.FOUNDRY_CAPACITORS.forEach((c, h) -> blockItemParent(blockModels, itemModels, handled, h.get(), ""));
+        MetalworksRegistrator.FOUNDRY_WINDOWS.forEach((c, h) -> blockItemParent(blockModels, itemModels, handled, h.get(), ""));
+        MetalworksRegistrator.FIRE_BRICKS.forEach((c, h) -> blockItemParent(blockModels, itemModels, handled, h.get(), ""));
+        blockItemModel(blockModels, itemModels, handled, MetalworksRegistrator.FOUNDRY_TAP.get(), "foundry_tap_base");
+        blockItemModel(blockModels, itemModels, handled, MetalworksRegistrator.CASTING_BASIN.get(), "casting_basin_base");
+        blockItemModel(blockModels, itemModels, handled, MetalworksRegistrator.CASTING_TABLE.get(), "casting_table_base");
+        blockItemParent(blockModels, itemModels, handled, MetalworksRegistrator.FIRE_CLAY.get(), "");
+        blockItemParent(blockModels, itemModels, handled, MetalworksRegistrator.LIQUID_HEATING_COIL.get(), "_off");
+        blockItemParent(blockModels, itemModels, handled, MetalworksRegistrator.POWERED_HEATING_COIL.get(), "_off");
+        blockItemParent(blockModels, itemModels, handled, MetalworksRegistrator.HIGH_POWERED_HEATING_COIL.get(), "_off");
+        blockItemParent(blockModels, itemModels, handled, MetalworksRegistrator.MEAT_BLOCK.get(), "");
+
+        // Fluid buckets use NeoForge's dynamic fluid-container item model (neoforge:fluid_container): a plain bucket base
+        // plus a fluid-mask layer that is re-textured/tinted at runtime to the contained fluid. Keyed off each source
+        // fluid's bucket so molten_* and meat are all covered.
+        for (var fluidHolder : ProductiveMetalworks.FLUIDS.getEntries()) {
+            Fluid fluid = fluidHolder.get();
+            if (fluid.defaultFluidState().isSource()) {
+                Item bucket = fluid.getBucket();
+                if (bucket instanceof BucketItem && handled.add(bucket)) {
+                    itemModels.itemModelOutput.accept(bucket, new DynamicFluidContainerModel.Unbaked(
+                            new DynamicFluidContainerModel.Textures(
+                                    Optional.empty(),
+                                    Optional.of(new Material(Identifier.withDefaultNamespace("item/bucket"))),
+                                    Optional.of(new Material(Identifier.fromNamespaceAndPath("neoforge", "item/mask/bucket_fluid_drip"))),
+                                    Optional.empty()),
+                            fluid, false, true, true));
+                }
+            }
         }
 
-        MultiVariantGenerator createBasedBlock(Block block, ModelTemplate baseTemplate, DyeColor color, String frontTexture) {
-            TextureMapping mapping = new TextureMapping()
-                    .put(TextureSlot.SIDE, TextureMapping.getBlockTexture(MetalworksRegistrator.FIRE_BRICKS.get(color).get()))
-                    .put(TextureSlot.TOP, TextureMapping.getBlockTexture(MetalworksRegistrator.FIRE_BRICKS.get(color).get()))
-                    .put(TextureSlot.FRONT, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, frontTexture));
-            ResourceLocation model = baseTemplate.create(block, mapping, this.modelOutput);
-            return createHorizontalFacing(block, model);
+        // Everything else (any unhandled item) points at the shipped models/item/<id>.json.
+        Set<Item> seen = new HashSet<>();
+        for (var holder : ProductiveMetalworks.ITEMS.getEntries()) {
+            Item item = holder.get();
+            if (!handled.contains(item) && seen.add(item)) {
+                Identifier id = BuiltInRegistries.ITEM.getKey(item);
+                itemModels.itemModelOutput.accept(item, ItemModelUtils.plainModel(Identifier.fromNamespaceAndPath(id.getNamespace(), "item/" + id.getPath())));
+            }
         }
+    }
 
-        MultiVariantGenerator createBasedBlockOnOff(Block block, ModelTemplate baseTemplate, DyeColor color, String frontTextureOn, String frontTextureOff) {
-            TextureMapping mappingOn = new TextureMapping()
-                    .put(TextureSlot.SIDE, TextureMapping.getBlockTexture(MetalworksRegistrator.FIRE_BRICKS.get(color).get()))
-                    .put(TextureSlot.TOP, TextureMapping.getBlockTexture(MetalworksRegistrator.FIRE_BRICKS.get(color).get()))
-                    .put(TextureSlot.FRONT, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, frontTextureOn));
-            TextureMapping mappingOff = new TextureMapping()
-                    .put(TextureSlot.SIDE, TextureMapping.getBlockTexture(MetalworksRegistrator.FIRE_BRICKS.get(color).get()))
-                    .put(TextureSlot.TOP, TextureMapping.getBlockTexture(MetalworksRegistrator.FIRE_BRICKS.get(color).get()))
-                    .put(TextureSlot.FRONT, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, frontTextureOff));
-            ResourceLocation modelOn = baseTemplate.createWithSuffix(block, "_on", mappingOn, this.modelOutput);
-            ResourceLocation modelOff = baseTemplate.createWithSuffix(block, "_off", mappingOff, this.modelOutput);
-            return createHorizontalFacingOnOff(block, modelOn, modelOff);
-        }
+    // ===== Blockstate helpers =====
 
-        MultiVariantGenerator createHorizontalFacingFullBlock(Block block) {
-            ResourceLocation model = ModelTemplates.CUBE_ORIENTABLE.create(block, TextureMapping.cube(block), this.modelOutput);
-            return createHorizontalFacing(block, model);
-        }
+    private void basedBlock(BlockModelGenerators blockModels, Block block, ModelTemplate baseTemplate, DyeColor color, String frontTexture) {
+        Block brick = MetalworksRegistrator.FIRE_BRICKS.get(color).get();
+        TextureMapping mapping = new TextureMapping()
+                .put(TextureSlot.SIDE, TextureMapping.getBlockTexture(brick))
+                .put(TextureSlot.TOP, TextureMapping.getBlockTexture(brick))
+                .put(TextureSlot.FRONT, new Material(pmwId(frontTexture)));
+        Identifier model = baseTemplate.create(block, mapping, blockModels.modelOutput);
+        horizontalFacing(blockModels, block, model);
+    }
 
-        MultiVariantGenerator createHorizontalFacing(Block block, ResourceLocation modelLocation) {
-            return MultiVariantGenerator.multiVariant(block, Variant.variant().with(VariantProperties.MODEL, modelLocation)).with(
-                    PropertyDispatch.property(BlockStateProperties.HORIZONTAL_FACING).
-                            select(Direction.EAST, Variant.variant().with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90).with(VariantProperties.MODEL, modelLocation)).
-                            select(Direction.SOUTH, Variant.variant().with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180)).
-                            select(Direction.WEST, Variant.variant().with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270)).
-                            select(Direction.NORTH, Variant.variant())
-            );
-        }
+    private void basedBlockOnOff(BlockModelGenerators blockModels, Block block, ModelTemplate baseTemplate, DyeColor color, String frontOn, String frontOff) {
+        Block brick = MetalworksRegistrator.FIRE_BRICKS.get(color).get();
+        TextureMapping mappingOn = new TextureMapping()
+                .put(TextureSlot.SIDE, TextureMapping.getBlockTexture(brick))
+                .put(TextureSlot.TOP, TextureMapping.getBlockTexture(brick))
+                .put(TextureSlot.FRONT, new Material(pmwId(frontOn)));
+        TextureMapping mappingOff = new TextureMapping()
+                .put(TextureSlot.SIDE, TextureMapping.getBlockTexture(brick))
+                .put(TextureSlot.TOP, TextureMapping.getBlockTexture(brick))
+                .put(TextureSlot.FRONT, new Material(pmwId(frontOff)));
+        Identifier modelOn = baseTemplate.createWithSuffix(block, "_on", mappingOn, blockModels.modelOutput);
+        Identifier modelOff = baseTemplate.createWithSuffix(block, "_off", mappingOff, blockModels.modelOutput);
+        blockModels.blockStateOutput.accept(
+                MultiVariantGenerator.dispatch(block)
+                        .with(PropertyDispatch.initial(BlockStateProperties.ATTACHED).generate(on -> plainVariant(on ? modelOn : modelOff)))
+                        .with(facingDispatch()));
+    }
 
-        MultiVariantGenerator createHorizontalFacingOnOff(Block block, ResourceLocation onModel, ResourceLocation offModel) {
-            return MultiVariantGenerator.multiVariant(block, Variant.variant())
-                .with(
-                        PropertyDispatch.property(BlockStateProperties.HORIZONTAL_FACING).
-                                select(Direction.EAST, Variant.variant().with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90)).
-                                select(Direction.SOUTH, Variant.variant().with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180)).
-                                select(Direction.WEST, Variant.variant().with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270)).
-                                select(Direction.NORTH, Variant.variant())
-                ).with(
-                        PropertyDispatch.property(BlockStateProperties.ATTACHED).generate((on) -> Variant.variant().with(VariantProperties.MODEL, on ? onModel : offModel)));
-        }
+    private void horizontalFacing(BlockModelGenerators blockModels, Block block, Identifier model) {
+        blockModels.blockStateOutput.accept(
+                MultiVariantGenerator.dispatch(block, plainVariant(model)).with(facingDispatch()));
+    }
 
-        MultiVariantGenerator createHeatingCoil(Block block) {
-            TextureMapping mappingOn = new TextureMapping()
-                    .put(TextureSlot.BOTTOM, TextureMapping.getBlockTexture(block, "_top_on"))
-                    .put(TextureSlot.SIDE, TextureMapping.getBlockTexture(block, "_side_on"))
-                    .put(TextureSlot.TOP, TextureMapping.getBlockTexture(block, "_top_on"));
-            TextureMapping mappingOff = new TextureMapping()
-                    .put(TextureSlot.BOTTOM, TextureMapping.getBlockTexture(block, "_top_off"))
-                    .put(TextureSlot.SIDE, TextureMapping.getBlockTexture(block, "_side_off"))
-                    .put(TextureSlot.TOP, TextureMapping.getBlockTexture(block, "_top_off"));
-            ResourceLocation onModel = ModelTemplates.CUBE_BOTTOM_TOP.createWithSuffix(block, "_on", mappingOn, this.modelOutput);
-            ResourceLocation offModel = ModelTemplates.CUBE_BOTTOM_TOP.createWithSuffix(block, "_off", mappingOff, this.modelOutput);
-            return MultiVariantGenerator.multiVariant(block, Variant.variant())
-                    .with(PropertyDispatch.property(BlockStateProperties.ATTACHED).generate((on) -> Variant.variant().with(VariantProperties.MODEL, on ? onModel : offModel)));
-        }
+    private void heatingCoil(BlockModelGenerators blockModels, Block block) {
+        TextureMapping mappingOn = new TextureMapping()
+                .put(TextureSlot.BOTTOM, TextureMapping.getBlockTexture(block, "_top_on"))
+                .put(TextureSlot.SIDE, TextureMapping.getBlockTexture(block, "_side_on"))
+                .put(TextureSlot.TOP, TextureMapping.getBlockTexture(block, "_top_on"));
+        TextureMapping mappingOff = new TextureMapping()
+                .put(TextureSlot.BOTTOM, TextureMapping.getBlockTexture(block, "_top_off"))
+                .put(TextureSlot.SIDE, TextureMapping.getBlockTexture(block, "_side_off"))
+                .put(TextureSlot.TOP, TextureMapping.getBlockTexture(block, "_top_off"));
+        Identifier onModel = ModelTemplates.CUBE_BOTTOM_TOP.createWithSuffix(block, "_on", mappingOn, blockModels.modelOutput);
+        Identifier offModel = ModelTemplates.CUBE_BOTTOM_TOP.createWithSuffix(block, "_off", mappingOff, blockModels.modelOutput);
+        blockModels.blockStateOutput.accept(
+                MultiVariantGenerator.dispatch(block)
+                        .with(PropertyDispatch.initial(BlockStateProperties.ATTACHED).generate(on -> plainVariant(on ? onModel : offModel))));
+    }
 
-        MultiVariantGenerator createAxisAlignedPillarBlock(Block axisAlignedPillarBlock, TexturedModel.Provider provider) {
-            ResourceLocation resourcelocation = provider.create(axisAlignedPillarBlock, this.modelOutput);
-            return MultiVariantGenerator.multiVariant(axisAlignedPillarBlock, Variant.variant().with(VariantProperties.MODEL, resourcelocation)).with(createRotatedPillar());
-        }
+    private void slicedPillar(BlockModelGenerators blockModels, Block block) {
+        Identifier base = BuiltInRegistries.BLOCK.getKey(block).withPrefix("block/");
+        blockModels.blockStateOutput.accept(
+                MultiVariantGenerator.dispatch(block)
+                        .with(PropertyDispatch.initial(MeatBlock.BITES).generate(bites ->
+                                plainVariant(bites == 0 ? base : base.withSuffix("_" + bites))))
+                        .with(PropertyDispatch.modify(BlockStateProperties.AXIS)
+                                .select(Direction.Axis.Y, VariantMutator.X_ROT.withValue(Quadrant.R0))
+                                .select(Direction.Axis.Z, VariantMutator.X_ROT.withValue(Quadrant.R90))
+                                .select(Direction.Axis.X, VariantMutator.X_ROT.withValue(Quadrant.R90).then(VariantMutator.Y_ROT.withValue(Quadrant.R90)))));
+    }
 
-        MultiVariantGenerator createFullBlock(Block block) {
-            TextureMapping mapping = new TextureMapping().put(TextureSlot.ALL, TextureMapping.getBlockTexture(block));
-            ResourceLocation model = ModelTemplates.CUBE_ALL.create(block, mapping, this.modelOutput);
-            return MultiVariantGenerator.multiVariant(block, Variant.variant().with(VariantProperties.MODEL, model));
-        }
+    private static PropertyDispatch<VariantMutator> facingDispatch() {
+        return PropertyDispatch.modify(BlockStateProperties.HORIZONTAL_FACING)
+                .select(Direction.NORTH, VariantMutator.Y_ROT.withValue(Quadrant.R0))
+                .select(Direction.EAST, VariantMutator.Y_ROT.withValue(Quadrant.R90))
+                .select(Direction.SOUTH, VariantMutator.Y_ROT.withValue(Quadrant.R180))
+                .select(Direction.WEST, VariantMutator.Y_ROT.withValue(Quadrant.R270));
+    }
 
-        MultiVariantGenerator createSimpleBlock(Block block, ResourceLocation modelLocation) {
-            return MultiVariantGenerator.multiVariant(block, Variant.variant().with(VariantProperties.MODEL, modelLocation));
-        }
+    // ===== Item-model helpers =====
 
-        PropertyDispatch createRotatedPillar() {
-            return PropertyDispatch.property(BlockStateProperties.AXIS)
-                    .select(Direction.Axis.Y, Variant.variant())
-                    .select(Direction.Axis.Z, Variant.variant().with(VariantProperties.X_ROT, VariantProperties.Rotation.R90))
-                    .select(
-                            Direction.Axis.X,
-                            Variant.variant().with(VariantProperties.X_ROT, VariantProperties.Rotation.R90).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90)
-                    );
-        }
+    private void flatItem(ItemModelGenerators itemModels, Set<Item> handled, Item item) {
+        itemModels.generateFlatItem(item, ModelTemplates.FLAT_ITEM);
+        handled.add(item);
+    }
 
-        private MultiVariantGenerator createSlicedPillarBlock(Block block) {
-            return MultiVariantGenerator.multiVariant(block)
-                    .with(createRotatedPillar())
-                    .with(
-                            PropertyDispatch.property(MeatBlock.BITES)
-                                    .select(0, Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(block)))
-                                    .select(1, Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(block, "_1")))
-                                    .select(2, Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(block, "_2")))
-                                    .select(3, Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(block, "_3")))
-                                    .select(4, Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(block, "_4")))
-                                    .select(5, Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(block, "_5")))
-                                    .select(6, Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(block, "_6")))
-                                    .select(7, Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(block, "_7")))
-                    );
+    private void blockItemParent(BlockModelGenerators blockModels, ItemModelGenerators itemModels, Set<Item> handled, Block block, String suffix) {
+        Identifier blockId = BuiltInRegistries.BLOCK.getKey(block);
+        blockItem(blockModels, itemModels, handled, block, Identifier.fromNamespaceAndPath(blockId.getNamespace(), "block/" + blockId.getPath() + suffix));
+    }
+
+    private void blockItemModel(BlockModelGenerators blockModels, ItemModelGenerators itemModels, Set<Item> handled, Block block, String baseModelPath) {
+        blockItem(blockModels, itemModels, handled, block, pmwId("block/" + baseModelPath));
+    }
+
+    private void blockItem(BlockModelGenerators blockModels, ItemModelGenerators itemModels, Set<Item> handled, Block block, Identifier parentModel) {
+        Item item = block.asItem();
+        if (!(item instanceof BlockItem) || handled.contains(item)) {
+            return;
         }
+        Identifier itemModelId = BuiltInRegistries.ITEM.getKey(item).withPrefix("item/");
+        itemTemplate(parentModel).create(itemModelId, new TextureMapping(), blockModels.modelOutput);
+        itemModels.itemModelOutput.accept(item, ItemModelUtils.plainModel(itemModelId));
+        handled.add(item);
+    }
+
+    // ===== Misc helpers =====
+
+    private static ModelTemplate baseModel(String path) {
+        return new ModelTemplate(Optional.of(Identifier.fromNamespaceAndPath(ProductiveMetalworks.MODID, path)), Optional.empty(), TextureSlot.FRONT, TextureSlot.SIDE, TextureSlot.TOP);
+    }
+
+    private static ModelTemplate itemTemplate(Identifier parent) {
+        return new ModelTemplate(Optional.of(parent), Optional.empty());
+    }
+
+    private static Identifier pmwId(String path) {
+        return Identifier.fromNamespaceAndPath(ProductiveMetalworks.MODID, path);
+    }
+
+    private static MultiVariant plainVariant(Identifier model) {
+        return new MultiVariant(WeightedList.of(new Variant(model)));
     }
 }

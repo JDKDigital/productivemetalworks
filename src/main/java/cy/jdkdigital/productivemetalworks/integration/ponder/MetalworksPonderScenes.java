@@ -1,21 +1,16 @@
 package cy.jdkdigital.productivemetalworks.integration.ponder;
 
-import net.neoforged.neoforge.registries.DeferredHolder;
-
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.Block;
-
-import net.createmod.ponder.api.registration.PonderSceneRegistrationHelper;
-
 import cy.jdkdigital.productivemetalworks.integration.ponder.scenes.FoundryScenes;
 import cy.jdkdigital.productivemetalworks.registry.MetalworksRegistrator;
-
-import java.util.stream.Collectors;
+import net.createmod.ponder.api.registration.PonderSceneRegistrationHelper;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.level.block.Block;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 @SuppressWarnings("unchecked")
 public class MetalworksPonderScenes {
 
-    public static void register(PonderSceneRegistrationHelper<ResourceLocation> helper) {
+    public static void register(PonderSceneRegistrationHelper<Identifier> helper) {
         PonderSceneRegistrationHelper<DeferredHolder<Block, Block>> HELPER = helper.withKeyFunction(DeferredHolder::getId);
 
         MetalworksRegistrator.FOUNDRY_CONTROLLERS.forEach((key, value) -> {

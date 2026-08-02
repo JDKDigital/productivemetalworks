@@ -6,16 +6,13 @@
     }
   ],
   "type": "productivemetalworks:item_casting",
-  "cast": {
-    "item": "productivemetalworks:rod_cast"
-  },
+  "cast": "productivemetalworks:rod_cast",
   "consume_cast": false,
   "fluid": {
     "amount": 135,
-    "fluid": "allthemodium:molten_vibranium"
+    "ingredient": "allthemodium:molten_vibranium"
   },
   "result": {
-    "count": 1,
     "id": "allthemodium:vibranium_rod"
   }
 }

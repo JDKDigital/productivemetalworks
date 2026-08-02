@@ -1,15 +1,15 @@
 package cy.jdkdigital.productivemetalworks.common.block.entity;
 
 import cy.jdkdigital.productivelib.common.block.entity.CapabilityBlockEntity;
+import cy.jdkdigital.productivelib.common.block.entity.InventoryHandlerHelper;
 import cy.jdkdigital.productivemetalworks.Config;
 import cy.jdkdigital.productivemetalworks.recipe.BlockCastingRecipe;
 import cy.jdkdigital.productivemetalworks.recipe.ItemCastingRecipe;
 import cy.jdkdigital.productivemetalworks.registry.MetalworksRegistrator;
 import cy.jdkdigital.productivemetalworks.registry.ModTags;
+import cy.jdkdigital.productivemetalworks.util.ModFluidTank;
 import cy.jdkdigital.productivemetalworks.util.RecipeHelper;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -20,17 +20,18 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.capabilities.Capabilities;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.fluids.FluidUtil;
-import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import net.neoforged.neoforge.fluids.crafting.FluidIngredient;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.ItemStackHandler;
 import net.neoforged.neoforge.registries.datamaps.builtin.NeoForgeDataMaps;
-import org.jetbrains.annotations.NotNull;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
 public class CastingBlockEntity extends CapabilityBlockEntity
 {
@@ -38,46 +39,62 @@ public class CastingBlockEntity extends CapabilityBlockEntity
     public int maxAmount = 1000;
 
     // cast inventory, no cap
-    public ItemStackHandler castInv = new ItemStackHandler(1) {
+    public InventoryHandlerHelper.BlockEntityItemStackHandler castInv = new InventoryHandlerHelper.BlockEntityItemStackHandler(1, this) {
         @Override
-        public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate) {
-            if (CastingBlockEntity.this.isCooling() || CastingBlockEntity.this.fluidHandler.getFluidAmount() > 0) {
-                return ItemStack.EMPTY;
-            }
-            return super.extractItem(slot, amount, simulate);
+        public boolean isItemValid(int slot, ItemStack stack, boolean fromAutomation) {
+            // The single slot is a dedicated cast slot and accepts any item; the generic handler would
+            // reject it because slot 0 == BOTTLE_SLOT isn't in its insertable set.
+            return true;
         }
 
         @Override
-        protected void onContentsChanged(int slot) {
+        public ItemStack extractItem(int slot, int amount, boolean simulate, boolean fromAutomation) {
+            if (CastingBlockEntity.this.isCooling() || CastingBlockEntity.this.fluidHandler.getFluidAmount() > 0) {
+                return ItemStack.EMPTY;
+            }
+            return super.extractItem(slot, amount, simulate, fromAutomation);
+        }
+
+        @Override
+        protected void onContentsChanged(int index, ItemStack previousContents) {
+            super.onContentsChanged(index, previousContents);
             if (CastingBlockEntity.this.level instanceof ServerLevel serverLevel) {
                 CastingBlockEntity.this.sync(serverLevel);
             }
             CastingBlockEntity.this.setChanged();
         }
 
-        public int getSlotLimit(int slot) {
+        @Override
+        protected int getCapacity(int index, ItemResource resource) {
             return 1;
         }
     };
 
     // result item inventory, with cap
-    ItemStackHandler itemHandler = new ItemStackHandler(1) {
+    InventoryHandlerHelper.BlockEntityItemStackHandler itemHandler = new InventoryHandlerHelper.BlockEntityItemStackHandler(1, this) {
         @Override
-        public boolean isItemValid(int slot, ItemStack stack) {
-            // Insertion is only allowed from recipe processing
+        public boolean isItemValid(int slot, ItemStack stack, boolean fromAutomation) {
+            // Never insertable — the result is written internally by serverTick; only castInv accepts items.
             return false;
         }
 
         @Override
-        public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate) {
-            if (CastingBlockEntity.this.isCooling() || CastingBlockEntity.this.fluidHandler.getFluidAmount() > 0) {
-                return ItemStack.EMPTY;
-            }
-            return super.extractItem(slot, amount, simulate);
+        public boolean isInputSlot(int slot) {
+            // Slot 0 is the result, not an input; allow a hopper under the block to pull it.
+            return false;
         }
 
         @Override
-        protected void onContentsChanged(int slot) {
+        public int extract(int index, ItemResource resource, int amount, TransactionContext transaction) {
+            if (CastingBlockEntity.this.isCooling() || CastingBlockEntity.this.fluidHandler.getFluidAmount() > 0) {
+                return 0;
+            }
+            return super.extract(index, resource, amount, transaction);
+        }
+
+        @Override
+        protected void onContentsChanged(int index, ItemStack previousContents) {
+            super.onContentsChanged(index, previousContents);
             if (CastingBlockEntity.this.level instanceof ServerLevel serverLevel) {
                 CastingBlockEntity.this.sync(serverLevel);
             }
@@ -86,23 +103,43 @@ public class CastingBlockEntity extends CapabilityBlockEntity
     };
 
     // fluid inv for casting fluid
-    FluidTank fluidHandler = new FluidTank(1000) {
+    ModFluidTank fluidHandler = new ModFluidTank(1000) {
         @Override
         public boolean isFluidValid(FluidStack stack) {
             if (CastingBlockEntity.this.level == null || CastingBlockEntity.this.isCooling()) {
                 return false;
             }
-            // Valid if the cast is a fluid container
-            if (CastingBlockEntity.this.castInv.getStackInSlot(0).getCapability(Capabilities.FluidHandler.ITEM) != null) {
-                return true;
-            }
+            // PORT-TODO (26.1): the old "cast is a fluid container" fast-path used
+            // ItemStack#getCapability(Capabilities.Fluid.ITEM); the 26.1 item fluid
+            // capability now requires an ItemAccess context. Buckets are handled in serverTick.
             // Valid if the cast + fluid has a recipe and there's not enough fluid to fulfill the recipe
             var recipe = CastingBlockEntity.this.findRecipe(CastingBlockEntity.this.level, CastingBlockEntity.this.castInv.getStackInSlot(0), stack);
-            return recipe != null && this.getFluidAmount() < recipe.getFluidAmount(CastingBlockEntity.this.level, stack) && CastingBlockEntity.this.getItemHandler().getStackInSlot(0).isEmpty();
+            return recipe != null && this.getFluidAmount() < recipe.getFluidAmount(CastingBlockEntity.this.level, stack) && CastingBlockEntity.this.itemHandler.getStackInSlot(0).isEmpty();
+        }
+
+        // The tap/automation pour uses ResourceHandler#insert, not the legacy fill below, so the recipe cap
+        // must be enforced here too (getCapacity bounds the slot to the recipe amount, preventing overshoot).
+        @Override
+        public boolean isValid(int index, FluidResource resource) {
+            if (CastingBlockEntity.this.level == null || CastingBlockEntity.this.isCooling()
+                    || !CastingBlockEntity.this.itemHandler.getStackInSlot(0).isEmpty()) {
+                return false;
+            }
+            return CastingBlockEntity.this.findRecipe(CastingBlockEntity.this.level, CastingBlockEntity.this.castInv.getStackInSlot(0), resource.toStack(1)) != null;
         }
 
         @Override
-        public int fill(FluidStack resource, @NotNull FluidAction action) {
+        protected int getCapacity(int index, FluidResource resource) {
+            int base = super.getCapacity(index, resource);
+            if (CastingBlockEntity.this.level == null) {
+                return base;
+            }
+            var recipe = CastingBlockEntity.this.findRecipe(CastingBlockEntity.this.level, CastingBlockEntity.this.castInv.getStackInSlot(0), resource.toStack(1));
+            return recipe == null ? 0 : Math.min(base, recipe.getFluidAmount(CastingBlockEntity.this.level, resource.toStack(1)));
+        }
+
+        @Override
+        public int fill(FluidStack resource, boolean execute) {
             if (resource.isEmpty() || !isFluidValid(resource) || CastingBlockEntity.this.level == null) {
                 return 0;
             }
@@ -110,52 +147,53 @@ public class CastingBlockEntity extends CapabilityBlockEntity
             if (recipe == null) {
                 return 0;
             }
-            if (action.simulate()) {
-                if (fluid.isEmpty()) {
+            FluidStack current = getFluid();
+            if (!execute) {
+                if (current.isEmpty()) {
                     return Math.min(recipe.getFluidAmount(CastingBlockEntity.this.level, resource), resource.getAmount());
                 }
-                if (!FluidStack.isSameFluidSameComponents(fluid, resource)) {
+                if (!FluidStack.isSameFluidSameComponents(current, resource)) {
                     return 0;
                 }
-                return Math.min(recipe.getFluidAmount(CastingBlockEntity.this.level, resource) - fluid.getAmount(), resource.getAmount());
+                return Math.min(recipe.getFluidAmount(CastingBlockEntity.this.level, resource) - current.getAmount(), resource.getAmount());
             }
-            CastingBlockEntity.this.maxAmount = recipe.getFluidAmount(level, fluid);
-            if (fluid.isEmpty()) {
-                fluid = resource.copyWithAmount(Math.min(recipe.getFluidAmount(CastingBlockEntity.this.level, resource), resource.getAmount()));
-                onContentsChanged();
-                return fluid.getAmount();
+            CastingBlockEntity.this.maxAmount = recipe.getFluidAmount(level, current);
+            if (current.isEmpty()) {
+                FluidStack stored = resource.copyWithAmount(Math.min(recipe.getFluidAmount(CastingBlockEntity.this.level, resource), resource.getAmount()));
+                setFluid(stored);
+                return stored.getAmount();
             }
-            if (!FluidStack.isSameFluidSameComponents(fluid, resource)) {
+            if (!FluidStack.isSameFluidSameComponents(current, resource)) {
                 return 0;
             }
-            int filled = recipe.getFluidAmount(CastingBlockEntity.this.level, resource) - fluid.getAmount();
-
+            int filled = recipe.getFluidAmount(CastingBlockEntity.this.level, resource) - current.getAmount();
+            FluidStack updated = current.copy();
             if (resource.getAmount() < filled) {
-                fluid.grow(resource.getAmount());
+                updated.grow(resource.getAmount());
                 filled = resource.getAmount();
             } else {
-                fluid.setAmount(recipe.getFluidAmount(CastingBlockEntity.this.level, resource));
+                updated.setAmount(recipe.getFluidAmount(CastingBlockEntity.this.level, resource));
             }
             if (filled > 0) {
-                onContentsChanged();
+                setFluid(updated);
             }
             return filled;
         }
 
         @Override
-        public @NotNull FluidStack drain(int maxDrain, FluidAction action) {
+        public FluidStack drain(int maxDrain, boolean execute) {
             if (CastingBlockEntity.this.isCooling()) {
                 return FluidStack.EMPTY;
             }
-            return super.drain(maxDrain, action);
+            return super.drain(maxDrain, execute);
         }
 
         @Override
-        public @NotNull FluidStack drain(FluidStack resource, FluidAction action) {
+        public FluidStack drain(FluidStack resource, boolean execute) {
             if (CastingBlockEntity.this.isCooling()) {
                 return FluidStack.EMPTY;
             }
-            return super.drain(resource, action);
+            return super.drain(resource, execute);
         }
 
         @Override
@@ -184,31 +222,32 @@ public class CastingBlockEntity extends CapabilityBlockEntity
                     var fluid = castingTableBlock.getFluidHandler().getFluid();
                     var recipe = castingTableBlock.findRecipe(level, castingTableBlock.castInv.getStackInSlot(0), fluid);
                     if (recipe != null && fluid.getAmount() >= recipe.getFluidAmount(level, fluid)) {
-                        fluid.shrink(recipe.getFluidAmount(level, fluid));
+                        castingTableBlock.getFluidHandler().drain(recipe.getFluidAmount(level, fluid), true);
                         if (recipe.consumeCast) {
-                            if (recipe.result.is(ModTags.Items.CASTS)) {
-                                castingTableBlock.castInv.setStackInSlot(0, recipe.result.copy());
-                                castingTableBlock.getItemHandler().getStackInSlot(0).shrink(1);
+                            if (recipe.result.create().is(ModTags.Items.CASTS)) {
+                                castingTableBlock.castInv.setStackInSlot(0, recipe.result.create());
+                                castingTableBlock.itemHandler.getStackInSlot(0).shrink(1);
                             } else {
                                 castingTableBlock.castInv.setStackInSlot(0, ItemStack.EMPTY);
                             }
                         }
                         castingTableBlock.sync(serverLevel);
-                        level.playSound(null, blockPos, SoundEvents.LAVA_EXTINGUISH, SoundSource.BLOCKS, level.random.nextInt(50, 100)/100f, level.random.nextInt(80, 100)/100f);
+                        level.playSound(null, blockPos, SoundEvents.LAVA_EXTINGUISH, SoundSource.BLOCKS, level.getRandom().nextInt(50, 100)/100f, level.getRandom().nextInt(80, 100)/100f);
                     }
                 }
             }
 
             // Initiate cooling
-            if (castingTableBlock.coolingTime == 0 && castingTableBlock.getItemHandler().getStackInSlot(0).isEmpty() && castingTableBlock.getFluidHandler().getFluidAmount() > 0) {
+            if (castingTableBlock.coolingTime == 0 && castingTableBlock.itemHandler.getStackInSlot(0).isEmpty() && castingTableBlock.getFluidHandler().getFluidAmount() > 0) {
                 var fluid = castingTableBlock.getFluidHandler().getFluid();
                 // First check if the "cast" is a fluid handler that can be filled with the fluid
                 boolean hasFilledContainer = false;
                 var cast = castingTableBlock.castInv.getStackInSlot(0);
-                if (cast.is(Items.BUCKET)) {
-                    var fillResult = FluidUtil.tryFillContainer(cast, castingTableBlock.getFluidHandler(), fluid.getAmount(), null, true);
-                    if (fillResult.isSuccess()) {
-                        castingTableBlock.itemHandler.setStackInSlot(0, fillResult.getResult());
+                if (cast.is(Items.BUCKET) && fluid.getAmount() >= FluidType.BUCKET_VOLUME) {
+                    var filledBucket = FluidUtil.getFilledBucket(fluid);
+                    if (!filledBucket.isEmpty()) {
+                        castingTableBlock.getFluidHandler().drain(FluidType.BUCKET_VOLUME, true);
+                        castingTableBlock.itemHandler.setStackInSlot(0, filledBucket);
                         castingTableBlock.castInv.setStackInSlot(0, ItemStack.EMPTY);
                         castingTableBlock.sync(serverLevel);
                         hasFilledContainer = true;
@@ -237,42 +276,50 @@ public class CastingBlockEntity extends CapabilityBlockEntity
     }
 
     @Override
-    public void savePacketNBT(CompoundTag tag, HolderLookup.Provider provider) {
-        super.savePacketNBT(tag, provider);
+    public void savePacketNBT(ValueOutput output) {
+        super.savePacketNBT(output);
 
-        tag.put("cast", this.castInv.serializeNBT(provider));
-        tag.putInt("maxAmount", this.maxAmount);
-        tag.putInt("coolingTime", this.coolingTime);
+        output.putChild("cast", this.castInv);
+        output.putInt("maxAmount", this.maxAmount);
+        output.putInt("coolingTime", this.coolingTime);
     }
 
     @Override
-    public void loadPacketNBT(CompoundTag tag, HolderLookup.Provider provider) {
-        super.loadPacketNBT(tag, provider);
+    public void loadPacketNBT(ValueInput input) {
+        super.loadPacketNBT(input);
 
-        if (tag.contains("cast")) {
-            this.castInv.deserializeNBT(provider, tag.getCompound("cast"));
-        }
-        if (tag.contains("coolingTime")) {
-            this.coolingTime = tag.getInt("coolingTime");
-        }
-        if (tag.contains("maxAmount")) {
-            this.maxAmount = tag.getInt("maxAmount");
+        input.readChild("cast", this.castInv);
+        this.coolingTime = input.getIntOr("coolingTime", 0);
+        this.maxAmount = input.getIntOr("maxAmount", this.maxAmount);
+    }
+
+    /** Output item in the result slot (empty if none). */
+    public ItemStack getResultStack() {
+        return itemHandler.getStackInSlot(0);
+    }
+
+    /** Remove the result item if present, otherwise the cast. Used when a player takes the output. */
+    public void clearResultOrCast() {
+        if (!itemHandler.getStackInSlot(0).isEmpty()) {
+            itemHandler.setStackInSlot(0, ItemStack.EMPTY);
+        } else {
+            castInv.setStackInSlot(0, ItemStack.EMPTY);
         }
     }
 
     public boolean canAcceptCast() {
-        return getItemHandler().getStackInSlot(0).isEmpty() && // no crafted output
+        return itemHandler.getStackInSlot(0).isEmpty() && // no crafted output
                castInv.getStackInSlot(0).isEmpty() && // no cast
                getFluidHandler().getFluidAmount() == 0; // no fluid
     }
 
     @Override
-    public IItemHandler getItemHandler() {
+    public ResourceHandler<ItemResource> getItemHandler() {
         return itemHandler;
     }
 
     @Override
-    public FluidTank getFluidHandler() {
+    public ModFluidTank getFluidHandler() {
         return fluidHandler;
     }
 
@@ -285,13 +332,13 @@ public class CastingBlockEntity extends CapabilityBlockEntity
         boolean isTable = getBlockState().is(MetalworksRegistrator.CASTING_TABLE.get());
         // Bucket filling
         if (isTable && cast.is(Items.BUCKET)) {
-            return new ItemCastingRecipe(Ingredient.of(cast), new SizedFluidIngredient(FluidIngredient.single(fluid), FluidType.BUCKET_VOLUME), FluidUtil.getFilledBucket(fluid), true);
+            return new ItemCastingRecipe(java.util.Optional.of(Ingredient.of(cast.getItem())), new SizedFluidIngredient(FluidIngredient.of(fluid), FluidType.BUCKET_VOLUME), net.minecraft.world.item.ItemStackTemplate.fromNonEmptyStack(FluidUtil.getFilledBucket(fluid)), true);
         }
         // Waxing
         if (!isTable && fluid.is(MetalworksRegistrator.MOLTEN_WAX.get()) && cast.getItem() instanceof BlockItem block) {
             var waxData = block.getBlock().builtInRegistryHolder().getData(NeoForgeDataMaps.WAXABLES);
             if (waxData != null) {
-                return new BlockCastingRecipe(Ingredient.of(cast), new SizedFluidIngredient(FluidIngredient.single(fluid), 50), waxData.waxed().asItem().getDefaultInstance(), true);
+                return new BlockCastingRecipe(java.util.Optional.of(Ingredient.of(cast.getItem())), new SizedFluidIngredient(FluidIngredient.of(fluid), 50), new net.minecraft.world.item.ItemStackTemplate(waxData.waxed().asItem()), true);
             }
         }
 

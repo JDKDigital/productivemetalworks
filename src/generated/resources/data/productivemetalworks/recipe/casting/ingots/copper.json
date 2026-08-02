@@ -1,15 +1,12 @@
 {
   "type": "productivemetalworks:item_casting",
-  "cast": {
-    "item": "productivemetalworks:ingot_cast"
-  },
+  "cast": "productivemetalworks:ingot_cast",
   "consume_cast": false,
   "fluid": {
     "amount": 90,
-    "tag": "c:molten_copper"
+    "ingredient": "#c:molten_copper"
   },
   "result": {
-    "count": 1,
     "id": "minecraft:copper_ingot"
   }
 }

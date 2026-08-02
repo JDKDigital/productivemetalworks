@@ -1,29 +1,13 @@
 {
-  "neoforge:conditions": [
-    {
-      "type": "neoforge:not",
-      "value": {
-        "type": "productivelib:fluid_tag_empty",
-        "tag": "c:molten_iron"
-      }
-    },
-    {
-      "type": "neoforge:not",
-      "value": {
-        "type": "productivelib:fluid_tag_empty",
-        "tag": "c:molten_nickel"
-      }
-    }
-  ],
   "type": "productivemetalworks:fluid_alloying",
   "fluids": [
     {
       "amount": 2,
-      "tag": "c:molten_iron"
+      "ingredient": "#c:molten_iron"
     },
     {
       "amount": 1,
-      "tag": "c:molten_nickel"
+      "ingredient": "#c:molten_nickel"
     }
   ],
   "result": {

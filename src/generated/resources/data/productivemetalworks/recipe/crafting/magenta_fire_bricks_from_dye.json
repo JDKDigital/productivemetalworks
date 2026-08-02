@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "D": {
-      "tag": "c:dyes/magenta"
-    },
-    "X": {
-      "tag": "productivemetalworks:fire_bricks"
-    }
+    "D": "#c:dyes/magenta",
+    "X": "#productivemetalworks:fire_bricks"
   },
   "pattern": [
     "XXX",

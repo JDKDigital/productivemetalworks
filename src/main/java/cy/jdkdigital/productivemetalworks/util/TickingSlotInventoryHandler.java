@@ -2,11 +2,10 @@ package cy.jdkdigital.productivemetalworks.util;
 
 import com.mojang.datafixers.util.Pair;
 import cy.jdkdigital.productivelib.common.block.entity.InventoryHandlerHelper;
-import cy.jdkdigital.productivemetalworks.ProductiveMetalworks;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -60,12 +59,11 @@ abstract public class TickingSlotInventoryHandler extends InventoryHandlerHelper
 
     @Override
     public void setStackInSlot(int slot, ItemStack stack) {
-        if (!stack.isEmpty() && slot < tickers.size() && this.blockEntity.hasLevel() && !this.blockEntity.getLevel().isClientSide) {
+        if (!stack.isEmpty() && slot < tickers.size() && this.blockEntity.hasLevel() && !this.blockEntity.getLevel().isClientSide()) {
             int time = getTimeInSlot(stack);
             tickers.set(slot, Pair.of(time, time));
         }
         super.setStackInSlot(slot, stack);
-        this.onContentsChanged(slot);
     }
 
     @NotNull
@@ -86,8 +84,9 @@ abstract public class TickingSlotInventoryHandler extends InventoryHandlerHelper
                     tickers.set(slot, Pair.of(Math.max(pair.getFirst() - t, 0), pair.getSecond()));
                 }
 
-                if (pair.getSecond() == 0 && getStackInSlot(slot).isEmpty()) {
-                    // if the stack is not empty and there's no valid ticker, reset it
+                if (pair.getSecond() == 0 && !getStackInSlot(slot).isEmpty()) {
+                    // a stack with no valid timer (e.g. inserted before fuel was available) — recompute it
+                    // now that conditions may have changed, otherwise it would never start melting
                     recalculate(slot);
                 }
             }
@@ -111,26 +110,27 @@ abstract public class TickingSlotInventoryHandler extends InventoryHandlerHelper
     }
 
     @Override
-    public CompoundTag serializeNBT(HolderLookup.Provider provider) {
-        CompoundTag nbt = super.serializeNBT(provider);
+    public void serialize(ValueOutput output) {
+        super.serialize(output);
         for (int slot = 0; slot < Math.min(size(), tickers.size()); slot++) {
             // Save the amount of time that has passed
             if (tickers.get(slot).getSecond() > 0) {
-                nbt.putInt("t" + slot + "_passed", tickers.get(slot).getFirst());
-                nbt.putInt("t" + slot + "_total", tickers.get(slot).getSecond());
+                output.putInt("t" + slot + "_passed", tickers.get(slot).getFirst());
+                output.putInt("t" + slot + "_total", tickers.get(slot).getSecond());
             }
         }
-        return nbt;
     }
 
     @Override
-    public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt) {
-        super.deserializeNBT(provider, nbt);
+    public void deserialize(ValueInput input) {
+        super.deserialize(input);
         initTickers();
         for (int slot = 0; slot < size(); slot++) {
-            if (nbt.contains("t" + slot + "_total") && slot < tickers.size()) {
-                int time = nbt.getInt("t" + slot + "_total");
-                tickers.set(slot, Pair.of(nbt.getInt("t" + slot + "_passed"), time));
+            if (slot < tickers.size()) {
+                int time = input.getIntOr("t" + slot + "_total", 0);
+                if (time > 0) {
+                    tickers.set(slot, Pair.of(input.getIntOr("t" + slot + "_passed", 0), time));
+                }
             }
         }
     }

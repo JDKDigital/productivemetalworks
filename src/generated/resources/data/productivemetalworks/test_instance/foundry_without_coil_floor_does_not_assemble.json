@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "environment": "productivemetalworks:foundry_without_coil_floor_does_not_assemble_env",
+  "function": "productivemetalworks:foundry_without_coil_floor_does_not_assemble",
+  "structure": "productivemetalworks:empty_7x7",
+  "max_ticks": 100,
+  "required": true,
+  "setup_ticks": 0
+}

@@ -1,13 +1,11 @@
 {
   "type": "productivemetalworks:block_casting",
-  "cast": [],
   "consume_cast": false,
   "fluid": {
     "amount": 900,
-    "fluid": "productivemetalworks:molten_lapis"
+    "ingredient": "productivemetalworks:molten_lapis"
   },
   "result": {
-    "count": 1,
     "id": "minecraft:lapis_block"
   }
 }

@@ -1,8 +1,6 @@
 {
   "type": "productivemetalworks:item_melting",
-  "ingredient": {
-    "item": "minecraft:slime_ball"
-  },
+  "ingredient": "minecraft:slime_ball",
   "maximum_temperature": 0,
   "minimum_temperature": 1000,
   "result": [

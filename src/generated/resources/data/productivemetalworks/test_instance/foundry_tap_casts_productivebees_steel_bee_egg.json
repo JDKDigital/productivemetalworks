@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "environment": "productivemetalworks:foundry_tap_casts_productivebees_steel_bee_egg_env",
+  "function": "productivemetalworks:foundry_tap_casts_productivebees_steel_bee_egg",
+  "structure": "productivemetalworks:empty_7x7",
+  "max_ticks": 600,
+  "required": true,
+  "setup_ticks": 0
+}

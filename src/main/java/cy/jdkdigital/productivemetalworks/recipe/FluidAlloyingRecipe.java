@@ -4,15 +4,12 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import cy.jdkdigital.productivemetalworks.registry.MetalworksRegistrator;
-import net.minecraft.core.HolderLookup;
+import cy.jdkdigital.productivemetalworks.util.FluidStackTemplate;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeInput;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
@@ -21,11 +18,26 @@ import java.util.List;
 
 public class FluidAlloyingRecipe implements Recipe<RecipeInput>
 {
+    public static final MapCodec<FluidAlloyingRecipe> MAP_CODEC = RecordCodecBuilder.mapCodec(
+            builder -> builder.group(
+                            SizedFluidIngredient.CODEC.listOf().fieldOf("fluids").forGetter(recipe -> recipe.fluids),
+                            Codec.INT.fieldOf("speed").orElse(1).forGetter(recipe -> recipe.speed),
+                            FluidStackTemplate.CODEC.fieldOf("result").forGetter(recipe -> recipe.result)
+                    )
+                    .apply(builder, FluidAlloyingRecipe::new)
+    );
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, FluidAlloyingRecipe> STREAM_CODEC = StreamCodec.of(
+            FluidAlloyingRecipe::toNetwork, FluidAlloyingRecipe::fromNetwork
+    );
+
+    public static final RecipeSerializer<FluidAlloyingRecipe> SERIALIZER = new RecipeSerializer<>(MAP_CODEC, STREAM_CODEC);
+
     public final List<SizedFluidIngredient> fluids;
     public final int speed;
-    public final FluidStack result;
+    public final FluidStackTemplate result;
 
-    public FluidAlloyingRecipe(List<SizedFluidIngredient> fluids, int speed, FluidStack result) {
+    public FluidAlloyingRecipe(List<SizedFluidIngredient> fluids, int speed, FluidStackTemplate result) {
         this.fluids = fluids;
         this.speed = speed;
         this.result = result;
@@ -51,13 +63,33 @@ public class FluidAlloyingRecipe implements Recipe<RecipeInput>
     }
 
     @Override
-    public ItemStack assemble(RecipeInput input, HolderLookup.Provider registries) {
+    public ItemStack assemble(RecipeInput input) {
         return ItemStack.EMPTY;
     }
 
     @Override
-    public boolean canCraftInDimensions(int width, int height) {
+    public RecipeSerializer<FluidAlloyingRecipe> getSerializer() {
+        return MetalworksRegistrator.FLUID_ALLOYING.get();
+    }
+
+    @Override
+    public RecipeType<FluidAlloyingRecipe> getType() {
+        return MetalworksRegistrator.FLUID_ALLOYING_TYPE.get();
+    }
+
+    @Override
+    public String group() {
+        return "";
+    }
+
+    @Override
+    public boolean showNotification() {
         return false;
+    }
+
+    @Override
+    public PlacementInfo placementInfo() {
+        return PlacementInfo.NOT_PLACEABLE;
     }
 
     @Override
@@ -66,53 +98,17 @@ public class FluidAlloyingRecipe implements Recipe<RecipeInput>
     }
 
     @Override
-    public ItemStack getResultItem(HolderLookup.Provider registries) {
-        return ItemStack.EMPTY;
+    public RecipeBookCategory recipeBookCategory() {
+        return RecipeBookCategories.CRAFTING_MISC;
     }
 
-    @Override
-    public RecipeSerializer<?> getSerializer() {
-        return MetalworksRegistrator.FLUID_ALLOYING.get();
+    public static FluidAlloyingRecipe fromNetwork(RegistryFriendlyByteBuf buffer) {
+        return new FluidAlloyingRecipe(SizedFluidIngredient.STREAM_CODEC.apply(ByteBufCodecs.list()).decode(buffer), buffer.readInt(), FluidStackTemplate.STREAM_CODEC.decode(buffer));
     }
 
-    @Override
-    public RecipeType<?> getType() {
-        return MetalworksRegistrator.FLUID_ALLOYING_TYPE.get();
-    }
-
-    public static class Serializer implements RecipeSerializer<FluidAlloyingRecipe>
-    {
-        private static final MapCodec<FluidAlloyingRecipe> CODEC = RecordCodecBuilder.mapCodec(
-                builder -> builder.group(
-                                SizedFluidIngredient.FLAT_CODEC.listOf().fieldOf("fluids").forGetter(recipe -> recipe.fluids),
-                                Codec.INT.fieldOf("speed").orElse(1).forGetter(recipe -> recipe.speed),
-                                FluidStack.CODEC.fieldOf("result").forGetter(recipe -> recipe.result)
-                        )
-                        .apply(builder, FluidAlloyingRecipe::new)
-        );
-
-        public static final StreamCodec<RegistryFriendlyByteBuf, FluidAlloyingRecipe> STREAM_CODEC = StreamCodec.of(
-                FluidAlloyingRecipe.Serializer::toNetwork, FluidAlloyingRecipe.Serializer::fromNetwork
-        );
-
-        @Override
-        public MapCodec<FluidAlloyingRecipe> codec() {
-            return CODEC;
-        }
-
-        @Override
-        public StreamCodec<RegistryFriendlyByteBuf, FluidAlloyingRecipe> streamCodec() {
-            return STREAM_CODEC;
-        }
-
-        public static FluidAlloyingRecipe fromNetwork(RegistryFriendlyByteBuf buffer) {
-            return new FluidAlloyingRecipe(SizedFluidIngredient.STREAM_CODEC.apply(ByteBufCodecs.list()).decode(buffer), buffer.readInt(), FluidStack.STREAM_CODEC.decode(buffer));
-        }
-
-        public static void toNetwork(RegistryFriendlyByteBuf buffer, FluidAlloyingRecipe recipe) {
-            SizedFluidIngredient.STREAM_CODEC.apply(ByteBufCodecs.list()).encode(buffer, recipe.fluids);
-            buffer.writeInt(recipe.speed);
-            FluidStack.STREAM_CODEC.encode(buffer, recipe.result);
-        }
+    public static void toNetwork(RegistryFriendlyByteBuf buffer, FluidAlloyingRecipe recipe) {
+        SizedFluidIngredient.STREAM_CODEC.apply(ByteBufCodecs.list()).encode(buffer, recipe.fluids);
+        buffer.writeInt(recipe.speed);
+        FluidStackTemplate.STREAM_CODEC.encode(buffer, recipe.result);
     }
 }

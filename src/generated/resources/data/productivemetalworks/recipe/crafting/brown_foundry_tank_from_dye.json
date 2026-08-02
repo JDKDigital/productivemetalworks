@@ -2,15 +2,10 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "tag": "productivemetalworks:foundry_tanks"
-    },
-    {
-      "tag": "c:dyes/brown"
-    }
+    "#productivemetalworks:foundry_tanks",
+    "#c:dyes/brown"
   ],
   "result": {
-    "count": 1,
     "id": "productivemetalworks:brown_foundry_tank"
   }
 }

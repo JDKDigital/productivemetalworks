@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "A": {
-      "item": "minecraft:amethyst_block"
-    },
-    "C": {
-      "tag": "c:ingots/copper"
-    },
-    "X": {
-      "item": "productivemetalworks:fire_brick"
-    }
+    "A": "minecraft:amethyst_block",
+    "C": "#c:ingots/copper",
+    "X": "productivemetalworks:fire_brick"
   },
   "pattern": [
     "CCC",
@@ -18,7 +12,6 @@
     "XXX"
   ],
   "result": {
-    "count": 1,
     "id": "productivemetalworks:powered_heating_coil"
   }
 }

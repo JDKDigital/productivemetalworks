@@ -1,13 +1,11 @@
 {
   "type": "productivemetalworks:item_casting",
-  "cast": [],
   "consume_cast": false,
   "fluid": {
     "amount": 810,
-    "fluid": "productivemetalworks:molten_heavy_core"
+    "ingredient": "productivemetalworks:molten_heavy_core"
   },
   "result": {
-    "count": 1,
     "id": "minecraft:heavy_core"
   }
 }

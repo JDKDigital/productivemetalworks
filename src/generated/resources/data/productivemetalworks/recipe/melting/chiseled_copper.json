@@ -1,30 +1,14 @@
 {
   "type": "productivemetalworks:item_melting",
   "ingredient": [
-    {
-      "item": "minecraft:chiseled_copper"
-    },
-    {
-      "item": "minecraft:exposed_chiseled_copper"
-    },
-    {
-      "item": "minecraft:weathered_chiseled_copper"
-    },
-    {
-      "item": "minecraft:oxidized_chiseled_copper"
-    },
-    {
-      "item": "minecraft:waxed_chiseled_copper"
-    },
-    {
-      "item": "minecraft:waxed_exposed_chiseled_copper"
-    },
-    {
-      "item": "minecraft:waxed_weathered_chiseled_copper"
-    },
-    {
-      "item": "minecraft:waxed_oxidized_chiseled_copper"
-    }
+    "minecraft:chiseled_copper",
+    "minecraft:exposed_chiseled_copper",
+    "minecraft:weathered_chiseled_copper",
+    "minecraft:oxidized_chiseled_copper",
+    "minecraft:waxed_chiseled_copper",
+    "minecraft:waxed_exposed_chiseled_copper",
+    "minecraft:waxed_weathered_chiseled_copper",
+    "minecraft:waxed_oxidized_chiseled_copper"
   ],
   "maximum_temperature": 0,
   "minimum_temperature": 1000,

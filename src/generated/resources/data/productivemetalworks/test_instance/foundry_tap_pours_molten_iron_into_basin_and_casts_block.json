@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "environment": "productivemetalworks:foundry_tap_pours_molten_iron_into_basin_and_casts_block_env",
+  "function": "productivemetalworks:foundry_tap_pours_molten_iron_into_basin_and_casts_block",
+  "structure": "productivemetalworks:empty_7x7",
+  "max_ticks": 600,
+  "required": true,
+  "setup_ticks": 0
+}

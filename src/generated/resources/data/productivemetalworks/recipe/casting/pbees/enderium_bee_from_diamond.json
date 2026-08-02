@@ -8,23 +8,23 @@
       "type": "productivelib:lazy",
       "value": {
         "type": "productivebees:bee_exists",
-        "bee": "productivebees:diamond"
+        "bee": "productivebees:gems/diamond"
       }
     },
     {
       "type": "productivelib:lazy",
       "value": {
         "type": "productivebees:bee_exists",
-        "bee": "productivebees:enderium"
+        "bee": "productivebees:alloys/enderium"
       }
     }
   ],
   "type": "productivemetalworks:item_casting",
   "cast": {
-    "type": "productivebees:component",
+    "neoforge:ingredient_type": "productivebees:component",
     "components": {
       "minecraft:entity_data": {
-        "type": "productivebees:diamond",
+        "type": "productivebees:gems/diamond",
         "id": "productivebees:configurable_bee"
       }
     },
@@ -33,16 +33,15 @@
   "consume_cast": true,
   "fluid": {
     "amount": 810,
-    "tag": "c:molten_enderium"
+    "ingredient": "#c:molten_enderium"
   },
   "result": {
     "components": {
       "minecraft:entity_data": {
-        "type": "productivebees:enderium",
+        "type": "productivebees:alloys/enderium",
         "id": "productivebees:configurable_bee"
       }
     },
-    "count": 1,
     "id": "productivebees:spawn_egg_configurable_bee"
   }
 }

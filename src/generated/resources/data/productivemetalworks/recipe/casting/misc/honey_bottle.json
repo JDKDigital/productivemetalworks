@@ -1,15 +1,12 @@
 {
   "type": "productivemetalworks:item_casting",
-  "cast": {
-    "item": "minecraft:glass_bottle"
-  },
+  "cast": "minecraft:glass_bottle",
   "consume_cast": true,
   "fluid": {
     "amount": 250,
-    "tag": "c:honey"
+    "ingredient": "#c:honey"
   },
   "result": {
-    "count": 1,
     "id": "minecraft:honey_bottle"
   }
 }

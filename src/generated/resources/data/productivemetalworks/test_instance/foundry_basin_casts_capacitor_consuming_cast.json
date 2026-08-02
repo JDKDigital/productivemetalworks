@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "environment": "productivemetalworks:foundry_basin_casts_capacitor_consuming_cast_env",
+  "function": "productivemetalworks:foundry_basin_casts_capacitor_consuming_cast",
+  "structure": "productivemetalworks:empty_7x7",
+  "max_ticks": 600,
+  "required": true,
+  "setup_ticks": 0
+}

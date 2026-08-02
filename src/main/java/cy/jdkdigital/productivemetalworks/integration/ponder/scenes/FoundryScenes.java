@@ -1,41 +1,28 @@
 package cy.jdkdigital.productivemetalworks.integration.ponder.scenes;
 
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.items.ItemStackHandler;
-import net.neoforged.neoforge.registries.DeferredHolder;
-
+import cy.jdkdigital.productivemetalworks.ProductiveMetalworks;
+import cy.jdkdigital.productivemetalworks.common.block.entity.*;
+import cy.jdkdigital.productivemetalworks.registry.MetalworksRegistrator;
+import cy.jdkdigital.productivemetalworks.util.TickingSlotInventoryHandler;
+import net.createmod.catnip.math.Pointing;
+import net.createmod.ponder.api.scene.SceneBuilder;
+import net.createmod.ponder.api.scene.SceneBuildingUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.Fluids;
-
-import net.createmod.catnip.math.Pointing;
-import net.createmod.ponder.api.scene.SceneBuilder;
-import net.createmod.ponder.api.scene.SceneBuildingUtil;
-
-import com.simibubi.create.content.processing.basin.BasinBlockEntity;
-
-import cy.jdkdigital.productivemetalworks.ProductiveMetalworks;
-import cy.jdkdigital.productivemetalworks.common.block.CastingBasinBlock;
-import cy.jdkdigital.productivemetalworks.common.block.CastingTableBlock;
-import cy.jdkdigital.productivemetalworks.common.block.entity.CastingBlockEntity;
-import cy.jdkdigital.productivemetalworks.common.block.entity.FoundryCapacitorBlockEntity;
-import cy.jdkdigital.productivemetalworks.common.block.entity.FoundryControllerBlockEntity;
-import cy.jdkdigital.productivemetalworks.common.block.entity.FoundryTankBlockEntity;
-import cy.jdkdigital.productivemetalworks.common.block.entity.FoundryTapBlockEntity;
-import cy.jdkdigital.productivemetalworks.registry.MetalworksRegistrator;
-import cy.jdkdigital.productivemetalworks.util.TickingSlotInventoryHandler;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -356,7 +343,7 @@ public class FoundryScenes {
 
         scene.overlay()
                 .showControls(util.vector().of(4.5, 2, 1.5), Pointing.DOWN, 20)
-                .withItem(new ItemStack(DeferredHolder.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "molten_nickel_bucket"))))
+                .withItem(new ItemStack(DeferredHolder.create(Registries.ITEM, Identifier.fromNamespaceAndPath(ProductiveMetalworks.MODID, "molten_nickel_bucket"))))
                 .rightClick();
 
         scene.idle(10);

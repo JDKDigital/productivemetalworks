@@ -6,14 +6,12 @@
     }
   ],
   "type": "productivemetalworks:item_casting",
-  "cast": [],
   "consume_cast": false,
   "fluid": {
     "amount": 50,
-    "tag": "c:wax"
+    "ingredient": "#c:wax"
   },
   "result": {
-    "count": 1,
     "id": "productivebees:wax"
   }
 }

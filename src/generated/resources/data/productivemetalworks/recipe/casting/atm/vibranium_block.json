@@ -6,14 +6,12 @@
     }
   ],
   "type": "productivemetalworks:block_casting",
-  "cast": [],
   "consume_cast": false,
   "fluid": {
     "amount": 810,
-    "fluid": "allthemodium:molten_vibranium"
+    "ingredient": "allthemodium:molten_vibranium"
   },
   "result": {
-    "count": 1,
     "id": "allthemodium:vibranium_block"
   }
 }

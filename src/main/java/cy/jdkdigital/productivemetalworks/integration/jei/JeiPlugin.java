@@ -1,5 +1,6 @@
 package cy.jdkdigital.productivemetalworks.integration.jei;
 
+import cy.jdkdigital.productivelib.compat.jei.RecipeMapCache;
 import cy.jdkdigital.productivemetalworks.ProductiveMetalworks;
 import cy.jdkdigital.productivemetalworks.recipe.*;
 import cy.jdkdigital.productivemetalworks.registry.MetalworksRegistrator;
@@ -11,15 +12,15 @@ import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.RecipeManager;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 import net.neoforged.neoforge.registries.datamaps.builtin.NeoForgeDataMaps;
 
@@ -29,7 +30,7 @@ import java.util.List;
 @mezz.jei.api.JeiPlugin
 public class JeiPlugin implements IModPlugin
 {
-    private static final ResourceLocation pluginId = ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, ProductiveMetalworks.MODID);
+    private static final Identifier pluginId = Identifier.fromNamespaceAndPath(ProductiveMetalworks.MODID, ProductiveMetalworks.MODID);
 
     public static final RecipeType<RecipeHolder<ItemMeltingRecipe>> ITEM_MELTING = RecipeType.createRecipeHolderType(MetalworksRegistrator.ITEM_MELTING_TYPE.getId());
     public static final RecipeType<RecipeHolder<EntityMeltingRecipe>> ENTITY_MELTING = RecipeType.createRecipeHolderType(MetalworksRegistrator.ENTITY_MELTING_TYPE.getId());
@@ -40,7 +41,7 @@ public class JeiPlugin implements IModPlugin
     public static final IIngredientType<Entity> ENTITY_INGREDIENT = () -> Entity.class;
 
     @Override
-    public ResourceLocation getPluginUid() {
+    public Identifier getPluginUid() {
         return pluginId;
     }
 
@@ -69,28 +70,28 @@ public class JeiPlugin implements IModPlugin
 
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
-        RecipeManager recipeManager = Minecraft.getInstance().level.getRecipeManager();
-
-        registration.addRecipes(ITEM_MELTING, recipeManager.getAllRecipesFor(MetalworksRegistrator.ITEM_MELTING_TYPE.get()));
-        registration.addRecipes(ITEM_CASTING, recipeManager.getAllRecipesFor(MetalworksRegistrator.ITEM_CASTING_TYPE.get()));
-        registration.addRecipes(BLOCK_CASTING, recipeManager.getAllRecipesFor(MetalworksRegistrator.BLOCK_CASTING_TYPE.get()));
-        registration.addRecipes(FLUID_ALLOYING, recipeManager.getAllRecipesFor(MetalworksRegistrator.FLUID_ALLOYING_TYPE.get()));
+        // 26.1: recipes are synced to the client opt-in (see EventHandler#onDatapackSync) and cached by
+        // RecipeMapCache. JEI refreshes plugins on RecipesReceivedEvent, so the cache is populated here.
+        registration.addRecipes(ITEM_MELTING, new ArrayList<>(RecipeMapCache.byType(MetalworksRegistrator.ITEM_MELTING_TYPE.get())));
+        registration.addRecipes(ITEM_CASTING, new ArrayList<>(RecipeMapCache.byType(MetalworksRegistrator.ITEM_CASTING_TYPE.get())));
+        registration.addRecipes(BLOCK_CASTING, new ArrayList<>(RecipeMapCache.byType(MetalworksRegistrator.BLOCK_CASTING_TYPE.get())));
+        registration.addRecipes(FLUID_ALLOYING, new ArrayList<>(RecipeMapCache.byType(MetalworksRegistrator.FLUID_ALLOYING_TYPE.get())));
 
         // Entity melting
-        BuiltInRegistries.ENTITY_TYPE.holders().forEach(entityType -> {
+        BuiltInRegistries.ENTITY_TYPE.listElements().forEach(entityType -> {
             var data = entityType.getData(MetalworksRegistrator.ENTITY_MELTING_MAP);
             if (data != null) {
                 var id = BuiltInRegistries.ENTITY_TYPE.getKey(entityType.value());
-                registration.addRecipes(ENTITY_MELTING, List.of(new RecipeHolder<>(ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "/melting/entity/" + id.getPath()), new EntityMeltingRecipe(id, List.of(data.fluid())))));
+                registration.addRecipes(ENTITY_MELTING, List.of(new RecipeHolder<>(recipeKey("melting/entity/" + id.getPath()), new EntityMeltingRecipe(id, List.of(data.fluid())))));
             }
         });
 
         // Waxing recipes
         List<RecipeHolder<BlockCastingRecipe>> WAXING_RECIPES = new ArrayList<>();
-        BuiltInRegistries.BLOCK.holders().forEach(blockReference -> {
+        BuiltInRegistries.BLOCK.listElements().forEach(blockReference -> {
             var waxData = blockReference.getData(NeoForgeDataMaps.WAXABLES);
             if (waxData != null) {
-                WAXING_RECIPES.add(new RecipeHolder<>(ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, blockReference.key().location().getPath()), new BlockCastingRecipe(Ingredient.of(blockReference.value()), SizedFluidIngredient.of(MetalworksRegistrator.MOLTEN_WAX.get(), 50), waxData.waxed().asItem().getDefaultInstance(), true)));
+                WAXING_RECIPES.add(new RecipeHolder<>(recipeKey("waxing/" + blockReference.key().identifier().getPath()), new BlockCastingRecipe(java.util.Optional.of(Ingredient.of(blockReference.value())), SizedFluidIngredient.of(MetalworksRegistrator.MOLTEN_WAX.get(), 50), new net.minecraft.world.item.ItemStackTemplate(waxData.waxed().asItem()), true)));
             }
         });
         registration.addRecipes(BLOCK_CASTING, WAXING_RECIPES);
@@ -100,9 +101,13 @@ public class JeiPlugin implements IModPlugin
         BuiltInRegistries.FLUID.entrySet().forEach(fluidHolder -> {
             var fluid = fluidHolder.getValue();
             if (fluid.defaultFluidState().isSource() && fluid.getBucket() != Items.AIR) {
-                BUCKET_RECIPES.add(new RecipeHolder<>(ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, fluidHolder.getKey().location().getPath()), new BlockCastingRecipe(Ingredient.of(Items.BUCKET), SizedFluidIngredient.of(fluid, 1000), fluid.getBucket().getDefaultInstance(), true)));
+                BUCKET_RECIPES.add(new RecipeHolder<>(recipeKey("bucket/" + fluidHolder.getKey().identifier().getPath()), new BlockCastingRecipe(java.util.Optional.of(Ingredient.of(Items.BUCKET)), SizedFluidIngredient.of(fluid, 1000), new net.minecraft.world.item.ItemStackTemplate(fluid.getBucket()), true)));
             }
         });
         registration.addRecipes(ITEM_CASTING, BUCKET_RECIPES);
+    }
+
+    private static ResourceKey<Recipe<?>> recipeKey(String path) {
+        return ResourceKey.create(Registries.RECIPE, Identifier.fromNamespaceAndPath(ProductiveMetalworks.MODID, path));
     }
 }

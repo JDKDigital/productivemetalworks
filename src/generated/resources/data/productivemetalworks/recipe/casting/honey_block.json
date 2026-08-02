@@ -9,14 +9,12 @@
     }
   ],
   "type": "productivemetalworks:block_casting",
-  "cast": [],
   "consume_cast": false,
   "fluid": {
     "amount": 1000,
-    "tag": "c:honey"
+    "ingredient": "#c:honey"
   },
   "result": {
-    "count": 1,
     "id": "minecraft:honey_block"
   }
 }

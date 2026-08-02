@@ -13,16 +13,14 @@ import mezz.jei.api.neoforge.NeoForgeTypes;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.category.AbstractRecipeCategory;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
-
-import java.util.Arrays;
 
 public class FluidAlloyingRecipeCategory extends AbstractRecipeCategory<RecipeHolder<FluidAlloyingRecipe>>
 {
@@ -35,11 +33,11 @@ public class FluidAlloyingRecipeCategory extends AbstractRecipeCategory<RecipeHo
                 guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(MetalworksRegistrator.FOUNDRY_DRAINS.get(DyeColor.BLACK).get())),
                 165, 68
         );
-        this.background = guiHelper.drawableBuilder(ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "textures/gui/jei/fluid_alloying.png"), 0, 0, 165, 68).setTextureSize(165, 68).build();
+        this.background = guiHelper.drawableBuilder(Identifier.fromNamespaceAndPath(ProductiveMetalworks.MODID, "textures/gui/jei/fluid_alloying.png"), 0, 0, 165, 68).setTextureSize(165, 68).build();
     }
 
     @Override
-    public void draw(RecipeHolder<FluidAlloyingRecipe> recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
+    public void draw(RecipeHolder<FluidAlloyingRecipe> recipe, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor guiGraphics, double mouseX, double mouseY) {
         this.background.draw(guiGraphics, 0, 0);
     }
 
@@ -51,7 +49,7 @@ public class FluidAlloyingRecipeCategory extends AbstractRecipeCategory<RecipeHo
         int leftover = 42 - (fWidth * recipe.value().fluids.size());
         for (int i = 0, fluidsSize = recipe.value().fluids.size(); i < fluidsSize; i++) {
             SizedFluidIngredient sizedFluidIngredient = recipe.value().fluids.get(i);
-            var fluidStacks = Arrays.stream(sizedFluidIngredient.getFluids()).filter(fluidStack -> fluidStack.getFluid().defaultFluidState().isSource()).toList();
+            var fluidStacks = FluidHelper.fluidStacks(sizedFluidIngredient).stream().filter(fluidStack -> fluidStack.getFluid().defaultFluidState().isSource()).toList();
             builder.addSlot(RecipeIngredientRole.INPUT, 12 + (i*fWidth), 8)
                     .addIngredients(NeoForgeTypes.FLUID_STACK, fluidStacks)
                     .addRichTooltipCallback((recipeSlotView, tooltip) -> {
@@ -61,13 +59,13 @@ public class FluidAlloyingRecipeCategory extends AbstractRecipeCategory<RecipeHo
                     .setSlotName("fluid" + i);
             leftover--;
             // Add bucket as hidden ingredient
-            builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).addIngredients(Ingredient.of(fluidStacks.stream().map(f -> new ItemStack(f.getFluid().getBucket()))));
+            builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).addIngredients(Ingredient.of(fluidStacks.stream().map(f -> f.getFluid().getBucket())));
         }
 
         builder.addSlot(RecipeIngredientRole.OUTPUT, 112, 8)
                 .addFluidStack(recipe.value().result.getFluid(), recipe.value().result.getAmount())
                 .addRichTooltipCallback((recipeSlotView, tooltip) -> {
-                    tooltip.addAll(FluidHelper.formatTooltip(recipe.value().result));
+                    tooltip.addAll(FluidHelper.formatTooltip(recipe.value().result.create()));
                 })
                 .setFluidRenderer(maxAmount, false, 42,52)
                 .setSlotName("result");

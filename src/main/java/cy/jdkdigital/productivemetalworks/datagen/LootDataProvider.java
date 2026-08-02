@@ -3,14 +3,14 @@ package cy.jdkdigital.productivemetalworks.datagen;
 import com.google.common.collect.Maps;
 import cy.jdkdigital.productivemetalworks.common.block.MeatBlock;
 import cy.jdkdigital.productivemetalworks.registry.MetalworksRegistrator;
-import net.minecraft.advancements.critereon.StatePropertiesPredicate;
+import net.minecraft.advancements.criterion.StatePropertiesPredicate;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.data.loot.LootTableProvider;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.LootPool;
@@ -18,6 +18,7 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
 import net.minecraft.world.level.storage.loot.functions.CopyComponentsFunction;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.ExplosionCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
@@ -51,12 +52,12 @@ public class LootDataProvider implements DataProvider
     }
 
     private CompletableFuture<?> run(CachedOutput pOutput, HolderLookup.Provider pProvider) {
-        final Map<ResourceLocation, LootTable> map = Maps.newHashMap();
+        final Map<Identifier, LootTable> map = Maps.newHashMap();
         this.subProviders.forEach((providerEntry) -> {
             providerEntry.provider().apply(pProvider).generate((resourceKey, builder) -> {
-                builder.setRandomSequence(resourceKey.location());
-                if (map.put(resourceKey.location(), builder.setParamSet(providerEntry.paramSet()).build()) != null) {
-                    throw new IllegalStateException("Duplicate loot table " + resourceKey.location());
+                builder.setRandomSequence(resourceKey.identifier());
+                if (map.put(resourceKey.identifier(), builder.setParamSet(providerEntry.paramSet()).build()) != null) {
+                    throw new IllegalStateException("Duplicate loot table " + resourceKey.identifier());
                 }
             });
         });
@@ -149,7 +150,7 @@ public class LootDataProvider implements DataProvider
 
         protected static LootTable.Builder genFluidTankBlockDrop(Block block) {
             LootPoolEntryContainer.Builder<?> builder = LootItem.lootTableItem(block).when(ExplosionCondition.survivesExplosion())
-                    .apply(CopyComponentsFunction.copyComponents(CopyComponentsFunction.Source.BLOCK_ENTITY).include(MetalworksRegistrator.FLUID_STACK.get()));
+                    .apply(CopyComponentsFunction.copyComponentsFromBlockEntity(LootContextParams.BLOCK_ENTITY).include(MetalworksRegistrator.FLUID_STACK.get()));
 
             return LootTable.lootTable().withPool(
                     LootPool.lootPool().setRolls(ConstantValue.exactly(1))

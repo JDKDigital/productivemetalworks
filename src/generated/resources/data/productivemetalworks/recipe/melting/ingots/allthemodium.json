@@ -9,9 +9,7 @@
     }
   ],
   "type": "productivemetalworks:item_melting",
-  "ingredient": {
-    "tag": "c:ingots/allthemodium"
-  },
+  "ingredient": "#c:ingots/allthemodium",
   "maximum_temperature": 0,
   "minimum_temperature": 3000,
   "result": [

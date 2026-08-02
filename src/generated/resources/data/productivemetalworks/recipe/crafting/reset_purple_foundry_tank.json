@@ -2,12 +2,9 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "productivemetalworks:purple_foundry_tank"
-    }
+    "productivemetalworks:purple_foundry_tank"
   ],
   "result": {
-    "count": 1,
     "id": "productivemetalworks:purple_foundry_tank"
   }
 }

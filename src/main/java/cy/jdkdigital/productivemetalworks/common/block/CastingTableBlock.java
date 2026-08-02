@@ -9,9 +9,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -82,14 +80,14 @@ public class CastingTableBlock extends BaseEntityBlock
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
-        return createTickerHelper(blockEntityType, MetalworksRegistrator.CASTING_BLOCK_ENTITY.get(), level.isClientSide ? CastingBlockEntity::clientTick : CastingBlockEntity::serverTick);
+        return createTickerHelper(blockEntityType, MetalworksRegistrator.CASTING_BLOCK_ENTITY.get(), level.isClientSide() ? CastingBlockEntity::clientTick : CastingBlockEntity::serverTick);
     }
 
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         if (level instanceof ServerLevel serverLevel && serverLevel.getBlockEntity(pos) instanceof CastingBlockEntity blockEntity && !blockEntity.isCooling() && blockEntity.getFluidHandler().getFluidAmount() == 0) {
             // Take output first, if there's no output grab the cast
-            var outputItem = blockEntity.getItemHandler().getStackInSlot(0);
+            var outputItem = blockEntity.getResultStack();
             if (outputItem.isEmpty()) {
                 outputItem = blockEntity.castInv.getStackInSlot(0);
             }
@@ -98,15 +96,15 @@ public class CastingTableBlock extends BaseEntityBlock
                 if (!player.getInventory().add(outputItem.copy())) {
                     Block.popResourceFromFace(serverLevel, pos, Direction.UP, outputItem.copy());
                 }
-                outputItem.shrink(outputItem.getMaxStackSize());
+                blockEntity.clearResultOrCast();
                 blockEntity.sync(serverLevel);
             }
         }
-        return InteractionResult.sidedSuccess(level.isClientSide);
+        return InteractionResult.SUCCESS;
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (
                 level.getBlockEntity(pos) instanceof CastingBlockEntity blockEntity &&
                 blockEntity.canAcceptCast() // no fluid
@@ -114,32 +112,27 @@ public class CastingTableBlock extends BaseEntityBlock
             if (level instanceof ServerLevel serverLevel) {
                 var clonedStack = stack.copy();
                 clonedStack.setCount(1);
-                blockEntity.castInv.insertItem(0, clonedStack, false);
-                stack.shrink(1);
-                blockEntity.sync(serverLevel);
+                // Only consume the held item if it was actually stored — never void it on a failed insert.
+                if (blockEntity.castInv.insertItem(0, clonedStack, false).isEmpty()) {
+                    stack.shrink(1);
+                    blockEntity.sync(serverLevel);
+                }
             }
-            return ItemInteractionResult.sidedSuccess(level.isClientSide);
+            return InteractionResult.SUCCESS;
         }
         return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
     }
 
 
-    @SuppressWarnings("deprecation")
     @Override
-    public void onRemove(BlockState oldState, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
-        if (oldState.getBlock() != newState.getBlock()) {
-            if (level.getBlockEntity(pos) instanceof CastingBlockEntity blockEntity) {
-                // Drop inventory
-                if (!blockEntity.isCooling()) {
-                    for (int slot = 0; slot < blockEntity.getItemHandler().getSlots(); ++slot) {
-                        Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), blockEntity.getItemHandler().getStackInSlot(slot));
-                    }
-                }
-                for (int slot = 0; slot < blockEntity.castInv.getSlots(); ++slot) {
-                    Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), blockEntity.castInv.getStackInSlot(slot));
-                }
+    protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos, boolean movedByPiston) {
+        if (level.getBlockEntity(pos) instanceof CastingBlockEntity blockEntity) {
+            // Drop inventory
+            if (!blockEntity.isCooling()) {
+                Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), blockEntity.getResultStack());
             }
+            Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), blockEntity.castInv.getStackInSlot(0));
         }
-        super.onRemove(oldState, level, pos, newState, isMoving);
+        super.affectNeighborsAfterRemoval(state, level, pos, movedByPiston);
     }
 }

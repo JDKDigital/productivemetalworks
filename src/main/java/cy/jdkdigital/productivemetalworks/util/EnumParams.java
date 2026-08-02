@@ -1,9 +1,6 @@
 package cy.jdkdigital.productivemetalworks.util;
 
 import cy.jdkdigital.productivemetalworks.common.damagesource.FoundryDeathMessageProvider;
-import net.neoforged.neoforge.common.damagesource.IDeathMessageProvider;
-
-import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
 public class EnumParams

@@ -2,15 +2,10 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "tag": "productivemetalworks:foundry_drains"
-    },
-    {
-      "tag": "c:dyes/lime"
-    }
+    "#productivemetalworks:foundry_drains",
+    "#c:dyes/lime"
   ],
   "result": {
-    "count": 1,
     "id": "productivemetalworks:lime_foundry_drain"
   }
 }

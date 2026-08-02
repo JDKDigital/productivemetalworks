@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "X": {
-      "item": "productivemetalworks:fire_brick"
-    }
+    "X": "productivemetalworks:fire_brick"
   },
   "pattern": [
     "XXX",
@@ -12,7 +10,6 @@
     "XXX"
   ],
   "result": {
-    "count": 1,
     "id": "productivemetalworks:black_foundry_drain"
   }
 }

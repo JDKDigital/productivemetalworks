@@ -6,16 +6,13 @@
     }
   ],
   "type": "productivemetalworks:item_casting",
-  "cast": {
-    "item": "productivemetalworks:plate_cast"
-  },
+  "cast": "productivemetalworks:plate_cast",
   "consume_cast": false,
   "fluid": {
     "amount": 90,
-    "tag": "c:molten_nickel"
+    "ingredient": "#c:molten_nickel"
   },
   "result": {
-    "count": 1,
     "id": "alltheores:nickel_plate"
   }
 }

@@ -9,9 +9,7 @@
     }
   ],
   "type": "productivemetalworks:item_melting",
-  "ingredient": {
-    "tag": "c:ores/electrum"
-  },
+  "ingredient": "#c:ores/electrum",
   "maximum_temperature": 0,
   "minimum_temperature": 1000,
   "result": [

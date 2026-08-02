@@ -7,11 +7,10 @@ import cy.jdkdigital.productivemetalworks.common.datamap.UnitMap;
 import cy.jdkdigital.productivemetalworks.registry.MetalworksRegistrator;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
-import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -30,12 +29,12 @@ public class DataMapProvider extends net.neoforged.neoforge.common.data.DataMapP
         final var units = builder(MetalworksRegistrator.UNIT_MAP);
 
         fuels.add(Fluids.LAVA.builtInRegistryHolder(), new FuelMap(1500, 0.2f, 0.5f), false);
-        fuels.add(ResourceLocation.fromNamespaceAndPath("allthemodium", "soul_lava"), new FuelMap(3000, 0.1f, 1.0f), false, new ModLoadedCondition("allthemodium"));
+        fuels.add(Identifier.fromNamespaceAndPath("allthemodium", "soul_lava"), new FuelMap(3000, 0.1f, 1.0f), false, new ModLoadedCondition("allthemodium"));
 
         coils.add(MetalworksRegistrator.POWERED_HEATING_COIL, new FuelMap(1500, 30f, 0.5f), false);
         coils.add(MetalworksRegistrator.HIGH_POWERED_HEATING_COIL, new FuelMap(3000, 40f, 1.0f), false);
 
-        entityMelting.add(EntityType.PLAYER.builtInRegistryHolder(), new EntityMeltingMap(new FluidStack(MetalworksRegistrator.LIQUID_MEAT.get(), 10), 0.8f), false);
+        entityMelting.add(EntityType.PLAYER.builtInRegistryHolder(), new EntityMeltingMap(new cy.jdkdigital.productivemetalworks.util.FluidStackTemplate(MetalworksRegistrator.LIQUID_MEAT.get(), 10), 0.8f), false);
 
         var metalUnits = new UnitMap(List.of(
                 new UnitMap.Unit(10, "nugget"),
@@ -80,9 +79,9 @@ public class DataMapProvider extends net.neoforged.neoforge.common.data.DataMapP
                 }
             }
         });
-        units.add(ResourceLocation.parse("allthemodium:molten_allthemodium"), metalUnits, false, new ModLoadedCondition("allthemodium"));
-        units.add(ResourceLocation.parse("allthemodium:molten_vibranium"), metalUnits, false, new ModLoadedCondition("allthemodium"));
-        units.add(ResourceLocation.parse("allthemodium:molten_unobtainium"), metalUnits, false, new ModLoadedCondition("allthemodium"));
-        units.add(ResourceLocation.parse("integrateddynamics:menril_resin"), new UnitMap(List.of(new UnitMap.Unit(100, "chunk"), new UnitMap.Unit(900, "block"))), false, new ModLoadedCondition("integrateddynamics"));
+        units.add(Identifier.parse("allthemodium:molten_allthemodium"), metalUnits, false, new ModLoadedCondition("allthemodium"));
+        units.add(Identifier.parse("allthemodium:molten_vibranium"), metalUnits, false, new ModLoadedCondition("allthemodium"));
+        units.add(Identifier.parse("allthemodium:molten_unobtainium"), metalUnits, false, new ModLoadedCondition("allthemodium"));
+        units.add(Identifier.parse("integrateddynamics:menril_resin"), new UnitMap(List.of(new UnitMap.Unit(100, "chunk"), new UnitMap.Unit(900, "block"))), false, new ModLoadedCondition("integrateddynamics"));
     }
 }

@@ -9,9 +9,7 @@
     }
   ],
   "type": "productivemetalworks:item_melting",
-  "ingredient": {
-    "tag": "c:gears/uranium"
-  },
+  "ingredient": "#c:gears/uranium",
   "maximum_temperature": 0,
   "minimum_temperature": 1000,
   "result": [

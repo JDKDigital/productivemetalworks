@@ -1,0 +1,65 @@
+{
+  "values": [
+    {
+      "id": "#c:gems/diamond",
+      "required": false
+    },
+    {
+      "id": "#c:ores/diamond",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/diamond",
+      "required": false
+    },
+    {
+      "id": "#c:gems/emerald",
+      "required": false
+    },
+    {
+      "id": "#c:ores/emerald",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/emerald",
+      "required": false
+    },
+    {
+      "id": "#c:gems/lapis",
+      "required": false
+    },
+    {
+      "id": "#c:ores/lapis",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/lapis",
+      "required": false
+    },
+    {
+      "id": "#c:gems/amethyst",
+      "required": false
+    },
+    {
+      "id": "#c:gems/quartz",
+      "required": false
+    },
+    {
+      "id": "#c:ores/quartz",
+      "required": false
+    },
+    {
+      "id": "#c:dusts/diamond",
+      "required": false
+    },
+    {
+      "id": "#c:dusts/quartz",
+      "required": false
+    },
+    "minecraft:diamond_horse_armor",
+    "minecraft:amethyst_block",
+    "minecraft:quartz_block",
+    "minecraft:quartz_bricks",
+    "minecraft:quartz_pillar"
+  ]
+}

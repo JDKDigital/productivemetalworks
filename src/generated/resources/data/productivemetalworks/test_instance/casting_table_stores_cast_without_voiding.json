@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "environment": "productivemetalworks:casting_table_stores_cast_without_voiding_env",
+  "function": "productivemetalworks:casting_table_stores_cast_without_voiding",
+  "structure": "productivemetalworks:empty_7x7",
+  "max_ticks": 100,
+  "required": true,
+  "setup_ticks": 0
+}

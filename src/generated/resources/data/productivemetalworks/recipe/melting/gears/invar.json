@@ -9,9 +9,7 @@
     }
   ],
   "type": "productivemetalworks:item_melting",
-  "ingredient": {
-    "tag": "c:gears/invar"
-  },
+  "ingredient": "#c:gears/invar",
   "maximum_temperature": 0,
   "minimum_temperature": 1000,
   "result": [

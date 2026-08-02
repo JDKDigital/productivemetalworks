@@ -6,16 +6,13 @@
     }
   ],
   "type": "productivemetalworks:item_casting",
-  "cast": {
-    "item": "productivemetalworks:ingot_cast"
-  },
+  "cast": "productivemetalworks:ingot_cast",
   "consume_cast": false,
   "fluid": {
     "amount": 90,
-    "tag": "c:molten_lumium"
+    "ingredient": "#c:molten_lumium"
   },
   "result": {
-    "count": 1,
     "id": "alltheores:lumium_ingot"
   }
 }

@@ -6,16 +6,13 @@
     }
   ],
   "type": "productivemetalworks:item_casting",
-  "cast": {
-    "item": "productivemetalworks:rod_cast"
-  },
+  "cast": "productivemetalworks:rod_cast",
   "consume_cast": false,
   "fluid": {
     "amount": 45,
-    "tag": "c:molten_iridium"
+    "ingredient": "#c:molten_iridium"
   },
   "result": {
-    "count": 1,
     "id": "alltheores:iridium_rod"
   }
 }

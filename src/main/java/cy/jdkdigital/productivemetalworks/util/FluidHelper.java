@@ -29,7 +29,7 @@ public class FluidHelper
         if (!itemToFluidCache.containsKey(itemStack.getItem())) {
             var meltingRecipe = RecipeHelper.getItemMeltingRecipe(level, itemStack, new FuelMap(100000, 1f, 1f));
             if (meltingRecipe != null && meltingRecipe.value().result.size() == 1) {
-                itemToFluidCache.put(itemStack.getItem(), meltingRecipe.value().result.getFirst().copy());
+                itemToFluidCache.put(itemStack.getItem(), meltingRecipe.value().result.getFirst().create());
             }
         }
         return itemToFluidCache.getOrDefault(itemStack.getItem(), null);
@@ -53,9 +53,17 @@ public class FluidHelper
         return fluids;
     }
 
+    /**
+     * The fluids matched by a {@link SizedFluidIngredient}, each at the ingredient's amount.
+     * Replaces the removed {@code SizedFluidIngredient#getFluids()}.
+     */
+    public static List<FluidStack> fluidStacks(SizedFluidIngredient fluidIngredient) {
+        return fluidIngredient.ingredient().fluids().stream().map(holder -> new FluidStack(holder, fluidIngredient.amount())).toList();
+    }
+
     public static List<Component> formatTooltip(SizedFluidIngredient fluidIngredient) {
-        var firstFluid = fluidIngredient.getFluids()[0];
-        return formatTooltip(new FluidStack(firstFluid.getFluid(), fluidIngredient.amount()));
+        var firstFluid = fluidIngredient.ingredient().fluids().getFirst();
+        return formatTooltip(new FluidStack(firstFluid, fluidIngredient.amount()));
     }
     public static List<Component> formatTooltip(FluidStack fluidStack) {
         List<Component> tooltips = new ArrayList<>();

@@ -2,15 +2,10 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "tag": "productivemetalworks:fire_bricks"
-    },
-    {
-      "tag": "c:dyes/blue"
-    }
+    "#productivemetalworks:fire_bricks",
+    "#c:dyes/blue"
   ],
   "result": {
-    "count": 1,
     "id": "productivemetalworks:blue_fire_bricks"
   }
 }

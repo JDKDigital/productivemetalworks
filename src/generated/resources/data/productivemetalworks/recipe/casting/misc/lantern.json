@@ -1,15 +1,12 @@
 {
   "type": "productivemetalworks:block_casting",
-  "cast": {
-    "item": "minecraft:torch"
-  },
+  "cast": "minecraft:torch",
   "consume_cast": true,
   "fluid": {
     "amount": 80,
-    "tag": "c:molten_iron"
+    "ingredient": "#c:molten_iron"
   },
   "result": {
-    "count": 1,
     "id": "minecraft:lantern"
   }
 }

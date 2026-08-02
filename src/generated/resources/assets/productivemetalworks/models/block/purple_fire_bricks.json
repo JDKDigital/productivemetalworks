@@ -1,8 +1,6 @@
 {
-  "parent": "minecraft:block/orientable",
+  "parent": "minecraft:block/cube_all",
   "textures": {
-    "front": "productivemetalworks:block/purple_fire_bricks",
-    "side": "productivemetalworks:block/purple_fire_bricks",
-    "top": "productivemetalworks:block/purple_fire_bricks"
+    "all": "productivemetalworks:block/purple_fire_bricks"
   }
 }

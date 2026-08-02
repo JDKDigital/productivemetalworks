@@ -6,14 +6,12 @@
     }
   ],
   "type": "productivemetalworks:block_casting",
-  "cast": [],
   "consume_cast": false,
   "fluid": {
     "amount": 810,
-    "tag": "c:molten_tin"
+    "ingredient": "#c:molten_tin"
   },
   "result": {
-    "count": 1,
     "id": "alltheores:tin_block"
   }
 }

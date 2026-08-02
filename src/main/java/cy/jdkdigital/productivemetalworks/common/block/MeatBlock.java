@@ -51,7 +51,7 @@ public class MeatBlock extends RotatedPillarBlock
 
     @Override
     protected void attack(BlockState state, Level level, BlockPos pos, Player player) {
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             level.playSound(player, pos, SoundEvents.SLIME_SQUISH, SoundSource.BLOCKS);
         }
         super.attack(state, level, pos, player);
@@ -74,7 +74,7 @@ public class MeatBlock extends RotatedPillarBlock
                     Block.popResource(level, pos, Items.BONE.getDefaultInstance());
                 }
             }
-            return InteractionResult.sidedSuccess(level.isClientSide);
+            return InteractionResult.SUCCESS;
         }
     }
 }

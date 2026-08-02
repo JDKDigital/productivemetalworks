@@ -1,0 +1,77 @@
+{
+  "values": [
+    "#productivemetalworks:meltable/metals",
+    "#productivemetalworks:meltable/gems",
+    "#productivemetalworks:meltable/organic",
+    {
+      "id": "#c:dusts/redstone",
+      "required": false
+    },
+    {
+      "id": "#c:ores/redstone",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/redstone",
+      "required": false
+    },
+    {
+      "id": "#c:dusts/glowstone",
+      "required": false
+    },
+    {
+      "id": "#minecraft:coals",
+      "required": false
+    },
+    {
+      "id": "#c:ores/coal",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/coal",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/charcoal",
+      "required": false
+    },
+    {
+      "id": "#c:glass_blocks/cheap",
+      "required": false
+    },
+    {
+      "id": "#c:glass_panes",
+      "required": false
+    },
+    {
+      "id": "#c:sands",
+      "required": false
+    },
+    {
+      "id": "#c:obsidians",
+      "required": false
+    },
+    {
+      "id": "#c:ender_pearls",
+      "required": false
+    },
+    {
+      "id": "#c:shulker_boxes",
+      "required": false
+    },
+    {
+      "id": "#c:dusts/obsidian",
+      "required": false
+    },
+    "minecraft:glowstone",
+    "minecraft:ender_eye",
+    "minecraft:popped_chorus_fruit",
+    "minecraft:blaze_powder",
+    "minecraft:blaze_rod",
+    "minecraft:slime_ball",
+    "minecraft:slime_block",
+    "minecraft:magma_block",
+    "minecraft:magma_cream",
+    "minecraft:shulker_shell"
+  ]
+}

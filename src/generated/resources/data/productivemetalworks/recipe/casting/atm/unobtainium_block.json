@@ -6,14 +6,12 @@
     }
   ],
   "type": "productivemetalworks:block_casting",
-  "cast": [],
   "consume_cast": false,
   "fluid": {
     "amount": 810,
-    "fluid": "allthemodium:molten_unobtainium"
+    "ingredient": "allthemodium:molten_unobtainium"
   },
   "result": {
-    "count": 1,
     "id": "allthemodium:unobtainium_block"
   }
 }

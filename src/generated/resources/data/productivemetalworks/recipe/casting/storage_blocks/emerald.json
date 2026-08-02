@@ -1,13 +1,11 @@
 {
   "type": "productivemetalworks:block_casting",
-  "cast": [],
   "consume_cast": false,
   "fluid": {
     "amount": 900,
-    "fluid": "productivemetalworks:molten_emerald"
+    "ingredient": "productivemetalworks:molten_emerald"
   },
   "result": {
-    "count": 1,
     "id": "minecraft:emerald_block"
   }
 }

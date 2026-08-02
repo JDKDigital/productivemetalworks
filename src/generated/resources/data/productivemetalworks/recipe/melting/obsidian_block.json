@@ -1,8 +1,6 @@
 {
   "type": "productivemetalworks:item_melting",
-  "ingredient": {
-    "tag": "c:obsidians"
-  },
+  "ingredient": "#c:obsidians",
   "maximum_temperature": 0,
   "minimum_temperature": 1300,
   "result": [

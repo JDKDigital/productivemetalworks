@@ -1,15 +1,14 @@
 package cy.jdkdigital.productivemetalworks.event;
 
 import cy.jdkdigital.productivelib.event.UpgradeTooltipEvent;
-import cy.jdkdigital.productivelib.registry.LibItems;
 import cy.jdkdigital.productivemetalworks.ProductiveMetalworks;
 import cy.jdkdigital.productivemetalworks.integration.jei.ingredient.EntityRenderer;
-import net.minecraft.ChatFormatting;
+import cy.jdkdigital.productivemetalworks.registry.MetalworksRegistrator;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.event.level.LevelEvent;
 
 @EventBusSubscriber(modid = ProductiveMetalworks.MODID)
@@ -27,8 +26,19 @@ public class EventHandler
         }
     }
 
+    // 26.1: opt the foundry recipe types into client sync so JEI can display them (see MetalworksRecipeCache).
     @SubscribeEvent
-    private static void levelUnload(final LevelEvent.Unload event) {
+    public static void onDatapackSync(OnDatapackSyncEvent event) {
+        event.sendRecipes(
+                MetalworksRegistrator.ITEM_MELTING_TYPE.get(),
+                MetalworksRegistrator.ITEM_CASTING_TYPE.get(),
+                MetalworksRegistrator.BLOCK_CASTING_TYPE.get(),
+                MetalworksRegistrator.FLUID_ALLOYING_TYPE.get()
+        );
+    }
+
+    @SubscribeEvent
+    public static void levelUnload(final LevelEvent.Unload event) {
         if (event.getLevel().isClientSide()) {
             EntityRenderer.cache.clear();
         }

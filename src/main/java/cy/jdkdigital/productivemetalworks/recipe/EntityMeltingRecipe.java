@@ -3,27 +3,37 @@ package cy.jdkdigital.productivemetalworks.recipe;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import cy.jdkdigital.productivemetalworks.registry.MetalworksRegistrator;
-import net.minecraft.core.HolderLookup;
+import cy.jdkdigital.productivemetalworks.util.FluidStackTemplate;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeInput;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.List;
 
 public class EntityMeltingRecipe implements Recipe<RecipeInput>
 {
-    public final ResourceLocation entity;
-    public final List<FluidStack> result;
+    public static final MapCodec<EntityMeltingRecipe> MAP_CODEC = RecordCodecBuilder.mapCodec(
+            builder -> builder.group(
+                            Identifier.CODEC.fieldOf("entity").forGetter(recipe -> recipe.entity),
+                            FluidStackTemplate.CODEC.listOf().fieldOf("result").forGetter(recipe -> recipe.result)
+                    )
+                    .apply(builder, EntityMeltingRecipe::new)
+    );
 
-    public EntityMeltingRecipe(ResourceLocation entity, List<FluidStack> result) {
+    public static final StreamCodec<RegistryFriendlyByteBuf, EntityMeltingRecipe> STREAM_CODEC = StreamCodec.of(
+            EntityMeltingRecipe::toNetwork, EntityMeltingRecipe::fromNetwork
+    );
+
+    public static final RecipeSerializer<EntityMeltingRecipe> SERIALIZER = new RecipeSerializer<>(MAP_CODEC, STREAM_CODEC);
+
+    public final Identifier entity;
+    public final List<FluidStackTemplate> result;
+
+    public EntityMeltingRecipe(Identifier entity, List<FluidStackTemplate> result) {
         this.entity = entity;
         this.result = result;
     }
@@ -34,13 +44,33 @@ public class EntityMeltingRecipe implements Recipe<RecipeInput>
     }
 
     @Override
-    public ItemStack assemble(RecipeInput input, HolderLookup.Provider registries) {
+    public ItemStack assemble(RecipeInput input) {
         return ItemStack.EMPTY;
     }
 
     @Override
-    public boolean canCraftInDimensions(int width, int height) {
+    public RecipeSerializer<EntityMeltingRecipe> getSerializer() {
+        return MetalworksRegistrator.ENTITY_MELTING.get();
+    }
+
+    @Override
+    public RecipeType<EntityMeltingRecipe> getType() {
+        return MetalworksRegistrator.ENTITY_MELTING_TYPE.get();
+    }
+
+    @Override
+    public String group() {
+        return "";
+    }
+
+    @Override
+    public boolean showNotification() {
         return false;
+    }
+
+    @Override
+    public PlacementInfo placementInfo() {
+        return PlacementInfo.NOT_PLACEABLE;
     }
 
     @Override
@@ -49,54 +79,19 @@ public class EntityMeltingRecipe implements Recipe<RecipeInput>
     }
 
     @Override
-    public ItemStack getResultItem(HolderLookup.Provider registries) {
-        return ItemStack.EMPTY;
+    public RecipeBookCategory recipeBookCategory() {
+        return RecipeBookCategories.CRAFTING_MISC;
     }
 
-    @Override
-    public RecipeSerializer<?> getSerializer() {
-        return MetalworksRegistrator.ENTITY_MELTING.get();
-    }
-
-    @Override
-    public RecipeType<?> getType() {
-        return MetalworksRegistrator.ENTITY_MELTING_TYPE.get();
-    }
-
-    public static class Serializer implements RecipeSerializer<EntityMeltingRecipe>
-    {
-        private static final MapCodec<EntityMeltingRecipe> CODEC = RecordCodecBuilder.mapCodec(
-                builder -> builder.group(
-                                ResourceLocation.CODEC.fieldOf("entity").forGetter(recipe -> recipe.entity),
-                                FluidStack.CODEC.listOf().fieldOf("result").forGetter(recipe -> recipe.result)
-                        )
-                        .apply(builder, EntityMeltingRecipe::new)
+    public static EntityMeltingRecipe fromNetwork(RegistryFriendlyByteBuf buffer) {
+        return new EntityMeltingRecipe(
+                Identifier.STREAM_CODEC.decode(buffer),
+                FluidStackTemplate.STREAM_CODEC.apply(ByteBufCodecs.list()).decode(buffer)
         );
+    }
 
-        public static final StreamCodec<RegistryFriendlyByteBuf, EntityMeltingRecipe> STREAM_CODEC = StreamCodec.of(
-                EntityMeltingRecipe.Serializer::toNetwork, EntityMeltingRecipe.Serializer::fromNetwork
-        );
-
-        @Override
-        public MapCodec<EntityMeltingRecipe> codec() {
-            return CODEC;
-        }
-
-        @Override
-        public StreamCodec<RegistryFriendlyByteBuf, EntityMeltingRecipe> streamCodec() {
-            return STREAM_CODEC;
-        }
-
-        public static EntityMeltingRecipe fromNetwork(RegistryFriendlyByteBuf buffer) {
-            return new EntityMeltingRecipe(
-                    ResourceLocation.STREAM_CODEC.decode(buffer),
-                    FluidStack.STREAM_CODEC.apply(ByteBufCodecs.list()).decode(buffer)
-            );
-        }
-
-        public static void toNetwork(RegistryFriendlyByteBuf buffer, EntityMeltingRecipe recipe) {
-            ResourceLocation.STREAM_CODEC.encode(buffer, recipe.entity);
-            FluidStack.STREAM_CODEC.apply(ByteBufCodecs.list()).encode(buffer, recipe.result);
-        }
+    public static void toNetwork(RegistryFriendlyByteBuf buffer, EntityMeltingRecipe recipe) {
+        Identifier.STREAM_CODEC.encode(buffer, recipe.entity);
+        FluidStackTemplate.STREAM_CODEC.apply(ByteBufCodecs.list()).encode(buffer, recipe.result);
     }
 }

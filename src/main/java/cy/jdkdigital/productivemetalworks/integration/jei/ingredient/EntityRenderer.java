@@ -1,15 +1,16 @@
 package cy.jdkdigital.productivemetalworks.integration.jei.ingredient;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
-import cy.jdkdigital.productivemetalworks.registry.MetalworksRegistrator;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySpawnReason;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -17,42 +18,41 @@ import java.util.Map;
 
 public class EntityRenderer
 {
-    public static Map<ResourceLocation, Entity> cache = new HashMap<>();
+    public static Map<Identifier, Entity> cache = new HashMap<>();
 
     @Nullable
-    public static Entity get(ResourceLocation entityId, Minecraft minecraft) {
-        return entityId.equals(ResourceLocation.parse("minecraft:player")) ? minecraft.player : cache.getOrDefault(entityId, null);
+    public static Entity get(Identifier entityId, Minecraft minecraft) {
+        return entityId.equals(Identifier.parse("minecraft:player")) ? minecraft.player : cache.getOrDefault(entityId, null);
     }
 
-    public static void render(GuiGraphics guiGraphics, int xPosition, int yPosition, ResourceLocation entityId, Minecraft minecraft) {
+    public static void render(GuiGraphicsExtractor guiGraphics, int xPosition, int yPosition, Identifier entityId, Minecraft minecraft) {
         if (!cache.containsKey(entityId) && minecraft.level != null) {
-            cache.put(entityId, BuiltInRegistries.ENTITY_TYPE.get(entityId).create(minecraft.level));
+            Entity entity = BuiltInRegistries.ENTITY_TYPE.get(entityId)
+                    .map(Holder::value)
+                    .map(type -> type.create(minecraft.level, EntitySpawnReason.LOAD))
+                    .orElse(null);
+            cache.put(entityId, entity);
         }
 
         render(guiGraphics, xPosition, yPosition, get(entityId, minecraft), minecraft);
     }
 
-    public static void render(GuiGraphics guiGraphics, int xPosition, int yPosition, @Nullable Entity entity, Minecraft minecraft) {
-        if (minecraft.player != null && entity != null) {
-            var data = entity.getType().builtInRegistryHolder().getData(MetalworksRegistrator.ENTITY_MELTING_MAP);
-            float scaledSize = 18 * (data != null ? data.scale() : 1.0f);
-
-            entity.tickCount = minecraft.player.tickCount;
-            entity.setYBodyRot(-20);
-
-            PoseStack postStack = guiGraphics.pose();
-            postStack.pushPose();
-            postStack.translate(7D + xPosition, 12D + yPosition, 1.5);
-            postStack.mulPose(Axis.ZP.rotationDegrees(190.0F));
-            postStack.mulPose(Axis.YP.rotationDegrees(20.0F));
-            postStack.mulPose(Axis.XP.rotationDegrees(20.0F));
-            postStack.translate(0.0F, -0.2F, 1);
-            postStack.scale(scaledSize, scaledSize, scaledSize);
-
-            EntityRenderDispatcher entityRendererManager = minecraft.getEntityRenderDispatcher();
-            MultiBufferSource.BufferSource buffer = minecraft.renderBuffers().bufferSource();
-            entityRendererManager.render(entity, 0, 0, 0.0D, minecraft.getFrameTimeNs(), 1, postStack, buffer, 15728880);
-            postStack.popPose();
+    // 26.1: live entity preview now goes through the extract/submit render-state pipeline —
+    // EntityRenderDispatcher#extractEntity produces an EntityRenderState that GuiGraphicsExtractor#entity submits.
+    public static void render(GuiGraphicsExtractor guiGraphics, int xPosition, int yPosition, @Nullable Entity entity, Minecraft minecraft) {
+        if (entity == null) {
+            return;
         }
+        EntityRenderState renderState = minecraft.getEntityRenderDispatcher().extractEntity(entity, 0.0F);
+
+        float bbMax = Math.max(entity.getBbWidth(), entity.getBbHeight());
+        float scale = 16.0F / Math.max(bbMax, 0.001F) * 0.85F;
+
+        // Face the viewer; the default GUI entity camera looks 30° down, so cancel that out.
+        Quaternionf cameraAngle = new Quaternionf().rotationXYZ(0.0F, Mth.PI, Mth.PI);
+        Vector3f translation = new Vector3f(0.0F, entity.getBbHeight() * -0.5F, 0.0F);
+        Quaternionf rotation = new Quaternionf().rotationY(Mth.PI);
+
+        guiGraphics.entity(renderState, scale, translation, rotation, cameraAngle, xPosition - 16, yPosition - 16, xPosition + 16, yPosition + 16);
     }
 }

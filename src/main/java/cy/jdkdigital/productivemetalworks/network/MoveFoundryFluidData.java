@@ -7,12 +7,12 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public record MoveFoundryFluidData(BlockPos pos, int tank) implements CustomPacketPayload
 {
-    public static final Type<MoveFoundryFluidData> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "move_foundry_fluid_data"));
+    public static final Type<MoveFoundryFluidData> TYPE = new Type<>(Identifier.fromNamespaceAndPath(ProductiveMetalworks.MODID, "move_foundry_fluid_data"));
 
     public static final StreamCodec<ByteBuf, MoveFoundryFluidData> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.fromCodec(BlockPos.CODEC),

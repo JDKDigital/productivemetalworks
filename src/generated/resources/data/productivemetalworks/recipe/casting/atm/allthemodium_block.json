@@ -6,14 +6,12 @@
     }
   ],
   "type": "productivemetalworks:block_casting",
-  "cast": [],
   "consume_cast": false,
   "fluid": {
     "amount": 810,
-    "fluid": "allthemodium:molten_allthemodium"
+    "ingredient": "allthemodium:molten_allthemodium"
   },
   "result": {
-    "count": 1,
     "id": "allthemodium:allthemodium_block"
   }
 }

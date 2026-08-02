@@ -1,29 +1,13 @@
 {
-  "neoforge:conditions": [
-    {
-      "type": "neoforge:not",
-      "value": {
-        "type": "productivelib:fluid_tag_empty",
-        "tag": "c:molten_silver"
-      }
-    },
-    {
-      "type": "neoforge:not",
-      "value": {
-        "type": "productivelib:fluid_tag_empty",
-        "tag": "c:molten_gold"
-      }
-    }
-  ],
   "type": "productivemetalworks:fluid_alloying",
   "fluids": [
     {
       "amount": 1,
-      "tag": "c:molten_silver"
+      "ingredient": "#c:molten_silver"
     },
     {
       "amount": 1,
-      "tag": "c:molten_gold"
+      "ingredient": "#c:molten_gold"
     }
   ],
   "result": {

@@ -6,16 +6,13 @@
     }
   ],
   "type": "productivemetalworks:item_casting",
-  "cast": {
-    "item": "productivemetalworks:gear_cast"
-  },
+  "cast": "productivemetalworks:gear_cast",
   "consume_cast": false,
   "fluid": {
     "amount": 720,
-    "fluid": "allthemodium:molten_unobtainium"
+    "ingredient": "allthemodium:molten_unobtainium"
   },
   "result": {
-    "count": 1,
     "id": "allthemodium:unobtainium_gear"
   }
 }

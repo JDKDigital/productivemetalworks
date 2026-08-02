@@ -1,43 +1,31 @@
 package cy.jdkdigital.productivemetalworks.common.block.entity;
 
 import cy.jdkdigital.productivelib.common.block.entity.CapabilityBlockEntity;
-import cy.jdkdigital.productivelib.common.block.entity.FluidTankBlockEntity;
 import cy.jdkdigital.productivelib.common.block.entity.IMultiBlockPeripheralBlockEntity;
-import cy.jdkdigital.productivemetalworks.ProductiveMetalworks;
 import cy.jdkdigital.productivemetalworks.registry.MetalworksRegistrator;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.energy.EnergyStorage;
-import net.neoforged.neoforge.fluids.FluidUtil;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.transfer.energy.EnergyHandler;
+import net.neoforged.neoforge.transfer.energy.SimpleEnergyHandler;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 public class FoundryCapacitorBlockEntity extends CapabilityBlockEntity implements IMultiBlockPeripheralBlockEntity
 {
     private BlockPos controllerPosition;
     private int tickCounter = 0;
 
-    public EnergyStorage energyHandler = new EnergyStorage(40000) {
+    public SimpleEnergyHandler energyHandler = new SimpleEnergyHandler(40000, 40000, 40000) {
         @Override
-        public int receiveEnergy(int toReceive, boolean simulate) {
-            var receivedEnergy = super.receiveEnergy(toReceive, simulate);
-            if (receivedEnergy > 0 && level instanceof ServerLevel) {
+        protected void onEnergyChanged(int previousAmount) {
+            super.onEnergyChanged(previousAmount);
+            if (level instanceof ServerLevel) {
                 sync(level);
             }
-            return receivedEnergy;
-        }
-
-        @Override
-        public int extractEnergy(int toExtract, boolean simulate) {
-            var extractedEnergy = super.extractEnergy(toExtract, simulate);
-            if (extractedEnergy > 0 && level instanceof ServerLevel) {
-                sync(level);
-            }
-            return extractedEnergy;
         }
     };
 
@@ -46,7 +34,7 @@ public class FoundryCapacitorBlockEntity extends CapabilityBlockEntity implement
     }
 
     @Override
-    public EnergyStorage getEnergyHandler() {
+    public EnergyHandler getEnergyHandler() {
         return energyHandler;
     }
 
@@ -61,21 +49,19 @@ public class FoundryCapacitorBlockEntity extends CapabilityBlockEntity implement
     }
 
     @Override
-    public void savePacketNBT(CompoundTag tag, HolderLookup.Provider provider) {
-        super.savePacketNBT(tag, provider);
+    public void savePacketNBT(ValueOutput output) {
+        super.savePacketNBT(output);
 
         if (this.controllerPosition != null) {
-            tag.putLong("controller", this.controllerPosition.asLong());
+            output.putLong("controller", this.controllerPosition.asLong());
         }
     }
 
     @Override
-    public void loadPacketNBT(CompoundTag tag, HolderLookup.Provider provider) {
-        super.loadPacketNBT(tag, provider);
+    public void loadPacketNBT(ValueInput input) {
+        super.loadPacketNBT(input);
 
-        if (tag.contains("controller")) {
-            this.controllerPosition = BlockPos.of(tag.getLong("controller"));
-        }
+        input.getLong("controller").ifPresent(l -> this.controllerPosition = BlockPos.of(l));
     }
 
     public void sync(Level level) {
@@ -90,31 +76,17 @@ public class FoundryCapacitorBlockEntity extends CapabilityBlockEntity implement
             if (mb != null) {
                 mb.peripherals().forEach(pos -> {
                     if (!pos.equals(capacitorBlockEntity.getBlockPos()) && level.getBlockEntity(pos) instanceof FoundryCapacitorBlockEntity otherCapacitor) {
-                        int energyDiff = capacitorBlockEntity.getEnergyHandler().getEnergyStored() - otherCapacitor.getEnergyHandler().getEnergyStored();
+                        int energyDiff = capacitorBlockEntity.energyHandler.getAmountAsInt() - otherCapacitor.energyHandler.getAmountAsInt();
                         if (energyDiff > 0) {
-                            int transferred = otherCapacitor.getEnergyHandler().receiveEnergy((int)Math.ceil(energyDiff/2d), false);
-                            capacitorBlockEntity.getEnergyHandler().extractEnergy(transferred, false);
+                            try (Transaction tx = Transaction.openRoot()) {
+                                int transferred = otherCapacitor.energyHandler.insert((int)Math.ceil(energyDiff/2d), tx);
+                                capacitorBlockEntity.energyHandler.extract(transferred, tx);
+                                tx.commit();
+                            }
                         }
                     }
                 });
             }
         }
     }
-
-//    @Override
-//    protected void applyImplicitComponents(DataComponentInput componentInput) {
-//        super.applyImplicitComponents(componentInput);
-//        ImmutableFluidStack fluid = componentInput.getOrDefault(MetalworksRegistrator.FLUID_STACK.get(), ImmutableFluidStack.EMPTY);
-//        if (!fluid.fluid().isEmpty()) {
-//            this.getEnergyHandler().setFluid(fluid.fluid().copy());
-//        }
-//    }
-//
-//    @Override
-//    protected void collectImplicitComponents(DataComponentMap.Builder components) {
-//        super.collectImplicitComponents(components);
-//        if (!this.getFluidHandler().getFluid().isEmpty()) {
-//            components.set(MetalworksRegistrator.FLUID_STACK.get(), new ImmutableFluidStack(this.getFluidHandler().getFluid().copy()));
-//        }
-//    }
 }

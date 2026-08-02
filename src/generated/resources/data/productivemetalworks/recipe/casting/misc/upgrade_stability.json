@@ -1,15 +1,12 @@
 {
   "type": "productivemetalworks:item_casting",
-  "cast": {
-    "item": "productivelib:upgrade_base"
-  },
+  "cast": "productivelib:upgrade_base",
   "consume_cast": true,
   "fluid": {
     "amount": 100,
-    "tag": "c:molten_ender"
+    "ingredient": "#c:molten_ender"
   },
   "result": {
-    "count": 1,
     "id": "productivelib:upgrade_stability"
   }
 }

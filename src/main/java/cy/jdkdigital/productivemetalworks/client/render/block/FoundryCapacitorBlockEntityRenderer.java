@@ -1,39 +1,68 @@
 package cy.jdkdigital.productivemetalworks.client.render.block;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
+import cy.jdkdigital.productivelib.client.FluidRenderHelper;
 import cy.jdkdigital.productivemetalworks.ProductiveMetalworks;
 import cy.jdkdigital.productivemetalworks.common.block.entity.FoundryCapacitorBlockEntity;
-import cy.jdkdigital.productivemetalworks.util.RenderHelper;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.sprite.SpriteId;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.material.Fluids;
-import net.neoforged.neoforge.fluids.FluidStack;
+import net.minecraft.world.phys.Vec3;
+import org.jspecify.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 
-public class FoundryCapacitorBlockEntityRenderer implements BlockEntityRenderer<FoundryCapacitorBlockEntity>
+public class FoundryCapacitorBlockEntityRenderer implements BlockEntityRenderer<FoundryCapacitorBlockEntity, FoundryCapacitorBlockEntityRenderer.CapacitorRenderState>
 {
-    static ResourceLocation POWER = ResourceLocation.fromNamespaceAndPath(ProductiveMetalworks.MODID, "block/power_level");
+    private static final SpriteId POWER = new SpriteId(TextureAtlas.LOCATION_BLOCKS, Identifier.fromNamespaceAndPath(ProductiveMetalworks.MODID, "block/power_level"));
+
+    private final TextureAtlasSprite powerSprite;
 
     public FoundryCapacitorBlockEntityRenderer(BlockEntityRendererProvider.Context context) {
+        this.powerSprite = context.sprites().get(POWER);
     }
 
-    public void render(FoundryCapacitorBlockEntity blockEntity, float partialTicks, @Nonnull PoseStack poseStack, @Nonnull MultiBufferSource bufferSource, int combinedLightIn, int combinedOverlayIn) {
-        if (blockEntity.getLevel() != null && blockEntity.getEnergyHandler().getMaxEnergyStored() > 0) {
-            Direction facing = blockEntity.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING);
-            float f = 12f - (12f * blockEntity.getEnergyHandler().getEnergyStored() / (float) blockEntity.getEnergyHandler().getMaxEnergyStored());
+    @Override
+    public CapacitorRenderState createRenderState() {
+        return new CapacitorRenderState();
+    }
 
+    @Override
+    public void extractRenderState(FoundryCapacitorBlockEntity be, CapacitorRenderState state, float partialTicks, @Nonnull Vec3 cameraPos, ModelFeatureRenderer.@Nullable CrumblingOverlay crumbling) {
+        BlockEntityRenderState.extractBase(be, state, crumbling);
+
+        state.render = be.getLevel() != null && be.getEnergyHandler().getCapacityAsInt() > 0;
+        if (state.render) {
+            state.facing = be.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING);
+            state.fill = 12f - (12f * be.getEnergyHandler().getAmountAsInt() / (float) be.getEnergyHandler().getCapacityAsInt());
+        }
+    }
+
+    @Override
+    public void submit(CapacitorRenderState state, @Nonnull PoseStack poseStack, @Nonnull SubmitNodeCollector collector, @Nonnull CameraRenderState cameraState) {
+        if (state.render) {
             poseStack.pushPose();
-            VertexConsumer vertexBuffer = bufferSource.getBuffer(RenderType.cutout());
-            RenderHelper.renderCenteredTexturedSide(poseStack, vertexBuffer, facing, POWER, 6f, 1.99f * RenderHelper.pixelFraction, (14f - f) * RenderHelper.pixelFraction, combinedLightIn, combinedOverlayIn);
+            collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(TextureAtlas.LOCATION_BLOCKS), (pose, buffer) ->
+                    FluidRenderHelper.renderTexturedSide(pose.pose(), buffer, state.facing, this.powerSprite, 6f, 1.99f * FluidRenderHelper.pixelFraction, (14f - state.fill) * FluidRenderHelper.pixelFraction, state.lightCoords, OverlayTexture.NO_OVERLAY));
             poseStack.popPose();
         }
+    }
+
+    public static class CapacitorRenderState extends BlockEntityRenderState
+    {
+        public boolean render;
+        public Direction facing = Direction.NORTH;
+        public float fill;
     }
 }

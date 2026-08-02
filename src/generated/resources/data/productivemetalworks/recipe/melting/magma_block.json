@@ -1,8 +1,6 @@
 {
   "type": "productivemetalworks:item_melting",
-  "ingredient": {
-    "item": "minecraft:magma_block"
-  },
+  "ingredient": "minecraft:magma_block",
   "maximum_temperature": 0,
   "minimum_temperature": 1000,
   "result": [

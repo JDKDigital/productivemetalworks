@@ -7,54 +7,40 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-@EventBusSubscriber(modid = ProductiveMetalworks.MODID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = ProductiveMetalworks.MODID)
 public class MetalworksDataProvider
 {
+    // 26.1: GatherDataEvent split into .Client / .Server; ExistingFileHelper was removed. Everything runs from
+    // the client data event (matching the productivebees 26.1 port). patchouli / fusion / clayworks compat was
+    // dropped (no 26.1.2 builds), so the GuideBook + Fusion providers are gone.
     @SubscribeEvent
-    public static void gatherData(GatherDataEvent event) {
-        if (event.getModContainer().getModId().equals(ProductiveMetalworks.MODID)) {
-            Data.gatherData(event);
-        }
-    }
+    public static void gatherData(GatherDataEvent.Client event) {
+        DataGenerator gen = event.getGenerator();
+        PackOutput output = gen.getPackOutput();
+        CompletableFuture<HolderLookup.Provider> provider = event.getLookupProvider();
 
-    static class Data
-    {
-        private static void gatherData(GatherDataEvent event) {
-            DataGenerator gen = event.getGenerator();
-            PackOutput output = event.getGenerator().getPackOutput();
-            CompletableFuture<HolderLookup.Provider> provider = event.getLookupProvider();
-            ExistingFileHelper helper = event.getExistingFileHelper();
+        gen.addProvider(true, new LanguageProvider(output, "en_us"));
 
-            gen.addProvider(event.includeClient(), new LanguageProvider(output, "en_us"));
+        gen.addProvider(true, new BlockModelProvider(output));
 
-            gen.addProvider(event.includeClient(), new BlockModelProvider(output));
-            gen.addProvider(event.includeClient(), new ItemModelProvider(output, helper));
+        gen.addProvider(true, new LootDataProvider(output, List.of(new LootTableProvider.SubProviderEntry(LootDataProvider.LootProvider::new, LootContextParamSets.BLOCK)), provider));
+        gen.addProvider(true, new RecipeProvider.Runner(output, provider));
 
-            gen.addProvider(event.includeServer(), new LootDataProvider(output, List.of(new LootTableProvider.SubProviderEntry(LootDataProvider.LootProvider::new, LootContextParamSets.BLOCK)), provider));
-            gen.addProvider(event.includeServer(), new RecipeProvider(output, provider));
+        BlockTagProvider blockTags = new BlockTagProvider(output, provider);
+        gen.addProvider(true, blockTags);
+        gen.addProvider(true, new ItemTagProvider(output, provider, blockTags.contentsGetter()));
+        gen.addProvider(true, new FluidTagProvider(output, provider));
+        gen.addProvider(true, new LootModifierProvider(output, provider));
+        gen.addProvider(true, new DataMapProvider(output, provider));
 
-            BlockTagProvider blockTags = new BlockTagProvider(output, provider, helper);
-            gen.addProvider(event.includeServer(), blockTags);
-            gen.addProvider(event.includeServer(), new ItemTagProvider(output, provider, blockTags.contentsGetter(), helper));
-            gen.addProvider(event.includeServer(), new FluidTagProvider(output, provider, helper));
-            gen.addProvider(event.includeServer(), new LootModifierProvider(output, provider));
-            gen.addProvider(event.includeServer(), new DataMapProvider(output, provider));
-
-            if (ModList.get().isLoaded("patchouli")) {
-                gen.addProvider(true, new GuideBookProvider(output, "en_us", provider));
-            }
-            if (ModList.get().isLoaded("fusion")) {
-                gen.addProvider(event.includeClient(), new FusionBlockModelProvider(output));
-                gen.addProvider(event.includeClient(), new FusionTextureMetadataProvider(output));
-            }
-        }
+        // GameTest playground structure + one test_instance/test_environment JSON per registered test.
+        gen.addProvider(true, new cy.jdkdigital.productivemetalworks.gametest.GameTestStructureProvider(output));
+        gen.addProvider(true, new cy.jdkdigital.productivemetalworks.gametest.TestEntriesProvider(output));
     }
 }

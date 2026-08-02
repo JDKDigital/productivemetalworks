@@ -6,16 +6,13 @@
     }
   ],
   "type": "productivemetalworks:item_casting",
-  "cast": {
-    "item": "productivemetalworks:nugget_cast"
-  },
+  "cast": "productivemetalworks:nugget_cast",
   "consume_cast": false,
   "fluid": {
     "amount": 10,
-    "tag": "c:molten_silver"
+    "ingredient": "#c:molten_silver"
   },
   "result": {
-    "count": 1,
     "id": "alltheores:silver_nugget"
   }
 }

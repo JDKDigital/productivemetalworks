@@ -2,19 +2,13 @@ package cy.jdkdigital.productivemetalworks.common.block;
 
 import com.mojang.serialization.MapCodec;
 import cy.jdkdigital.productivelib.common.block.IMultiBlockPeripheral;
-import cy.jdkdigital.productivemetalworks.ProductiveMetalworks;
 import cy.jdkdigital.productivemetalworks.common.block.entity.FoundryTankBlockEntity;
 import cy.jdkdigital.productivemetalworks.registry.MetalworksRegistrator;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
@@ -27,12 +21,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.BlockHitResult;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.fluids.FluidUtil;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidUtil;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
 
 public class FoundryTankBlock extends BaseEntityBlock implements IMultiBlockPeripheral
 {
@@ -72,58 +62,21 @@ public class FoundryTankBlock extends BaseEntityBlock implements IMultiBlockPeri
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
-        return level.isClientSide ? null : createTickerHelper(blockEntityType, MetalworksRegistrator.FOUNDRY_TANK_BLOCK_ENTITY.get(), FoundryTankBlockEntity::serverTick);
+        return level.isClientSide() ? null : createTickerHelper(blockEntityType, MetalworksRegistrator.FOUNDRY_TANK_BLOCK_ENTITY.get(), FoundryTankBlockEntity::serverTick);
     }
 
-    @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
-        if (stack.has(MetalworksRegistrator.FLUID_STACK.get())) {
-            var fluid = stack.get(MetalworksRegistrator.FLUID_STACK.get());
-            if (fluid != null) {
-                tooltipComponents.add(Component.translatable("block." + ProductiveMetalworks.MODID + "foundry_tank.fluid_tooltip", fluid.fluid().getAmount(), Component.translatable(fluid.fluid().getFluidType().getDescriptionId())).withStyle(ChatFormatting.LIGHT_PURPLE));
-            }
-        }
-    }
+    // PORT-TODO (26.1): tooltip moved off Block (appendHoverText removed). Reinstate via a custom
+    //  BlockItem subclass that reads the FLUID_STACK data component.
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if (level.getBlockEntity(pos) instanceof FoundryTankBlockEntity blockEntity && stack.getCapability(Capabilities.FluidHandler.ITEM) != null) {
-            if (level instanceof ServerLevel) {
-                var containerHasFluid = FluidUtil.getFluidHandler(player.getItemInHand(hand)).map(handler -> !handler.getFluidInTank(0).isEmpty()).orElse(false);
-                // Try to insert/extract into tanks above and below, start with the one being interacted with
-                int j = 0;
-                while (level.getBlockEntity(pos.below(j)) instanceof FoundryTankBlockEntity tank && j < 50) {
-                    if (containerHasFluid) {
-                        var fluidActionResult = FluidUtil.tryEmptyContainerAndStow(player.getItemInHand(hand), tank.getFluidHandler(), player.getCapability(Capabilities.ItemHandler.ENTITY), Integer.MAX_VALUE, player, true);
-                        if (fluidActionResult.isSuccess()) {
-                            player.setItemInHand(hand, fluidActionResult.getResult());
-                        }
-                    } else {
-                        var fluidActionResult = FluidUtil.tryFillContainerAndStow(player.getItemInHand(hand), tank.getFluidHandler(), player.getCapability(Capabilities.ItemHandler.ENTITY), Integer.MAX_VALUE, player, true);
-                        if (fluidActionResult.isSuccess()) {
-                            player.setItemInHand(hand, fluidActionResult.getResult());
-                        }
-                    }
-                    j++;
-                }
-                int i = 1;
-                while (level.getBlockEntity(pos.above(i)) instanceof FoundryTankBlockEntity tank && i < 50) {
-                    if (containerHasFluid) {
-                        var fluidActionResult = FluidUtil.tryEmptyContainerAndStow(player.getItemInHand(hand), tank.getFluidHandler(), player.getCapability(Capabilities.ItemHandler.ENTITY), Integer.MAX_VALUE, player, true);
-                        if (fluidActionResult.isSuccess()) {
-                            player.setItemInHand(hand, fluidActionResult.getResult());
-                        }
-                    } else {
-                        var fluidActionResult = FluidUtil.tryFillContainerAndStow(player.getItemInHand(hand), tank.getFluidHandler(), player.getCapability(Capabilities.ItemHandler.ENTITY), Integer.MAX_VALUE, player, true);
-                        if (fluidActionResult.isSuccess()) {
-                            player.setItemInHand(hand, fluidActionResult.getResult());
-                        }
-                    }
-                    i++;
-                }
-            }
-            return ItemInteractionResult.sidedSuccess(level.isClientSide);
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        // Run on both sides (interactWithFluidHandler commits, so the client prediction matches the server)
+        // and return SUCCESS to suppress the bucket's default place-fluid action. Without the client-side
+        // path the client falls through and mis-places the fluid as a block. Gravity transfer
+        // (tickFluidTank) then spreads the fluid across the stacked tank column.
+        if (level.getBlockEntity(pos) instanceof FoundryTankBlockEntity blockEntity
+                && FluidUtil.interactWithFluidHandler(player, hand, pos, blockEntity.getFluidHandler())) {
+            return InteractionResult.SUCCESS;
         }
         return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
     }

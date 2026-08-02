@@ -9,9 +9,7 @@
     }
   ],
   "type": "productivemetalworks:item_melting",
-  "ingredient": {
-    "tag": "c:gears/iridium"
-  },
+  "ingredient": "#c:gears/iridium",
   "maximum_temperature": 0,
   "minimum_temperature": 1000,
   "result": [

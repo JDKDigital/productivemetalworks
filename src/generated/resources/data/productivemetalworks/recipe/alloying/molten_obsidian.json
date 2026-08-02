@@ -1,29 +1,13 @@
 {
-  "neoforge:conditions": [
-    {
-      "type": "neoforge:not",
-      "value": {
-        "type": "productivelib:fluid_tag_empty",
-        "tag": "minecraft:water"
-      }
-    },
-    {
-      "type": "neoforge:not",
-      "value": {
-        "type": "productivelib:fluid_tag_empty",
-        "tag": "minecraft:lava"
-      }
-    }
-  ],
   "type": "productivemetalworks:fluid_alloying",
   "fluids": [
     {
       "amount": 1,
-      "tag": "minecraft:water"
+      "ingredient": "#minecraft:water"
     },
     {
       "amount": 2,
-      "tag": "minecraft:lava"
+      "ingredient": "#minecraft:lava"
     }
   ],
   "result": {

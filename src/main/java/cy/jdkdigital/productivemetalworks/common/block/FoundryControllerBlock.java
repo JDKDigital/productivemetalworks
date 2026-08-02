@@ -16,12 +16,12 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
@@ -93,20 +93,20 @@ public class FoundryControllerBlock extends CapabilityContainerBlock implements 
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess ticks, BlockPos pos, Direction direction, BlockPos neighbourPos, BlockState neighbourState, RandomSource random) {
         if (level instanceof ServerLevel serverLevel && serverLevel.getBlockEntity(pos) instanceof FoundryControllerBlockEntity blockEntity) {
             try {
                 blockEntity.setMultiBlockData(detectMultiblock(serverLevel, pos));
             } catch (InvalidStructureException ise) {
             }
         }
-        return super.updateShape(state, direction, neighborState, level, pos, neighborPos);
+        return super.updateShape(state, level, ticks, pos, direction, neighbourPos, neighbourState, random);
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
-        return createTickerHelper(blockEntityType, MetalworksRegistrator.FOUNDRY_CONTROLLER_BLOCK_ENTITY.get(), level.isClientSide ? FoundryControllerBlockEntity::clientTick : FoundryControllerBlockEntity::serverTick);
+        return createTickerHelper(blockEntityType, MetalworksRegistrator.FOUNDRY_CONTROLLER_BLOCK_ENTITY.get(), level.isClientSide() ? FoundryControllerBlockEntity::clientTick : FoundryControllerBlockEntity::serverTick);
     }
 
     @Override
@@ -114,41 +114,35 @@ public class FoundryControllerBlock extends CapabilityContainerBlock implements 
         if (level.getBlockEntity(pos) instanceof FoundryControllerBlockEntity blockEntity) {
             try {
                 blockEntity.setMultiBlockData(detectMultiblock(level, pos));
-                if (!level.isClientSide) {
+                if (!level.isClientSide()) {
                     player.openMenu(blockEntity, pos);
                 }
             } catch (InvalidStructureException ise) {
-                if (!level.isClientSide) {
+                if (!level.isClientSide()) {
                     player.sendSystemMessage(Component.translatable(ProductiveMetalworks.MODID + ".message.foundry_invalid", ise.getMessage(), "" + level.getBlockState(ise.getPos())));
                 }
             }
         }
-        return InteractionResult.sidedSuccess(level.isClientSide);
+        return InteractionResult.SUCCESS;
     }
 
-    @SuppressWarnings("deprecation")
     @Override
-    public void onRemove(BlockState oldState, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
-        if (oldState.getBlock() != newState.getBlock()) {
-            if (level.getBlockEntity(pos) instanceof FoundryControllerBlockEntity blockEntity) {
-                // Drop inventory
-                for (int slot = 0; slot < blockEntity.getItemHandler().getSlots(); ++slot) {
-                    Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), blockEntity.getItemHandler().getStackInSlot(slot));
-                }
-                // Mark heating coils as inactive
-                var mb = blockEntity.getMultiblockData();
-                if (mb != null) {
-                    var controllerFacing = oldState.getValue(BlockStateProperties.HORIZONTAL_FACING);
-                    BlockPos.betweenClosedStream(mb.topCorners().getFirst().relative(controllerFacing.getOpposite()).relative(controllerFacing.getCounterClockWise()).below(mb.height()), mb.topCorners().getSecond().relative(controllerFacing).relative(controllerFacing.getClockWise()).below(mb.height())).forEach(blockPos -> {
-                        var state = level.getBlockState(blockPos);
-                        if (state.hasProperty(BlockStateProperties.ATTACHED)) {
-                            level.setBlockAndUpdate(blockPos, state.setValue(BlockStateProperties.ATTACHED, false));
-                        }
-                    });
-                }
+    protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos, boolean movedByPiston) {
+        // Inventory drop is handled by CapabilityBlockEntity#preRemoveSideEffects in 26.1.
+        if (level.getBlockEntity(pos) instanceof FoundryControllerBlockEntity blockEntity) {
+            // Mark heating coils as inactive
+            var mb = blockEntity.getMultiblockData();
+            if (mb != null) {
+                var controllerFacing = state.getValue(BlockStateProperties.HORIZONTAL_FACING);
+                BlockPos.betweenClosedStream(mb.topCorners().getFirst().relative(controllerFacing.getOpposite()).relative(controllerFacing.getCounterClockWise()).below(mb.height()), mb.topCorners().getSecond().relative(controllerFacing).relative(controllerFacing.getClockWise()).below(mb.height())).forEach(blockPos -> {
+                    var coilState = level.getBlockState(blockPos);
+                    if (coilState.hasProperty(BlockStateProperties.ATTACHED)) {
+                        level.setBlockAndUpdate(blockPos, coilState.setValue(BlockStateProperties.ATTACHED, false));
+                    }
+                });
             }
         }
-        super.onRemove(oldState, level, pos, newState, isMoving);
+        super.affectNeighborsAfterRemoval(state, level, pos, movedByPiston);
     }
 
     public static MultiBlockDetector.MultiBlockData detectMultiblock(Level level, BlockPos pos) throws InvalidStructureException {

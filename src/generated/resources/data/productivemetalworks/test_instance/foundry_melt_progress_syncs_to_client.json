@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "environment": "productivemetalworks:foundry_melt_progress_syncs_to_client_env",
+  "function": "productivemetalworks:foundry_melt_progress_syncs_to_client",
+  "structure": "productivemetalworks:empty_7x7",
+  "max_ticks": 100,
+  "required": true,
+  "setup_ticks": 0
+}

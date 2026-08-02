@@ -3,13 +3,8 @@ package cy.jdkdigital.productivemetalworks.common.block;
 import com.mojang.serialization.MapCodec;
 import cy.jdkdigital.productivelib.common.block.IMultiBlockPeripheral;
 import cy.jdkdigital.productivemetalworks.common.block.entity.FoundryCapacitorBlockEntity;
-import cy.jdkdigital.productivemetalworks.common.block.entity.FoundryTankBlockEntity;
 import cy.jdkdigital.productivemetalworks.registry.MetalworksRegistrator;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
@@ -22,8 +17,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
 
 public class FoundryCapacitorBlock extends BaseEntityBlock implements IMultiBlockPeripheral
 {
@@ -63,17 +56,9 @@ public class FoundryCapacitorBlock extends BaseEntityBlock implements IMultiBloc
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
-        return level.isClientSide ? null : createTickerHelper(blockEntityType, MetalworksRegistrator.FOUNDRY_CAPACITOR_BLOCK_ENTITY.get(), FoundryCapacitorBlockEntity::serverTick);
+        return level.isClientSide() ? null : createTickerHelper(blockEntityType, MetalworksRegistrator.FOUNDRY_CAPACITOR_BLOCK_ENTITY.get(), FoundryCapacitorBlockEntity::serverTick);
     }
 
-    @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
-//        if (stack.has(MetalworksRegistrator.FLUID_STACK.get())) {
-//            var fluid = stack.get(MetalworksRegistrator.FLUID_STACK.get());
-//            if (fluid != null) {
-//                tooltipComponents.add(Component.translatable("block." + ProductiveMetalworks.MODID + "foundry_tank.fluid_tooltip", fluid.fluid().getAmount(), Component.translatable(fluid.fluid().getFluidType().getDescriptionId())).withStyle(ChatFormatting.LIGHT_PURPLE));
-//            }
-//        }
-    }
+    // PORT-TODO (26.1): Block#appendHoverText removed — reinstate the stored-fluid tooltip via a
+    //  custom BlockItem subclass if this block ever stores fluid components.
 }

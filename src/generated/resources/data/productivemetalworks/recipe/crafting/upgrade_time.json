@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "B": {
-      "item": "productivelib:upgrade_base"
-    },
-    "O": {
-      "item": "minecraft:clock"
-    },
-    "X": {
-      "item": "productivemetalworks:fire_brick"
-    }
+    "B": "productivelib:upgrade_base",
+    "O": "minecraft:clock",
+    "X": "productivemetalworks:fire_brick"
   },
   "pattern": [
     "XOX",
@@ -18,7 +12,6 @@
     "XOX"
   ],
   "result": {
-    "count": 1,
     "id": "productivelib:upgrade_time"
   }
 }

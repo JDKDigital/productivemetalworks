@@ -6,14 +6,13 @@ import cy.jdkdigital.productivemetalworks.registry.ModTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.FluidTagsProvider;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 import java.util.concurrent.CompletableFuture;
 
 public class FluidTagProvider extends FluidTagsProvider
 {
-    public FluidTagProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> future, ExistingFileHelper helper) {
-        super(output, future, ProductiveMetalworks.MODID, helper);
+    public FluidTagProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> future) {
+        super(output, future, ProductiveMetalworks.MODID);
     }
 
     @Override

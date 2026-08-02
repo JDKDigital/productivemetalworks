@@ -4,9 +4,9 @@ import cy.jdkdigital.productivelib.common.block.entity.AbstractBlockEntity;
 import cy.jdkdigital.productivelib.common.block.entity.IMultiBlockPeripheralBlockEntity;
 import cy.jdkdigital.productivemetalworks.registry.MetalworksRegistrator;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 public class FoundryDrainBlockEntity extends AbstractBlockEntity implements IMultiBlockPeripheralBlockEntity
 {
@@ -28,20 +28,18 @@ public class FoundryDrainBlockEntity extends AbstractBlockEntity implements IMul
     }
 
     @Override
-    public void savePacketNBT(CompoundTag tag, HolderLookup.Provider provider) {
-        super.savePacketNBT(tag, provider);
+    public void savePacketNBT(ValueOutput output) {
+        super.savePacketNBT(output);
 
         if (this.controllerPosition != null) {
-            tag.putLong("controller", this.controllerPosition.asLong());
+            output.putLong("controller", this.controllerPosition.asLong());
         }
     }
 
     @Override
-    public void loadPacketNBT(CompoundTag tag, HolderLookup.Provider provider) {
-        super.loadPacketNBT(tag, provider);
+    public void loadPacketNBT(ValueInput input) {
+        super.loadPacketNBT(input);
 
-        if (tag.contains("controller")) {
-            this.controllerPosition = BlockPos.of(tag.getLong("controller"));
-        }
+        input.getLong("controller").ifPresent(l -> this.controllerPosition = BlockPos.of(l));
     }
 }

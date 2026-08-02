@@ -1,17 +1,20 @@
 package cy.jdkdigital.productivemetalworks.util;
 
-import cy.jdkdigital.productivelib.util.MultiFluidTank;
+import cy.jdkdigital.productivelib.compat.jei.RecipeMapCache;
 import cy.jdkdigital.productivemetalworks.common.datamap.FuelMap;
 import cy.jdkdigital.productivemetalworks.event.CastingRecipeEvent;
 import cy.jdkdigital.productivemetalworks.recipe.BlockCastingRecipe;
+import cy.jdkdigital.productivemetalworks.recipe.cache.CastKey;
+import cy.jdkdigital.productivemetalworks.recipe.cache.CompatKey;
+import cy.jdkdigital.productivemetalworks.recipe.cache.MeltKey;
 import cy.jdkdigital.productivemetalworks.recipe.FluidAlloyingRecipe;
 import cy.jdkdigital.productivemetalworks.recipe.ItemCastingRecipe;
 import cy.jdkdigital.productivemetalworks.recipe.ItemMeltingRecipe;
 import cy.jdkdigital.productivemetalworks.registry.MetalworksRegistrator;
-import net.minecraft.core.component.TypedDataComponent;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeMap;
 import net.minecraft.world.level.Level;
 import net.neoforged.fml.ModLoader;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -24,29 +27,39 @@ import java.util.Map;
 
 public class RecipeHelper
 {
-    static Map<String, RecipeHolder<ItemMeltingRecipe>> itemMeltingRecipeCache = new HashMap<>();
+    // The server has the full recipe manager; the client only has the foundry recipe types opted into sync
+    // (EventHandler#onDatapackSync), cached in RecipeMapCache. Resolve from whichever side we're on so that
+    // client-side lookups — e.g. the melt time the foundry GUI shows — work too, not just the server.
+    @Nullable
+    private static RecipeMap recipeMap(Level level) {
+        return level instanceof ServerLevel serverLevel ? serverLevel.recipeAccess().recipeMap() : RecipeMapCache.getRecipeMap();
+    }
+
+    static Map<MeltKey, RecipeHolder<ItemMeltingRecipe>> itemMeltingRecipeCache = new HashMap<>();
     @Nullable
     public static RecipeHolder<ItemMeltingRecipe> getItemMeltingRecipe(Level level, ItemStack item, @Nullable FuelMap fuelData) {
         if (fuelData == null) {
             return null;
         }
-        String cacheKey = itemCacheKey(item) + fuelData.temperature();
-        if (!itemMeltingRecipeCache.containsKey(cacheKey)) {
-            for (RecipeHolder<ItemMeltingRecipe> recipeHolder : level.getRecipeManager().getAllRecipesFor(MetalworksRegistrator.ITEM_MELTING_TYPE.get())) {
+        MeltKey cacheKey = MeltKey.of(item, fuelData.temperature());
+        RecipeMap recipeMap = recipeMap(level);
+        if (!itemMeltingRecipeCache.containsKey(cacheKey) && recipeMap != null) {
+            for (RecipeHolder<ItemMeltingRecipe> recipeHolder : recipeMap.byType(MetalworksRegistrator.ITEM_MELTING_TYPE.get())) {
                 if (recipeHolder.value().matches(item, fuelData.temperature())) {
-                    itemMeltingRecipeCache.put(cacheKey, new RecipeHolder<>(recipeHolder.id(), recipeHolder.value()));
+                    itemMeltingRecipeCache.put(cacheKey, recipeHolder);
                 }
             }
         }
         return itemMeltingRecipeCache.getOrDefault(cacheKey, null);
     }
 
-    static Map<String, RecipeHolder<ItemCastingRecipe>> itemCastingRecipeCache = new HashMap<>();
+    static Map<CastKey, RecipeHolder<ItemCastingRecipe>> itemCastingRecipeCache = new HashMap<>();
     @Nullable
     public static RecipeHolder<ItemCastingRecipe> getItemCastingRecipe(Level level, ItemStack cast, FluidStack fluid) {
-        String cacheKey = itemCacheKey(cast) + fluidCacheKey(fluid);
-        if (!itemCastingRecipeCache.containsKey(cacheKey)) {
-            for (RecipeHolder<ItemCastingRecipe> recipeHolder : level.getRecipeManager().getAllRecipesFor(MetalworksRegistrator.ITEM_CASTING_TYPE.get())) {
+        CastKey cacheKey = CastKey.of(cast, fluid);
+        RecipeMap recipeMap = recipeMap(level);
+        if (!itemCastingRecipeCache.containsKey(cacheKey) && recipeMap != null) {
+            for (RecipeHolder<ItemCastingRecipe> recipeHolder : recipeMap.byType(MetalworksRegistrator.ITEM_CASTING_TYPE.get())) {
                 if (recipeHolder.value().matches(cast, fluid, level)) {
                     itemCastingRecipeCache.put(cacheKey, recipeHolder);
                 }
@@ -55,12 +68,13 @@ public class RecipeHelper
         return itemCastingRecipeCache.getOrDefault(cacheKey, null);
     }
 
-    static Map<String, RecipeHolder<BlockCastingRecipe>> blockCastingRecipeCache = new HashMap<>();
+    static Map<CastKey, RecipeHolder<BlockCastingRecipe>> blockCastingRecipeCache = new HashMap<>();
     @Nullable
     public static RecipeHolder<BlockCastingRecipe> getBlockCastingRecipe(Level level, ItemStack cast, FluidStack fluid) {
-        String cacheKey = itemCacheKey(cast) + fluidCacheKey(fluid);
-        if (!blockCastingRecipeCache.containsKey(cacheKey)) {
-            for (RecipeHolder<BlockCastingRecipe> recipeHolder : level.getRecipeManager().getAllRecipesFor(MetalworksRegistrator.BLOCK_CASTING_TYPE.get())) {
+        CastKey cacheKey = CastKey.of(cast, fluid);
+        RecipeMap recipeMap = recipeMap(level);
+        if (!blockCastingRecipeCache.containsKey(cacheKey) && recipeMap != null) {
+            for (RecipeHolder<BlockCastingRecipe> recipeHolder : recipeMap.byType(MetalworksRegistrator.BLOCK_CASTING_TYPE.get())) {
                 if (recipeHolder.value().matches(cast, fluid, level)) {
                     blockCastingRecipeCache.put(cacheKey, recipeHolder);
                 }
@@ -70,10 +84,11 @@ public class RecipeHelper
     }
 
     static List<RecipeHolder<FluidAlloyingRecipe>> alloyRecipes = new ArrayList<>();
-    public static List<RecipeHolder<FluidAlloyingRecipe>> getAlloyRecipes(Level level, MultiFluidTank fluidHandler) {
+    public static List<RecipeHolder<FluidAlloyingRecipe>> getAlloyRecipes(Level level, ModFluidTank fluidHandler) {
         // Iterate fluid tanks and try to alloy fluids from 2 tanks
-        if (alloyRecipes.isEmpty()) {
-            alloyRecipes = level.getRecipeManager().getAllRecipesFor(MetalworksRegistrator.FLUID_ALLOYING_TYPE.get());
+        RecipeMap recipeMap = recipeMap(level);
+        if (alloyRecipes.isEmpty() && recipeMap != null) {
+            alloyRecipes = new ArrayList<>(recipeMap.byType(MetalworksRegistrator.FLUID_ALLOYING_TYPE.get()));
         }
 
         List<FluidStack> availableFluids = new ArrayList<>();
@@ -92,9 +107,9 @@ public class RecipeHelper
         return recipeProcessList;
     }
 
-    static Map<String, ItemCastingRecipe> compatCastingRecipeCache = new HashMap<>();
+    static Map<CompatKey, ItemCastingRecipe> compatCastingRecipeCache = new HashMap<>();
     public static ItemCastingRecipe getCompatRecipe(Level level, ItemStack cast, FluidStack fluid, boolean isTable) {
-        String cacheKey = itemCacheKey(cast) + fluidCacheKey(fluid) + (isTable ? "table" : "basin");
+        CompatKey cacheKey = CompatKey.of(cast, fluid, isTable);
         if (!compatCastingRecipeCache.containsKey(cacheKey)) {
             var event = new CastingRecipeEvent(level, cast, fluid, isTable);
             ModLoader.postEvent(event);
@@ -103,11 +118,4 @@ public class RecipeHelper
         return compatCastingRecipeCache.getOrDefault(cacheKey, null);
     }
 
-    // TODO move to lib
-    public static String itemCacheKey(ItemStack stack) {
-        return BuiltInRegistries.ITEM.getKey(stack.getItem()).toString() + (!stack.getComponents().isEmpty() ? stack.getComponents().stream().map(TypedDataComponent::toString).reduce((s, s2) -> s + s2) : "");
-    }
-    public static String fluidCacheKey(FluidStack stack) {
-        return BuiltInRegistries.FLUID.getKey(stack.getFluid()).toString() + (!stack.getComponents().isEmpty() ? stack.getComponents().stream().map(TypedDataComponent::toString).reduce((s, s2) -> s + s2) : "");
-    }
 }

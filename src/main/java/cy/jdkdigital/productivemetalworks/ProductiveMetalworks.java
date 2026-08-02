@@ -1,8 +1,6 @@
 package cy.jdkdigital.productivemetalworks;
 
 import com.mojang.logging.LogUtils;
-
-import cy.jdkdigital.productivemetalworks.integration.ponder.MetalworksPonderPlugin;
 import cy.jdkdigital.productivemetalworks.registry.MetalworksRegistrator;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -19,15 +17,15 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
-import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.NeoForgeMod;
 import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
-
-import net.createmod.ponder.foundation.PonderIndex;
-
 import org.slf4j.Logger;
+
+// PORT-TODO (26.1): ponder/create integration excluded until Create ships a 26.1.2 build.
+//import cy.jdkdigital.productivemetalworks.integration.ponder.MetalworksPonderPlugin;
+//import net.createmod.ponder.foundation.PonderIndex;
 
 // The value here should match an entry in the META-INF/neoforge.mods.toml file
 @Mod(ProductiveMetalworks.MODID)
@@ -53,6 +51,14 @@ public class ProductiveMetalworks
     // FML will recognize some parameter types like IEventBus or ModContainer and pass them in automatically.
     public ProductiveMetalworks(IEventBus modEventBus, ModContainer modContainer)
     {
+        // GameTest hook. Touching MetalworksGameTests.MAX_TICKS forces its <clinit>, which calls
+        // TestFunctions.register(...) for every test; init() then unfreezes BuiltInRegistries.TEST_FUNCTION,
+        // registers each entry, and refreezes. No-op cost in production (the gametest path is only reached
+        // when GameTestHooks.isGametestEnabled() is true).
+        @SuppressWarnings("unused")
+        Object forceTestsLoad = cy.jdkdigital.productivemetalworks.gametest.MetalworksGameTests.MAX_TICKS;
+        cy.jdkdigital.productivemetalworks.gametest.TestFunctions.init();
+
         MetalworksRegistrator.register();
 
         BLOCKS.register(modEventBus);
@@ -75,8 +81,9 @@ public class ProductiveMetalworks
             InterModComms.sendTo("invtweaks", "blacklist-screen", () -> "cy.jdkdigital.productivemetalworks.client.screen.*");
         }
 
-        if(FMLEnvironment.dist.isClient()) {
-            PonderIndex.addPlugin(new MetalworksPonderPlugin());
-        }
+        // PORT-TODO (26.1): restore once Create/ponder publishes a 26.1.2 build and integration/ponder is re-included.
+//        if(FMLEnvironment.dist.isClient()) {
+//            PonderIndex.addPlugin(new MetalworksPonderPlugin());
+//        }
     }
 }
