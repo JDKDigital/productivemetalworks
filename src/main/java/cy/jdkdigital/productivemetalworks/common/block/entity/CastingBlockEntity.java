@@ -226,7 +226,9 @@ public class CastingBlockEntity extends CapabilityBlockEntity
                         if (recipe.consumeCast) {
                             if (recipe.result.create().is(ModTags.Items.CASTS)) {
                                 castingTableBlock.castInv.setStackInSlot(0, recipe.result.create());
-                                castingTableBlock.itemHandler.getStackInSlot(0).shrink(1);
+                                var remainingResult = castingTableBlock.itemHandler.getStackInSlot(0);
+                                remainingResult.shrink(1);
+                                castingTableBlock.itemHandler.setStackInSlot(0, remainingResult.isEmpty() ? ItemStack.EMPTY : remainingResult);
                             } else {
                                 castingTableBlock.castInv.setStackInSlot(0, ItemStack.EMPTY);
                             }

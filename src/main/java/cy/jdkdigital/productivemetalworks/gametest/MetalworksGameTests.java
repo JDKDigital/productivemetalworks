@@ -62,6 +62,7 @@ public final class MetalworksGameTests
         register("foundry_tap_casts_productivebees_steel_bee_egg", MetalworksGameTests::testFoundryTapCastsBeeEgg, 600);
         register("foundry_basin_casts_capacitor_consuming_cast", MetalworksGameTests::testFoundryBasinCastsCapacitor, 600);
         register("casting_table_stores_cast_without_voiding", MetalworksGameTests::testCastingTableStoresCast);
+        register("casting_table_cast_creation_leaves_empty_result_slot", MetalworksGameTests::testCastingTableCastCreationLeavesEmptyResult, 300);
         // Melting is slow: raw iron (180 mB) at lava's burn speed (0.5 mB/tick) ≈ 360 ticks + overhead.
         register("foundry_melts_raw_iron_into_molten_iron", MetalworksGameTests::testFoundryMeltsRawIron, 600);
         register("foundry_melt_progress_syncs_to_client", MetalworksGameTests::testFoundryMeltProgressSync);
@@ -228,6 +229,34 @@ public final class MetalworksGameTests
             return;
         }
         helper.succeed();
+    }
+
+    private static void testCastingTableCastCreationLeavesEmptyResult(GameTestHelper helper) {
+        BlockPos pos = new BlockPos(1, 1, 1);
+        helper.setBlock(pos, MetalworksRegistrator.CASTING_TABLE.get().defaultBlockState());
+        CastingBlockEntity be = helper.getBlockEntity(pos, CastingBlockEntity.class);
+        be.castInv.setStackInSlot(0, new ItemStack(Items.IRON_INGOT));
+
+        int filled = be.getFluidHandler().fill(new FluidStack(MetalworksRegistrator.MOLTEN_STEEL.get(), 1000), true);
+        if (filled != 360) {
+            helper.fail("Expected the casting table to accept exactly the recipe's 360 mB of molten steel, accepted " + filled, pos);
+            return;
+        }
+
+        helper.succeedWhen(() -> {
+            CastingBlockEntity table = helper.getBlockEntity(pos, CastingBlockEntity.class);
+            if (table.isCooling() || table.getFluidHandler().getFluidAmount() > 0) {
+                throw helper.assertionException(pos, "Casting table is still cooling / holding fluid");
+            }
+            if (!table.castInv.getStackInSlot(0).is(MetalworksRegistrator.CAST_INGOT.get())) {
+                throw helper.assertionException(pos, "Expected the finished ingot cast in the cast slot, found "
+                        + (table.castInv.getStackInSlot(0).isEmpty() ? "nothing" : table.castInv.getStackInSlot(0).getItem()));
+            }
+            if (!table.getResultStack().isEmpty()) {
+                throw helper.assertionException(pos, "The cast was duplicated: " + table.getResultStack().getCount() + "x "
+                        + table.getResultStack().getItem() + " left in the result slot, which should be empty");
+            }
+        });
     }
 
     // Raw iron loaded into an assembled-but-unfuelled foundry has no melt timer yet; it must start melting
