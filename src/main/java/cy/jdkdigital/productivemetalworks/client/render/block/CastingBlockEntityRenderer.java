@@ -13,10 +13,8 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.client.model.data.ModelData;
 import net.neoforged.neoforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
@@ -57,7 +55,7 @@ public class CastingBlockEntityRenderer implements BlockEntityRenderer<CastingBl
                     poseStack.translate(0.5f, 0.96f, 0.5f);
                     poseStack.mulPose(Axis.XP.rotationDegrees((float) (90.0D % 360)));
                 } else {
-                    if (!(cast.getItem() instanceof BlockItem)) {
+                    if (!RenderHelper.canRenderAsBlock(cast)) {
                         poseStack.translate(0.5f, 0.5f, 0.5f);
                         poseStack.mulPose(Axis.YP.rotationDegrees((float) (30.0D % 360)));
                         poseStack.mulPose(Axis.ZP.rotationDegrees((float) (180.0D % 360)));
@@ -65,8 +63,8 @@ public class CastingBlockEntityRenderer implements BlockEntityRenderer<CastingBl
                     poseStack.translate(RenderHelper.pixelFraction, RenderHelper.pixelFraction, RenderHelper.pixelFraction);
                 }
                 poseStack.scale(0.875f, 0.875f, 0.875f);
-                if (cast.getItem() instanceof BlockItem blockItem) {
-                    Minecraft.getInstance().getBlockRenderer().renderSingleBlock(blockItem.getBlock().defaultBlockState(), poseStack, bufferSource,combinedLightIn, combinedOverlayIn, ModelData.EMPTY, null);
+                if (RenderHelper.canRenderAsBlock(cast)) {
+                    RenderHelper.renderBlockItem(cast, poseStack, bufferSource, combinedLightIn, combinedOverlayIn);
                 } else {
                     Minecraft.getInstance().getItemRenderer().renderStatic(cast, ItemDisplayContext.FIXED, combinedLightIn, combinedOverlayIn, poseStack, bufferSource, blockEntity.getLevel(), 0);
                 }
@@ -87,8 +85,8 @@ public class CastingBlockEntityRenderer implements BlockEntityRenderer<CastingBl
                     poseStack.translate(RenderHelper.pixelFraction, RenderHelper.pixelFraction, RenderHelper.pixelFraction);
                     poseStack.scale(0.875f, 0.875f, 0.875f);
                 }
-                if (output.getItem() instanceof BlockItem blockItem) {
-                    Minecraft.getInstance().getBlockRenderer().renderSingleBlock(blockItem.getBlock().defaultBlockState(), poseStack, bufferSource,combinedLightIn, combinedOverlayIn, ModelData.EMPTY, null);
+                if (RenderHelper.canRenderAsBlock(output)) {
+                    RenderHelper.renderBlockItem(output, poseStack, bufferSource, combinedLightIn, combinedOverlayIn);
                 } else {
                     Minecraft.getInstance().getItemRenderer().renderStatic(output, ItemDisplayContext.FIXED, combinedLightIn, combinedOverlayIn, poseStack, bufferSource, blockEntity.getLevel(), 0);
                 }

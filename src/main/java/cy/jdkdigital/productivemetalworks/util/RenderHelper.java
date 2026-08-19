@@ -5,18 +5,43 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import cy.jdkdigital.productivelib.util.ColorUtil;
 import cy.jdkdigital.productivemetalworks.ProductiveMetalworks;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.client.model.data.ModelData;
 import net.neoforged.neoforge.fluids.FluidStack;
 import org.joml.Matrix4f;
+
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class RenderHelper
 {
     public static float pixelFraction = 0.0625f; // fractional size of 1 pixel
     public static float halfPixelFraction = 0.03125f;
+
+    private static final Set<Block> UNRENDERABLE_BLOCKS = ConcurrentHashMap.newKeySet();
+
+    public static boolean canRenderAsBlock(ItemStack stack) {
+        return stack.getItem() instanceof BlockItem blockItem && !UNRENDERABLE_BLOCKS.contains(blockItem.getBlock());
+    }
+
+    public static void renderBlockItem(ItemStack stack, PoseStack poseStack, MultiBufferSource bufferSource, int combinedLightIn, int combinedOverlayIn) {
+        Block block = ((BlockItem) stack.getItem()).getBlock();
+        try {
+            Minecraft.getInstance().getBlockRenderer().renderSingleBlock(block.defaultBlockState(), poseStack, bufferSource, combinedLightIn, combinedOverlayIn, ModelData.EMPTY, null);
+        } catch (Exception e) {
+            UNRENDERABLE_BLOCKS.add(block);
+            ProductiveMetalworks.LOGGER.warn("Block {} cannot be rendered without a level, falling back to item rendering", BuiltInRegistries.BLOCK.getKey(block), e);
+        }
+    }
 
     public static void renderFullFluidLayer(PoseStack poseStack, VertexConsumer vertexBuffer, float fluidYStart, float fluidYEnd, int[] xRange, int[] zRange, FluidStack fluidStack, int combinedLightIn, int combinedOverlayIn, float opacity, float shrinkage) {
         Matrix4f lastPose = poseStack.last().pose();

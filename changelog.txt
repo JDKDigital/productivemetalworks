@@ -1,3 +1,8 @@
+1.21.1-1.15.1
+
+- Fixed a crash when rendering blocks in the foundry or casting table that can not be rendered without a level
+
+
 1.21.1-1.15.0
 
 - No more extracting casts while the casting table or basin is operating

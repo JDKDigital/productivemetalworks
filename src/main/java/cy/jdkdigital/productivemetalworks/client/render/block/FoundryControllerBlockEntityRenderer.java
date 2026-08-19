@@ -13,13 +13,11 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.phys.AABB;
-import net.neoforged.neoforge.client.model.data.ModelData;
 
 import javax.annotation.Nonnull;
 import java.util.stream.IntStream;
@@ -86,8 +84,8 @@ public class FoundryControllerBlockEntityRenderer implements BlockEntityRenderer
                         poseStack.pushPose();
                         poseStack.translate(pos.getX() - multiBlockData.controllerPos().getX() + RenderHelper.halfPixelFraction, pos.getY() - multiBlockData.controllerPos().getY() + RenderHelper.halfPixelFraction, pos.getZ() - multiBlockData.controllerPos().getZ() + RenderHelper.halfPixelFraction);
                         poseStack.scale(1.0f - RenderHelper.pixelFraction, 1.0f - RenderHelper.pixelFraction, 1.0f - RenderHelper.pixelFraction);
-                        if (output.getItem() instanceof BlockItem blockItem) {
-                            Minecraft.getInstance().getBlockRenderer().renderSingleBlock(blockItem.getBlock().defaultBlockState(), poseStack, bufferSource, combinedLightIn, combinedOverlayIn, ModelData.EMPTY, null);
+                        if (RenderHelper.canRenderAsBlock(output)) {
+                            RenderHelper.renderBlockItem(output, poseStack, bufferSource, combinedLightIn, combinedOverlayIn);
                         } else {
                             poseStack.translate(0.5f, 0.5f, 0.5f);
                             poseStack.mulPose(Axis.XP.rotationDegrees((float) (90.0D % 360)));
