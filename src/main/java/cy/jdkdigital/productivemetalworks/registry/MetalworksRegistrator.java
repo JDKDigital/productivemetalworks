@@ -37,6 +37,7 @@ import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.datamaps.DataMapType;
 
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -203,7 +204,7 @@ public class MetalworksRegistrator
     }
 
     public static Map<DyeColor, DeferredHolder<Block, Block>> registerDyedBlocks(String name, Function<BlockBehaviour.Properties, Block> factory, Supplier<BlockBehaviour.Properties> properties) {
-        Map<DyeColor, DeferredHolder<Block, Block>> blocks = new HashMap<>();
+        Map<DyeColor, DeferredHolder<Block, Block>> blocks = new EnumMap<>(DyeColor.class);
         for (DyeColor color : DyeColor.values()) {
             var block = ProductiveMetalworks.BLOCKS.registerBlock(color.getSerializedName() + "_" + name, factory, properties);
             ProductiveMetalworks.ITEMS.registerItem(color.getSerializedName() + "_" + name, p -> new BlockItem(block.get(), p), () -> new Item.Properties().useBlockDescriptionPrefix());
