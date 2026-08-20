@@ -4,6 +4,7 @@ import cy.jdkdigital.productivelib.event.UpgradeTooltipEvent;
 import cy.jdkdigital.productivemetalworks.ProductiveMetalworks;
 import cy.jdkdigital.productivemetalworks.integration.jei.ingredient.EntityRenderer;
 import cy.jdkdigital.productivemetalworks.registry.MetalworksRegistrator;
+import cy.jdkdigital.productivemetalworks.util.RecipeHelper;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -29,6 +30,7 @@ public class EventHandler
     // 26.1: opt the foundry recipe types into client sync so JEI can display them (see MetalworksRecipeCache).
     @SubscribeEvent
     public static void onDatapackSync(OnDatapackSyncEvent event) {
+        RecipeHelper.clearCaches();
         event.sendRecipes(
                 MetalworksRegistrator.ITEM_MELTING_TYPE.get(),
                 MetalworksRegistrator.ITEM_CASTING_TYPE.get(),
@@ -42,5 +44,6 @@ public class EventHandler
         if (event.getLevel().isClientSide()) {
             EntityRenderer.cache.clear();
         }
+        RecipeHelper.clearCaches();
     }
 }

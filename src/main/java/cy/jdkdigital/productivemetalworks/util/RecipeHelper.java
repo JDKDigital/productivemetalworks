@@ -42,45 +42,66 @@ public class RecipeHelper
             return null;
         }
         MeltKey cacheKey = MeltKey.of(item, fuelData.temperature());
+        if (itemMeltingRecipeCache.containsKey(cacheKey)) {
+            return itemMeltingRecipeCache.get(cacheKey);
+        }
         RecipeMap recipeMap = recipeMap(level);
-        if (!itemMeltingRecipeCache.containsKey(cacheKey) && recipeMap != null) {
-            for (RecipeHolder<ItemMeltingRecipe> recipeHolder : recipeMap.byType(MetalworksRegistrator.ITEM_MELTING_TYPE.get())) {
-                if (recipeHolder.value().matches(item, fuelData.temperature())) {
-                    itemMeltingRecipeCache.put(cacheKey, recipeHolder);
-                }
+        if (recipeMap == null) {
+            return null;
+        }
+        RecipeHolder<ItemMeltingRecipe> match = null;
+        for (RecipeHolder<ItemMeltingRecipe> recipeHolder : recipeMap.byType(MetalworksRegistrator.ITEM_MELTING_TYPE.get())) {
+            if (recipeHolder.value().matches(item, fuelData.temperature())) {
+                match = recipeHolder;
+                break;
             }
         }
-        return itemMeltingRecipeCache.getOrDefault(cacheKey, null);
+        itemMeltingRecipeCache.put(cacheKey, match);
+        return match;
     }
 
     static Map<CastKey, RecipeHolder<ItemCastingRecipe>> itemCastingRecipeCache = new HashMap<>();
     @Nullable
     public static RecipeHolder<ItemCastingRecipe> getItemCastingRecipe(Level level, ItemStack cast, FluidStack fluid) {
         CastKey cacheKey = CastKey.of(cast, fluid);
+        if (itemCastingRecipeCache.containsKey(cacheKey)) {
+            return itemCastingRecipeCache.get(cacheKey);
+        }
         RecipeMap recipeMap = recipeMap(level);
-        if (!itemCastingRecipeCache.containsKey(cacheKey) && recipeMap != null) {
-            for (RecipeHolder<ItemCastingRecipe> recipeHolder : recipeMap.byType(MetalworksRegistrator.ITEM_CASTING_TYPE.get())) {
-                if (recipeHolder.value().matches(cast, fluid, level)) {
-                    itemCastingRecipeCache.put(cacheKey, recipeHolder);
-                }
+        if (recipeMap == null) {
+            return null;
+        }
+        RecipeHolder<ItemCastingRecipe> match = null;
+        for (RecipeHolder<ItemCastingRecipe> recipeHolder : recipeMap.byType(MetalworksRegistrator.ITEM_CASTING_TYPE.get())) {
+            if (recipeHolder.value().matches(cast, fluid, level)) {
+                match = recipeHolder;
+                break;
             }
         }
-        return itemCastingRecipeCache.getOrDefault(cacheKey, null);
+        itemCastingRecipeCache.put(cacheKey, match);
+        return match;
     }
 
     static Map<CastKey, RecipeHolder<BlockCastingRecipe>> blockCastingRecipeCache = new HashMap<>();
     @Nullable
     public static RecipeHolder<BlockCastingRecipe> getBlockCastingRecipe(Level level, ItemStack cast, FluidStack fluid) {
         CastKey cacheKey = CastKey.of(cast, fluid);
+        if (blockCastingRecipeCache.containsKey(cacheKey)) {
+            return blockCastingRecipeCache.get(cacheKey);
+        }
         RecipeMap recipeMap = recipeMap(level);
-        if (!blockCastingRecipeCache.containsKey(cacheKey) && recipeMap != null) {
-            for (RecipeHolder<BlockCastingRecipe> recipeHolder : recipeMap.byType(MetalworksRegistrator.BLOCK_CASTING_TYPE.get())) {
-                if (recipeHolder.value().matches(cast, fluid, level)) {
-                    blockCastingRecipeCache.put(cacheKey, recipeHolder);
-                }
+        if (recipeMap == null) {
+            return null;
+        }
+        RecipeHolder<BlockCastingRecipe> match = null;
+        for (RecipeHolder<BlockCastingRecipe> recipeHolder : recipeMap.byType(MetalworksRegistrator.BLOCK_CASTING_TYPE.get())) {
+            if (recipeHolder.value().matches(cast, fluid, level)) {
+                match = recipeHolder;
+                break;
             }
         }
-        return blockCastingRecipeCache.getOrDefault(cacheKey, null);
+        blockCastingRecipeCache.put(cacheKey, match);
+        return match;
     }
 
     static List<RecipeHolder<FluidAlloyingRecipe>> alloyRecipes = new ArrayList<>();
@@ -118,4 +139,11 @@ public class RecipeHelper
         return compatCastingRecipeCache.getOrDefault(cacheKey, null);
     }
 
+    public static void clearCaches() {
+        itemMeltingRecipeCache.clear();
+        itemCastingRecipeCache.clear();
+        blockCastingRecipeCache.clear();
+        compatCastingRecipeCache.clear();
+        alloyRecipes = new ArrayList<>();
+    }
 }
