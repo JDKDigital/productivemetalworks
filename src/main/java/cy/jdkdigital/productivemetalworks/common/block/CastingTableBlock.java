@@ -6,7 +6,6 @@ import cy.jdkdigital.productivemetalworks.registry.MetalworksRegistrator;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -121,18 +120,5 @@ public class CastingTableBlock extends BaseEntityBlock
             return InteractionResult.SUCCESS;
         }
         return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
-    }
-
-
-    @Override
-    protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos, boolean movedByPiston) {
-        if (level.getBlockEntity(pos) instanceof CastingBlockEntity blockEntity) {
-            // Drop inventory
-            if (!blockEntity.isCooling()) {
-                Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), blockEntity.getResultStack());
-            }
-            Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), blockEntity.castInv.getStackInSlot(0));
-        }
-        super.affectNeighborsAfterRemoval(state, level, pos, movedByPiston);
     }
 }

@@ -10,6 +10,7 @@ import cy.jdkdigital.productivemetalworks.registry.ModTags;
 import cy.jdkdigital.productivemetalworks.util.ModFluidTank;
 import cy.jdkdigital.productivemetalworks.util.RecipeHelper;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.Containers;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -296,6 +297,16 @@ public class CastingBlockEntity extends CapabilityBlockEntity
     }
 
     /** Output item in the result slot (empty if none). */
+    @Override
+    public void preRemoveSideEffects(BlockPos pos, BlockState state) {
+        if (!isCooling()) {
+            super.preRemoveSideEffects(pos, state);
+        }
+        if (this.level != null) {
+            Containers.dropItemStack(this.level, pos.getX(), pos.getY(), pos.getZ(), castInv.getStackInSlot(0));
+        }
+    }
+
     public ItemStack getResultStack() {
         return itemHandler.getStackInSlot(0);
     }
