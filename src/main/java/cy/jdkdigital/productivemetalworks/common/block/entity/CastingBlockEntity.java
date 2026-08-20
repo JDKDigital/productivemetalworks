@@ -182,6 +182,14 @@ public class CastingBlockEntity extends CapabilityBlockEntity
         }
 
         @Override
+        public int extract(int index, FluidResource resource, int amount, TransactionContext transaction) {
+            if (CastingBlockEntity.this.isCooling()) {
+                return 0;
+            }
+            return super.extract(index, resource, amount, transaction);
+        }
+
+        @Override
         public FluidStack drain(int maxDrain, boolean execute) {
             if (CastingBlockEntity.this.isCooling()) {
                 return FluidStack.EMPTY;
