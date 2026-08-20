@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "environment": "productivemetalworks:breaking_controller_deactivates_heating_coils_env",
+  "function": "productivemetalworks:breaking_controller_deactivates_heating_coils",
+  "structure": "productivemetalworks:empty_7x7",
+  "max_ticks": 100,
+  "required": true,
+  "setup_ticks": 0
+}

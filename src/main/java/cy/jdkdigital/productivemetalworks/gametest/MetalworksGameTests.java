@@ -14,6 +14,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
@@ -24,9 +25,11 @@ import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 
@@ -62,7 +65,12 @@ public final class MetalworksGameTests
         register("foundry_tap_casts_productivebees_steel_bee_egg", MetalworksGameTests::testFoundryTapCastsBeeEgg, 600);
         register("foundry_basin_casts_capacitor_consuming_cast", MetalworksGameTests::testFoundryBasinCastsCapacitor, 600);
         register("casting_table_stores_cast_without_voiding", MetalworksGameTests::testCastingTableStoresCast);
-        register("casting_table_cast_creation_leaves_empty_result_slot", MetalworksGameTests::testCastingTableCastCreationLeavesEmptyResult, 300);
+        register("casting_table_cast_creation_leaves_empty_result_slot", MetalworksGameTests::testCastingTableCastCreationLeavesEmptyResult, 600);
+        register("casting_table_reuses_fresh_cast_immediately", MetalworksGameTests::testCastingTableReusesFreshCast, 600);
+        register("casting_table_locks_melt_while_cooling", MetalworksGameTests::testCastingTableLocksMeltWhileCooling, 600);
+        register("casting_table_drops_cast_when_broken", MetalworksGameTests::testCastingTableDropsCastOnBreak);
+        register("breaking_controller_deactivates_heating_coils", MetalworksGameTests::testBreakingControllerDeactivatesCoils);
+        register("foundry_grown_slots_get_melt_timers", MetalworksGameTests::testGrownFoundrySlotsGetMeltTimers);
         // Melting is slow: raw iron (180 mB) at lava's burn speed (0.5 mB/tick) ≈ 360 ticks + overhead.
         register("foundry_melts_raw_iron_into_molten_iron", MetalworksGameTests::testFoundryMeltsRawIron, 600);
         register("foundry_melt_progress_syncs_to_client", MetalworksGameTests::testFoundryMeltProgressSync);
@@ -229,6 +237,126 @@ public final class MetalworksGameTests
             return;
         }
         helper.succeed();
+    }
+
+    private static void testGrownFoundrySlotsGetMeltTimers(GameTestHelper helper) {
+        buildFoundry(helper, true);
+        helper.setBlock(TANK_POS, MetalworksRegistrator.FOUNDRY_TANKS.get(DyeColor.BLACK).get().defaultBlockState());
+        helper.getBlockEntity(TANK_POS, FoundryTankBlockEntity.class).getFluidHandler().fill(new FluidStack(Fluids.LAVA, 4000), true);
+        helper.useBlock(CONTROLLER_POS);
+
+        FoundryControllerBlockEntity controller = helper.getBlockEntity(CONTROLLER_POS, FoundryControllerBlockEntity.class);
+        if (controller.getMultiblockData() == null) {
+            helper.fail("Foundry did not assemble", CONTROLLER_POS);
+            return;
+        }
+
+        TickingSlotInventoryHandler items = (TickingSlotInventoryHandler) controller.getItemHandler();
+        int grownSlot = items.size() + 2;
+        items.setSize(grownSlot + 1);
+        items.insertItem(grownSlot, new ItemStack(Items.RAW_IRON), false, false);
+
+        if (items.getTicker(grownSlot).getSecond() <= 0) {
+            helper.fail("Slot " + grownSlot + " got no melt timer after the foundry inventory grew, so its contents would never melt", CONTROLLER_POS);
+            return;
+        }
+        helper.succeed();
+    }
+
+    private static void testBreakingControllerDeactivatesCoils(GameTestHelper helper) {
+        BlockPos coilPos = new BlockPos(1, FLOOR_Y, 1);
+        buildFoundry(helper, true);
+        helper.setBlock(TANK_POS, MetalworksRegistrator.FOUNDRY_TANKS.get(DyeColor.BLACK).get().defaultBlockState());
+
+        helper.startSequence()
+                .thenExecute(() -> helper.useBlock(CONTROLLER_POS))
+                .thenIdle(2)
+                .thenExecute(() -> {
+                    if (!helper.getBlockState(coilPos).getValue(BlockStateProperties.ATTACHED)) {
+                        helper.fail("Heating coil did not light up when the foundry assembled", coilPos);
+                    }
+                })
+                .thenExecute(() -> helper.getLevel().destroyBlock(helper.absolutePos(CONTROLLER_POS), false))
+                .thenIdle(2)
+                .thenExecute(() -> {
+                    if (helper.getBlockState(coilPos).getValue(BlockStateProperties.ATTACHED)) {
+                        helper.fail("Heating coil is still lit after the controller was broken", coilPos);
+                    }
+                })
+                .thenSucceed();
+    }
+
+    private static void testCastingTableLocksMeltWhileCooling(GameTestHelper helper) {
+        BlockPos pos = new BlockPos(1, 1, 1);
+        helper.setBlock(pos, MetalworksRegistrator.CASTING_TABLE.get().defaultBlockState());
+        CastingBlockEntity be = helper.getBlockEntity(pos, CastingBlockEntity.class);
+        be.castInv.setStackInSlot(0, new ItemStack(Items.IRON_INGOT));
+        be.getFluidHandler().fill(new FluidStack(MetalworksRegistrator.MOLTEN_STEEL.get(), 1000), true);
+
+        helper.startSequence()
+                .thenWaitUntil(() -> {
+                    if (!helper.getBlockEntity(pos, CastingBlockEntity.class).isCooling()) {
+                        throw helper.assertionException(pos, "Casting table has not started cooling yet");
+                    }
+                })
+                .thenExecute(() -> {
+                    int siphoned = fluidExtract(helper, pos);
+                    if (siphoned > 0) {
+                        helper.fail("A pipe siphoned " + siphoned + " mB of melt out of the casting table while it was cooling, so the metal can be recovered and the cast kept", pos);
+                    }
+                })
+                .thenSucceed();
+    }
+
+    private static void testCastingTableReusesFreshCast(GameTestHelper helper) {
+        BlockPos pos = new BlockPos(1, 1, 1);
+        helper.setBlock(pos, MetalworksRegistrator.CASTING_TABLE.get().defaultBlockState());
+        CastingBlockEntity be = helper.getBlockEntity(pos, CastingBlockEntity.class);
+        be.castInv.setStackInSlot(0, new ItemStack(Items.IRON_INGOT));
+        be.getFluidHandler().fill(new FluidStack(MetalworksRegistrator.MOLTEN_STEEL.get(), 1000), true);
+
+        helper.startSequence()
+                .thenWaitUntil(() -> {
+                    CastingBlockEntity table = helper.getBlockEntity(pos, CastingBlockEntity.class);
+                    if (table.isCooling() || table.getFluidHandler().getFluidAmount() > 0
+                            || !table.castInv.getStackInSlot(0).is(MetalworksRegistrator.CAST_INGOT.get())) {
+                        throw helper.assertionException(pos, "The ingot cast has not been created yet");
+                    }
+                })
+                .thenExecute(() -> {
+                    CastingBlockEntity table = helper.getBlockEntity(pos, CastingBlockEntity.class);
+                    int filled = table.getFluidHandler().fill(new FluidStack(MetalworksRegistrator.MOLTEN_IRON.get(), 1000), true);
+                    if (filled <= 0) {
+                        helper.fail("The table refused molten iron straight after creating the cast, so the fresh cast cannot be used immediately", pos);
+                    }
+                })
+                .thenWaitUntil(() -> {
+                    CastingBlockEntity table = helper.getBlockEntity(pos, CastingBlockEntity.class);
+                    if (!table.getResultStack().is(Items.IRON_INGOT)) {
+                        throw helper.assertionException(pos, "The freshly created cast did not go on to cast an iron ingot from molten iron");
+                    }
+                })
+                .thenSucceed();
+    }
+
+    private static void testCastingTableDropsCastOnBreak(GameTestHelper helper) {
+        BlockPos pos = new BlockPos(1, 1, 1);
+        helper.setBlock(pos, MetalworksRegistrator.CASTING_TABLE.get().defaultBlockState());
+        helper.getBlockEntity(pos, CastingBlockEntity.class).castInv.setStackInSlot(0, new ItemStack(MetalworksRegistrator.CAST_INGOT.get()));
+
+        helper.startSequence()
+                .thenExecute(() -> helper.getLevel().destroyBlock(helper.absolutePos(pos), true))
+                .thenIdle(2)
+                .thenExecute(() -> {
+                    BlockPos abs = helper.absolutePos(pos);
+                    AABB search = new AABB(abs.getX() - 4, abs.getY() - 4, abs.getZ() - 4, abs.getX() + 5, abs.getY() + 5, abs.getZ() + 5);
+                    boolean dropped = helper.getLevel().getEntitiesOfClass(ItemEntity.class, search).stream()
+                            .anyMatch(e -> e.getItem().is(MetalworksRegistrator.CAST_INGOT.get()));
+                    if (!dropped) {
+                        helper.fail("Breaking the casting table did not drop the cast held in the cast slot", pos);
+                    }
+                })
+                .thenSucceed();
     }
 
     private static void testCastingTableCastCreationLeavesEmptyResult(GameTestHelper helper) {
@@ -468,6 +596,26 @@ public final class MetalworksGameTests
                     }
                 })
                 .thenSucceed();
+    }
+
+    private static int fluidExtract(GameTestHelper helper, BlockPos pos) {
+        ResourceHandler<FluidResource> handler = helper.getLevel().getCapability(
+                Capabilities.Fluid.BLOCK, helper.absolutePos(pos), Direction.DOWN);
+        if (handler == null) {
+            return 0;
+        }
+        try (Transaction tx = Transaction.openRoot()) {
+            FluidResource resource = handler.getResource(0);
+            if (resource.isEmpty()) {
+                return 0;
+            }
+            int extracted = handler.extract(0, resource, 1000, tx);
+            if (extracted <= 0) {
+                return 0;
+            }
+            tx.commit();
+            return extracted;
+        }
     }
 
     private static ItemStack beeEgg(Item eggItem, String beeType) {

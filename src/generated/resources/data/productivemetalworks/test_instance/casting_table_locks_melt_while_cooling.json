@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "environment": "productivemetalworks:casting_table_locks_melt_while_cooling_env",
+  "function": "productivemetalworks:casting_table_locks_melt_while_cooling",
+  "structure": "productivemetalworks:empty_7x7",
+  "max_ticks": 600,
+  "required": true,
+  "setup_ticks": 0
+}

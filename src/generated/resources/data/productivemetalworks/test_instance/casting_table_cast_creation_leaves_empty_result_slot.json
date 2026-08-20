@@ -3,7 +3,7 @@
   "environment": "productivemetalworks:casting_table_cast_creation_leaves_empty_result_slot_env",
   "function": "productivemetalworks:casting_table_cast_creation_leaves_empty_result_slot",
   "structure": "productivemetalworks:empty_7x7",
-  "max_ticks": 300,
+  "max_ticks": 600,
   "required": true,
   "setup_ticks": 0
 }

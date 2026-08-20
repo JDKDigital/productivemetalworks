@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "environment": "productivemetalworks:casting_table_reuses_fresh_cast_immediately_env",
+  "function": "productivemetalworks:casting_table_reuses_fresh_cast_immediately",
+  "structure": "productivemetalworks:empty_7x7",
+  "max_ticks": 600,
+  "required": true,
+  "setup_ticks": 0
+}
