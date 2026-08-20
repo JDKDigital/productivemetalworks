@@ -22,6 +22,8 @@ import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import org.slf4j.Logger;
+import cy.jdkdigital.productivemetalworks.gametest.MetalworksGameTests;
+import cy.jdkdigital.productivemetalworks.gametest.TestFunctions;
 
 // PORT-TODO (26.1): ponder/create integration excluded until Create ships a 26.1.2 build.
 //import cy.jdkdigital.productivemetalworks.integration.ponder.MetalworksPonderPlugin;
@@ -56,8 +58,8 @@ public class ProductiveMetalworks
         // registers each entry, and refreezes. No-op cost in production (the gametest path is only reached
         // when GameTestHooks.isGametestEnabled() is true).
         @SuppressWarnings("unused")
-        Object forceTestsLoad = cy.jdkdigital.productivemetalworks.gametest.MetalworksGameTests.MAX_TICKS;
-        cy.jdkdigital.productivemetalworks.gametest.TestFunctions.init();
+        Object forceTestsLoad = MetalworksGameTests.MAX_TICKS;
+        TestFunctions.init();
 
         MetalworksRegistrator.register();
 

@@ -33,6 +33,8 @@ import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
+import java.util.Optional;
+import net.minecraft.world.item.ItemStackTemplate;
 
 public class CastingBlockEntity extends CapabilityBlockEntity
 {
@@ -353,13 +355,16 @@ public class CastingBlockEntity extends CapabilityBlockEntity
         boolean isTable = getBlockState().is(MetalworksRegistrator.CASTING_TABLE.get());
         // Bucket filling
         if (isTable && cast.is(Items.BUCKET)) {
-            return new ItemCastingRecipe(java.util.Optional.of(Ingredient.of(cast.getItem())), new SizedFluidIngredient(FluidIngredient.of(fluid), FluidType.BUCKET_VOLUME), net.minecraft.world.item.ItemStackTemplate.fromNonEmptyStack(FluidUtil.getFilledBucket(fluid)), true);
+            var filledBucket = FluidUtil.getFilledBucket(fluid);
+            if (!filledBucket.isEmpty()) {
+                return new ItemCastingRecipe(Optional.of(Ingredient.of(cast.getItem())), new SizedFluidIngredient(FluidIngredient.of(fluid), FluidType.BUCKET_VOLUME), ItemStackTemplate.fromNonEmptyStack(filledBucket), true);
+            }
         }
         // Waxing
         if (!isTable && fluid.is(MetalworksRegistrator.MOLTEN_WAX.get()) && cast.getItem() instanceof BlockItem block) {
             var waxData = block.getBlock().builtInRegistryHolder().getData(NeoForgeDataMaps.WAXABLES);
             if (waxData != null) {
-                return new BlockCastingRecipe(java.util.Optional.of(Ingredient.of(cast.getItem())), new SizedFluidIngredient(FluidIngredient.of(fluid), 50), new net.minecraft.world.item.ItemStackTemplate(waxData.waxed().asItem()), true);
+                return new BlockCastingRecipe(Optional.of(Ingredient.of(cast.getItem())), new SizedFluidIngredient(FluidIngredient.of(fluid), 50), new ItemStackTemplate(waxData.waxed().asItem()), true);
             }
         }
 

@@ -37,6 +37,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.ticks.TickPriority;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -181,15 +182,26 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
 
             // Process entity detection
             if (blockEntity.tickCounter % 20 == 0 && (Config.foundryCollectItems || Config.foundryDamageEntities)) {
-                var c1 = mb.topCorners().getFirst().below(mb.height());
-                var c2 = mb.topCorners().getSecond().below(mb.height() - 2);
+                var top1 = mb.topCorners().getFirst();
+                var top2 = mb.topCorners().getSecond();
+                var cavity = new BoundingBox(
+                        Math.min(top1.getX(), top2.getX()) + 1,
+                        top1.below(mb.height() - 1).getY(),
+                        Math.min(top1.getZ(), top2.getZ()) + 1,
+                        Math.max(top1.getX(), top2.getX()) - 1,
+                        top1.getY(),
+                        Math.max(top1.getZ(), top2.getZ()) - 1
+                );
 
-                level.getEntities(null, new AABB(c1.getX(), c1.getY(), c1.getZ(), c2.getX(), c2.getY(), c2.getZ())).forEach(entity -> {
+                level.getEntities(null, AABB.of(cavity)).forEach(entity -> {
                     // Item entities can be picked up when there's room in the item handler
                     if (Config.foundryCollectItems) {
                         if (entity instanceof ItemEntity item && !item.isRemoved()) {
                             var groundStack = item.getItem();
                             for (int slot = 0; slot < blockEntity.itemHandler.size(); slot++) {
+                                if (groundStack.isEmpty()) {
+                                    break;
+                                }
                                 if (blockEntity.itemHandler.getItem(slot).isEmpty()) {
                                     var clonedStack = groundStack.copy();
                                     clonedStack.setCount(1);

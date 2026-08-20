@@ -14,6 +14,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
@@ -22,6 +23,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.TypedEntityData;
 import net.minecraft.world.level.GameType;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.Fluids;
@@ -36,6 +38,8 @@ import net.neoforged.neoforge.transfer.transaction.Transaction;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Consumer;
+import net.minecraft.world.level.material.Fluid;
+import java.util.function.Predicate;
 
 /**
  * In-game tests for the foundry multiblock.
@@ -68,6 +72,8 @@ public final class MetalworksGameTests
         register("casting_table_cast_creation_leaves_empty_result_slot", MetalworksGameTests::testCastingTableCastCreationLeavesEmptyResult, 600);
         register("casting_table_reuses_fresh_cast_immediately", MetalworksGameTests::testCastingTableReusesFreshCast, 600);
         register("casting_table_locks_melt_while_cooling", MetalworksGameTests::testCastingTableLocksMeltWhileCooling, 600);
+        register("foundry_vacuum_consumes_single_item_once", MetalworksGameTests::testFoundryVacuumConsumesSingleItemOnce, 200);
+        register("foundry_damage_limited_to_inner_cavity", MetalworksGameTests::testFoundryDamageLimitedToCavity, 200);
         register("casting_table_drops_cast_when_broken", MetalworksGameTests::testCastingTableDropsCastOnBreak);
         register("breaking_controller_deactivates_heating_coils", MetalworksGameTests::testBreakingControllerDeactivatesCoils);
         register("foundry_grown_slots_get_melt_timers", MetalworksGameTests::testGrownFoundrySlotsGetMeltTimers);
@@ -281,6 +287,117 @@ public final class MetalworksGameTests
                 .thenExecute(() -> {
                     if (helper.getBlockState(coilPos).getValue(BlockStateProperties.ATTACHED)) {
                         helper.fail("Heating coil is still lit after the controller was broken", coilPos);
+                    }
+                })
+                .thenSucceed();
+    }
+
+    private static void testFoundryDamageLimitedToCavity(GameTestHelper helper) {
+        BlockState coil = MetalworksRegistrator.LIQUID_HEATING_COIL.get().defaultBlockState();
+        BlockState wall = MetalworksRegistrator.FIRE_BRICKS.get(DyeColor.BLACK).get().defaultBlockState();
+        BlockPos controllerPos = new BlockPos(2, WALL_Y, 0);
+        BlockPos tankPos = new BlockPos(2, WALL_Y, 4);
+
+        for (int x = 0; x <= 4; x++) {
+            for (int z = 0; z <= 4; z++) {
+                helper.setBlock(new BlockPos(x, FLOOR_Y, z), coil);
+                boolean perimeter = x == 0 || x == 4 || z == 0 || z == 4;
+                boolean openCorner = (x == 0 || x == 4) && (z == 0 || z == 4);
+                if (perimeter && !openCorner) {
+                    helper.setBlock(new BlockPos(x, WALL_Y, z), wall);
+                }
+            }
+        }
+        helper.setBlock(controllerPos, MetalworksRegistrator.FOUNDRY_CONTROLLERS.get(DyeColor.BLACK).get().defaultBlockState()
+                .setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH));
+        helper.setBlock(tankPos, MetalworksRegistrator.FOUNDRY_TANKS.get(DyeColor.BLACK).get().defaultBlockState());
+        helper.getBlockEntity(tankPos, FoundryTankBlockEntity.class).getFluidHandler().fill(new FluidStack(Fluids.LAVA, 4000), true);
+        helper.setBlock(new BlockPos(5, FLOOR_Y, 2), Blocks.STONE.defaultBlockState());
+        helper.setBlock(new BlockPos(2, FLOOR_Y, 5), Blocks.STONE.defaultBlockState());
+        helper.useBlock(controllerPos);
+
+        if (helper.getBlockEntity(controllerPos, FoundryControllerBlockEntity.class).getMultiblockData() == null) {
+            helper.fail("5x5 foundry with open wall corners did not assemble", controllerPos);
+            return;
+        }
+
+        BlockPos[] safeSpots = {
+                new BlockPos(0, WALL_Y, 0), new BlockPos(4, WALL_Y, 0),
+                new BlockPos(0, WALL_Y, 4), new BlockPos(4, WALL_Y, 4),
+                new BlockPos(5, WALL_Y, 2), new BlockPos(2, WALL_Y, 5)
+        };
+        BlockPos[] cavitySpots = {
+                new BlockPos(2, WALL_Y, 2), new BlockPos(1, WALL_Y, 1), new BlockPos(3, WALL_Y, 3)
+        };
+
+        LivingEntity[] safe = new LivingEntity[safeSpots.length];
+        float[] safeBefore = new float[safeSpots.length];
+        for (int i = 0; i < safeSpots.length; i++) {
+            safe[i] = helper.spawnWithNoFreeWill(EntityType.PIG, safeSpots[i]);
+            safeBefore[i] = safe[i].getHealth();
+        }
+        LivingEntity[] inCavity = new LivingEntity[cavitySpots.length];
+        float[] cavityBefore = new float[cavitySpots.length];
+        for (int i = 0; i < cavitySpots.length; i++) {
+            inCavity[i] = helper.spawnWithNoFreeWill(EntityType.PIG, cavitySpots[i]);
+            cavityBefore[i] = inCavity[i].getHealth();
+        }
+
+        helper.startSequence()
+                .thenIdle(30)
+                .thenExecute(() -> {
+                    for (int i = 0; i < safeSpots.length; i++) {
+                        if (safe[i].getHealth() < safeBefore[i]) {
+                            helper.fail("An entity at " + safeSpots[i].toShortString() + " took foundry damage, but that is an open wall corner / outside the wall, not the inner cavity", controllerPos);
+                            return;
+                        }
+                    }
+                    for (int i = 0; i < cavitySpots.length; i++) {
+                        if (inCavity[i].getHealth() >= cavityBefore[i]) {
+                            helper.fail("An entity inside the foundry cavity at " + cavitySpots[i].toShortString() + " took no damage", controllerPos);
+                            return;
+                        }
+                    }
+                })
+                .thenSucceed();
+    }
+
+    private static void testFoundryVacuumConsumesSingleItemOnce(GameTestHelper helper) {
+        buildFoundry(helper, true);
+        helper.setBlock(TANK_POS, MetalworksRegistrator.FOUNDRY_TANKS.get(DyeColor.BLACK).get().defaultBlockState());
+        helper.getBlockEntity(TANK_POS, FoundryTankBlockEntity.class).getFluidHandler().fill(new FluidStack(Fluids.LAVA, 4000), true);
+        helper.useBlock(CONTROLLER_POS);
+
+        FoundryControllerBlockEntity controller = helper.getBlockEntity(CONTROLLER_POS, FoundryControllerBlockEntity.class);
+        if (controller.getMultiblockData() == null) {
+            helper.fail("Foundry did not assemble", CONTROLLER_POS);
+            return;
+        }
+        TickingSlotInventoryHandler items = (TickingSlotInventoryHandler) controller.getItemHandler();
+        items.setSize(6);
+
+        BlockPos interior = new BlockPos(1, WALL_Y, 1);
+        BlockPos absInterior = helper.absolutePos(interior);
+        ItemEntity dropped = new ItemEntity(helper.getLevel(), absInterior.getX() + 0.5, absInterior.getY() + 0.5, absInterior.getZ() + 0.5, new ItemStack(Items.RAW_IRON));
+        dropped.setPickUpDelay(0);
+        helper.getLevel().addFreshEntity(dropped);
+
+        helper.startSequence()
+                .thenIdle(45)
+                .thenExecute(() -> {
+                    TickingSlotInventoryHandler handler = (TickingSlotInventoryHandler) helper.getBlockEntity(CONTROLLER_POS, FoundryControllerBlockEntity.class).getItemHandler();
+                    int occupied = 0;
+                    for (int slot = 0; slot < handler.size(); slot++) {
+                        if (!handler.getStackInSlot(slot).isEmpty()) {
+                            occupied++;
+                        }
+                    }
+                    if (occupied != 1) {
+                        helper.fail("One dropped raw iron filled " + occupied + " foundry slots, expected exactly 1", CONTROLLER_POS);
+                        return;
+                    }
+                    if (ItemStack.EMPTY.getCount() != 0) {
+                        helper.fail("The shared ItemStack.EMPTY singleton was mutated (count is now " + ItemStack.EMPTY.getCount() + ")", CONTROLLER_POS);
                     }
                 })
                 .thenSucceed();
@@ -510,8 +627,8 @@ public final class MetalworksGameTests
     }
 
     private static void runTapCastTest(GameTestHelper helper, BlockState castingBlock, ItemStack cast, int recipeAmount,
-                                       net.minecraft.world.level.material.Fluid fuel,
-                                       java.util.function.Predicate<ItemStack> resultMatches, String resultDesc, boolean castConsumed) {
+                                       Fluid fuel,
+                                       Predicate<ItemStack> resultMatches, String resultDesc, boolean castConsumed) {
         buildFoundry(helper, true);
         helper.setBlock(DRAIN_POS, MetalworksRegistrator.FOUNDRY_DRAINS.get(DyeColor.BLACK).get().defaultBlockState());
         helper.setBlock(TAP_POS, MetalworksRegistrator.FOUNDRY_TAP.get().defaultBlockState()

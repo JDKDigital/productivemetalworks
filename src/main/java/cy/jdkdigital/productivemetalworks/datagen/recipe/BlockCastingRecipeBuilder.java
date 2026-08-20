@@ -14,6 +14,7 @@ import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
+import net.minecraft.world.item.Items;
 
 public class BlockCastingRecipeBuilder implements RecipeBuilder
 {
@@ -44,7 +45,7 @@ public class BlockCastingRecipeBuilder implements RecipeBuilder
         if (cast == null || result == null) {
             return new BlockCastingRecipeBuilder(Optional.empty(), fluid, result, consumeCast, true);
         }
-        Optional<Ingredient> ing = cast.item().value() == net.minecraft.world.item.Items.AIR ? Optional.empty() : Optional.of(Ingredient.of(cast.item().value()));
+        Optional<Ingredient> ing = cast.item().value() == Items.AIR ? Optional.empty() : Optional.of(Ingredient.of(cast.item().value()));
         return new BlockCastingRecipeBuilder(ing, fluid, result, consumeCast, false);
     }
 

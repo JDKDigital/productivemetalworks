@@ -32,6 +32,7 @@ import net.neoforged.neoforge.client.model.item.DynamicFluidContainerModel;
 
 import java.util.*;
 import java.util.stream.Stream;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 public class BlockModelProvider extends ModelProvider
 {
@@ -73,7 +74,7 @@ public class BlockModelProvider extends ModelProvider
         return known.stream();
     }
 
-    private static void addBlocks(List<Holder<Block>> list, Iterable<? extends net.neoforged.neoforge.registries.DeferredHolder<Block, Block>> holders) {
+    private static void addBlocks(List<Holder<Block>> list, Iterable<? extends DeferredHolder<Block, Block>> holders) {
         holders.forEach(h -> list.add(h.get().builtInRegistryHolder()));
     }
 

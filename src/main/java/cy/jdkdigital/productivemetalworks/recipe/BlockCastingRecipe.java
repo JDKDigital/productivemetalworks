@@ -11,6 +11,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
+import java.util.Optional;
 
 public class BlockCastingRecipe extends ItemCastingRecipe
 {
@@ -30,7 +31,7 @@ public class BlockCastingRecipe extends ItemCastingRecipe
 
     public static final RecipeSerializer<BlockCastingRecipe> SERIALIZER = new RecipeSerializer<>(MAP_CODEC, STREAM_CODEC);
 
-    public BlockCastingRecipe(java.util.Optional<Ingredient> cast, SizedFluidIngredient fluid, ItemStackTemplate result, boolean consumeCast) {
+    public BlockCastingRecipe(Optional<Ingredient> cast, SizedFluidIngredient fluid, ItemStackTemplate result, boolean consumeCast) {
         super(cast, fluid, result, consumeCast);
     }
 
@@ -45,7 +46,7 @@ public class BlockCastingRecipe extends ItemCastingRecipe
     }
 
     public static BlockCastingRecipe fromNetwork(RegistryFriendlyByteBuf buffer) {
-        return new BlockCastingRecipe(buffer.readBoolean() ? java.util.Optional.of(Ingredient.CONTENTS_STREAM_CODEC.decode(buffer)) : java.util.Optional.empty(), SizedFluidIngredient.STREAM_CODEC.decode(buffer), ItemStackTemplate.STREAM_CODEC.decode(buffer), buffer.readBoolean());
+        return new BlockCastingRecipe(buffer.readBoolean() ? Optional.of(Ingredient.CONTENTS_STREAM_CODEC.decode(buffer)) : Optional.empty(), SizedFluidIngredient.STREAM_CODEC.decode(buffer), ItemStackTemplate.STREAM_CODEC.decode(buffer), buffer.readBoolean());
     }
 
     public static void toNetwork(RegistryFriendlyByteBuf buffer, BlockCastingRecipe recipe) {

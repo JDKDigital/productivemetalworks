@@ -50,6 +50,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import net.minecraft.core.component.DataComponentPatch;
+import cy.jdkdigital.productivebees.common.crafting.ingredient.ComponentIngredient;
 
 public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider
 {
@@ -712,7 +714,7 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider
         var tag = new CompoundTag();
         tag.putString("type", beeId(name).toString());
         tag.putString("id", "productivebees:configurable_bee");
-        net.minecraft.core.component.DataComponentPatch patch = net.minecraft.core.component.DataComponentPatch.builder()
+        DataComponentPatch patch = DataComponentPatch.builder()
                 .set(DataComponents.ENTITY_DATA, TypedEntityData.of(EntityType.byString("productivebees:configurable_bee").orElseThrow(), tag)).build();
         Item egg = BuiltInRegistries.ITEM.getValue(Identifier.fromNamespaceAndPath("productivebees", "spawn_egg_configurable_bee"));
         return new ItemStackTemplate(egg == null ? Items.AIR : egg, patch);
@@ -720,7 +722,7 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider
 
     // Build the productivebees ComponentIngredient cast from a bee-egg template without materializing the stack.
     private static Ingredient beeEggCast(ItemStackTemplate template) {
-        return cy.jdkdigital.productivebees.common.crafting.ingredient.ComponentIngredient.of(template.components(), template.item().value());
+        return ComponentIngredient.of(template.components(), template.item().value());
     }
 
     private void pbeesCompat(RecipeOutput recipeOutput) {
@@ -728,32 +730,32 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider
                 .save(recipeOutput
                                 .withConditions(new ModLoadedCondition("allthemodium"))
                                 .withConditions(new ModLoadedCondition("productivebees"))
-                                .withConditions(new LazyCondition(new cy.jdkdigital.productivebees.common.crafting.conditions.BeeExistsCondition(beeId("ghostly"))))
-                                .withConditions(new LazyCondition(new cy.jdkdigital.productivebees.common.crafting.conditions.BeeExistsCondition(beeId("soul_lava"))))
+                                .withConditions(new LazyCondition(new BeeExistsCondition(beeId("ghostly"))))
+                                .withConditions(new LazyCondition(new BeeExistsCondition(beeId("soul_lava"))))
                         , "productivemetalworks:casting/pbees/soul_lava_bee");
 
         ItemCastingRecipeBuilder.of(beeEggCast(makeBeeEgg("netherite")), SizedFluidIngredient.of(BuiltInRegistries.FLUID.getValue(Identifier.parse("allthemodium:molten_allthemodium")), 360), makeBeeEgg("allthemodium"), true)
                 .save(recipeOutput
                                 .withConditions(new ModLoadedCondition("allthemodium"))
                                 .withConditions(new ModLoadedCondition("productivebees"))
-                                .withConditions(new LazyCondition(new cy.jdkdigital.productivebees.common.crafting.conditions.BeeExistsCondition(beeId("netherite"))))
-                                .withConditions(new LazyCondition(new cy.jdkdigital.productivebees.common.crafting.conditions.BeeExistsCondition(beeId("allthemodium"))))
+                                .withConditions(new LazyCondition(new BeeExistsCondition(beeId("netherite"))))
+                                .withConditions(new LazyCondition(new BeeExistsCondition(beeId("allthemodium"))))
                         , "productivemetalworks:casting/pbees/allthemodium_bee");
 
         ItemCastingRecipeBuilder.of(beeEggCast(makeBeeEgg("allthemodium")), SizedFluidIngredient.of(BuiltInRegistries.FLUID.getValue(Identifier.parse("allthemodium:molten_vibranium")), 360), makeBeeEgg("vibranium"), true)
                 .save(recipeOutput
                                 .withConditions(new ModLoadedCondition("allthemodium"))
                                 .withConditions(new ModLoadedCondition("productivebees"))
-                                .withConditions(new LazyCondition(new cy.jdkdigital.productivebees.common.crafting.conditions.BeeExistsCondition(beeId("allthemodium"))))
-                                .withConditions(new LazyCondition(new cy.jdkdigital.productivebees.common.crafting.conditions.BeeExistsCondition(beeId("vibranium"))))
+                                .withConditions(new LazyCondition(new BeeExistsCondition(beeId("allthemodium"))))
+                                .withConditions(new LazyCondition(new BeeExistsCondition(beeId("vibranium"))))
                         , "productivemetalworks:casting/pbees/vibranium_bee");
 
         ItemCastingRecipeBuilder.of(beeEggCast(makeBeeEgg("vibranium")), SizedFluidIngredient.of(BuiltInRegistries.FLUID.getValue(Identifier.parse("allthemodium:molten_unobtainium")), 360), makeBeeEgg("unobtainium"), true)
                 .save(recipeOutput
                                 .withConditions(new ModLoadedCondition("allthemodium"))
                                 .withConditions(new ModLoadedCondition("productivebees"))
-                                .withConditions(new LazyCondition(new cy.jdkdigital.productivebees.common.crafting.conditions.BeeExistsCondition(beeId("vibranium"))))
-                                .withConditions(new LazyCondition(new cy.jdkdigital.productivebees.common.crafting.conditions.BeeExistsCondition(beeId("unobtainium"))))
+                                .withConditions(new LazyCondition(new BeeExistsCondition(beeId("vibranium"))))
+                                .withConditions(new LazyCondition(new BeeExistsCondition(beeId("unobtainium"))))
                         , "productivemetalworks:casting/pbees/unobtainium_bee");
 
         // melt combs
@@ -808,7 +810,7 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider
         var inputTag = new CompoundTag();
         inputTag.putString("id", ModEntities.CONFIGURABLE_BEE.getId().toString());
         inputTag.putString("type", type);
-        net.minecraft.core.component.DataComponentPatch patch = net.minecraft.core.component.DataComponentPatch.builder()
+        DataComponentPatch patch = DataComponentPatch.builder()
                 .set(DataComponents.ENTITY_DATA, TypedEntityData.of(ModEntities.CONFIGURABLE_BEE.get(), inputTag)).build();
         return new ItemStackTemplate(ModItems.CONFIGURABLE_SPAWN_EGG.get(), patch);
     }

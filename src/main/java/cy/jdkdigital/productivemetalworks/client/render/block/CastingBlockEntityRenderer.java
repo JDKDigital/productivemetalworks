@@ -24,6 +24,7 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import org.jspecify.annotations.Nullable;
 
 import javax.annotation.Nonnull;
+import net.minecraft.world.phys.Vec3;
 
 public class CastingBlockEntityRenderer implements BlockEntityRenderer<CastingBlockEntity, CastingBlockEntityRenderer.CastingRenderState>
 {
@@ -41,7 +42,7 @@ public class CastingBlockEntityRenderer implements BlockEntityRenderer<CastingBl
     }
 
     @Override
-    public void extractRenderState(CastingBlockEntity be, CastingRenderState state, float partialTicks, @Nonnull net.minecraft.world.phys.Vec3 cameraPos, ModelFeatureRenderer.@Nullable CrumblingOverlay crumbling) {
+    public void extractRenderState(CastingBlockEntity be, CastingRenderState state, float partialTicks, @Nonnull Vec3 cameraPos, ModelFeatureRenderer.@Nullable CrumblingOverlay crumbling) {
         BlockEntityRenderState.extractBase(be, state, crumbling);
 
         state.isTable = be.getBlockState().is(MetalworksRegistrator.CASTING_TABLE.get());

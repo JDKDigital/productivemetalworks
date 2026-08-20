@@ -12,6 +12,8 @@ import net.neoforged.neoforge.data.event.GatherDataEvent;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import cy.jdkdigital.productivemetalworks.gametest.GameTestStructureProvider;
+import cy.jdkdigital.productivemetalworks.gametest.TestEntriesProvider;
 
 @EventBusSubscriber(modid = ProductiveMetalworks.MODID)
 public class MetalworksDataProvider
@@ -40,7 +42,7 @@ public class MetalworksDataProvider
         gen.addProvider(true, new DataMapProvider(output, provider));
 
         // GameTest playground structure + one test_instance/test_environment JSON per registered test.
-        gen.addProvider(true, new cy.jdkdigital.productivemetalworks.gametest.GameTestStructureProvider(output));
-        gen.addProvider(true, new cy.jdkdigital.productivemetalworks.gametest.TestEntriesProvider(output));
+        gen.addProvider(true, new GameTestStructureProvider(output));
+        gen.addProvider(true, new TestEntriesProvider(output));
     }
 }

@@ -26,6 +26,8 @@ import net.neoforged.neoforge.registries.datamaps.builtin.NeoForgeDataMaps;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import net.minecraft.world.item.ItemStackTemplate;
 
 @mezz.jei.api.JeiPlugin
 public class JeiPlugin implements IModPlugin
@@ -91,7 +93,7 @@ public class JeiPlugin implements IModPlugin
         BuiltInRegistries.BLOCK.listElements().forEach(blockReference -> {
             var waxData = blockReference.getData(NeoForgeDataMaps.WAXABLES);
             if (waxData != null) {
-                WAXING_RECIPES.add(new RecipeHolder<>(recipeKey("waxing/" + blockReference.key().identifier().getPath()), new BlockCastingRecipe(java.util.Optional.of(Ingredient.of(blockReference.value())), SizedFluidIngredient.of(MetalworksRegistrator.MOLTEN_WAX.get(), 50), new net.minecraft.world.item.ItemStackTemplate(waxData.waxed().asItem()), true)));
+                WAXING_RECIPES.add(new RecipeHolder<>(recipeKey("waxing/" + blockReference.key().identifier().getPath()), new BlockCastingRecipe(Optional.of(Ingredient.of(blockReference.value())), SizedFluidIngredient.of(MetalworksRegistrator.MOLTEN_WAX.get(), 50), new ItemStackTemplate(waxData.waxed().asItem()), true)));
             }
         });
         registration.addRecipes(BLOCK_CASTING, WAXING_RECIPES);
@@ -101,7 +103,7 @@ public class JeiPlugin implements IModPlugin
         BuiltInRegistries.FLUID.entrySet().forEach(fluidHolder -> {
             var fluid = fluidHolder.getValue();
             if (fluid.defaultFluidState().isSource() && fluid.getBucket() != Items.AIR) {
-                BUCKET_RECIPES.add(new RecipeHolder<>(recipeKey("bucket/" + fluidHolder.getKey().identifier().getPath()), new BlockCastingRecipe(java.util.Optional.of(Ingredient.of(Items.BUCKET)), SizedFluidIngredient.of(fluid, 1000), new net.minecraft.world.item.ItemStackTemplate(fluid.getBucket()), true)));
+                BUCKET_RECIPES.add(new RecipeHolder<>(recipeKey("bucket/" + fluidHolder.getKey().identifier().getPath()), new BlockCastingRecipe(Optional.of(Ingredient.of(Items.BUCKET)), SizedFluidIngredient.of(fluid, 1000), new ItemStackTemplate(fluid.getBucket()), true)));
             }
         });
         registration.addRecipes(ITEM_CASTING, BUCKET_RECIPES);

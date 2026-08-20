@@ -19,6 +19,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Emits the datapack JSON files that back each gametest:
@@ -53,7 +55,7 @@ public class TestEntriesProvider implements DataProvider
         @SuppressWarnings("unused")
         var force = MetalworksGameTests.MAX_TICKS;
 
-        java.util.List<CompletableFuture<?>> futures = new java.util.ArrayList<>();
+        List<CompletableFuture<?>> futures = new ArrayList<>();
 
         for (Map.Entry<String, Integer> entry : MetalworksGameTests.MAX_TICKS.entrySet()) {
             String name = entry.getKey();

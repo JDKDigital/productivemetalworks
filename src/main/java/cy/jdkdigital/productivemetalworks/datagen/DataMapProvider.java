@@ -14,6 +14,7 @@ import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import cy.jdkdigital.productivemetalworks.util.FluidStackTemplate;
 
 public class DataMapProvider extends net.neoforged.neoforge.common.data.DataMapProvider
 {
@@ -34,7 +35,7 @@ public class DataMapProvider extends net.neoforged.neoforge.common.data.DataMapP
         coils.add(MetalworksRegistrator.POWERED_HEATING_COIL, new FuelMap(1500, 30f, 0.5f), false);
         coils.add(MetalworksRegistrator.HIGH_POWERED_HEATING_COIL, new FuelMap(3000, 40f, 1.0f), false);
 
-        entityMelting.add(EntityType.PLAYER.builtInRegistryHolder(), new EntityMeltingMap(new cy.jdkdigital.productivemetalworks.util.FluidStackTemplate(MetalworksRegistrator.LIQUID_MEAT.get(), 10), 0.8f), false);
+        entityMelting.add(EntityType.PLAYER.builtInRegistryHolder(), new EntityMeltingMap(new FluidStackTemplate(MetalworksRegistrator.LIQUID_MEAT.get(), 10), 0.8f), false);
 
         var metalUnits = new UnitMap(List.of(
                 new UnitMap.Unit(10, "nugget"),
