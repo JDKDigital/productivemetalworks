@@ -26,10 +26,19 @@ abstract public class TickingSlotInventoryHandler extends InventoryHandlerHelper
 
     @Override
     public void setSize(int size) {
+        int previousSize = size();
         super.setSize(size);
-        if (size != this.size()) {
-            initTickers();
-            recalculate();
+        if (size != previousSize) {
+            resizeTickers(size);
+        }
+    }
+
+    protected void resizeTickers(int size) {
+        while (tickers.size() > size) {
+            tickers.remove(tickers.size() - 1);
+        }
+        while (tickers.size() < size) {
+            tickers.add(Pair.of(0, 0));
         }
     }
 
