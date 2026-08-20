@@ -126,25 +126,6 @@ public class FoundryControllerBlock extends CapabilityContainerBlock implements 
         return InteractionResult.SUCCESS;
     }
 
-    @Override
-    protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos, boolean movedByPiston) {
-        // Inventory drop is handled by CapabilityBlockEntity#preRemoveSideEffects in 26.1.
-        if (level.getBlockEntity(pos) instanceof FoundryControllerBlockEntity blockEntity) {
-            // Mark heating coils as inactive
-            var mb = blockEntity.getMultiblockData();
-            if (mb != null) {
-                var controllerFacing = state.getValue(BlockStateProperties.HORIZONTAL_FACING);
-                BlockPos.betweenClosedStream(mb.topCorners().getFirst().relative(controllerFacing.getOpposite()).relative(controllerFacing.getCounterClockWise()).below(mb.height()), mb.topCorners().getSecond().relative(controllerFacing).relative(controllerFacing.getClockWise()).below(mb.height())).forEach(blockPos -> {
-                    var coilState = level.getBlockState(blockPos);
-                    if (coilState.hasProperty(BlockStateProperties.ATTACHED)) {
-                        level.setBlockAndUpdate(blockPos, coilState.setValue(BlockStateProperties.ATTACHED, false));
-                    }
-                });
-            }
-        }
-        super.affectNeighborsAfterRemoval(state, level, pos, movedByPiston);
-    }
-
     public static MultiBlockDetector.MultiBlockData detectMultiblock(Level level, BlockPos pos) throws InvalidStructureException {
         return MultiBlockDetector.detectStructure(level, pos, ModTags.Blocks.FOUNDRY_WALL_BLOCKS, ModTags.Blocks.FOUNDRY_BOTTOM_BLOCKS, true, true, true, Config.foundryMaxVolume, Config.foundryMaxCircumference, Config.foundryMaxHeight);
     }

@@ -71,6 +71,24 @@ public class FoundryControllerBlockEntity extends FluidTankBlockEntity implement
         }
     };
 
+    @Override
+    public void preRemoveSideEffects(BlockPos pos, BlockState state) {
+        super.preRemoveSideEffects(pos, state);
+        if (this.level == null || this.foundryData == null || !state.hasProperty(BlockStateProperties.HORIZONTAL_FACING)) {
+            return;
+        }
+        var controllerFacing = state.getValue(BlockStateProperties.HORIZONTAL_FACING);
+        BlockPos.betweenClosedStream(
+                this.foundryData.topCorners().getFirst().relative(controllerFacing.getOpposite()).relative(controllerFacing.getCounterClockWise()).below(this.foundryData.height()),
+                this.foundryData.topCorners().getSecond().relative(controllerFacing).relative(controllerFacing.getClockWise()).below(this.foundryData.height())
+        ).forEach(coilPos -> {
+            var coilState = this.level.getBlockState(coilPos);
+            if (coilState.hasProperty(BlockStateProperties.ATTACHED)) {
+                this.level.setBlockAndUpdate(coilPos, coilState.setValue(BlockStateProperties.ATTACHED, false));
+            }
+        });
+    }
+
     public CoilType getCoilType() {
         return coilType;
     }
