@@ -83,7 +83,7 @@ public class ProductiveMetalworks
             InterModComms.sendTo("invtweaks", "blacklist-screen", () -> "cy.jdkdigital.productivemetalworks.client.screen.*");
         }
 
-        // PORT-TODO (26.1): restore once Create/ponder publishes a 26.1.2 build and integration/ponder is re-included.
+        // TODO: restore once Create/ponder publishes a 26.1.2 build and integration/ponder is re-included.
 //        if(FMLEnvironment.dist.isClient()) {
 //            PonderIndex.addPlugin(new MetalworksPonderPlugin());
 //        }

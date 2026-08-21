@@ -124,6 +124,11 @@ sourceSets.main.java {
     exclude 'cy/jdkdigital/productivemetalworks/integration/ponder/**'   // Create/ponder has no 26.1.2 build
 }
 
+tasks.named('jar', Jar) {
+    exclude "data/${mod_id}/test_instance/**"
+    exclude "data/${mod_id}/test_environment/**"
+}
+
 // Sets up a dependency configuration called 'localRuntime'.
 // This configuration should be used instead of 'runtimeOnly' to declare
 // a dependency that will be present for runtime testing but that is

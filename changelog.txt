@@ -1,3 +1,15 @@
+26.1.2-1.17.0
+
+- Fixed getting two casts when creating a cast, the new cast now only ends up in the cast slot
+- Fixed casts not dropping when breaking a casting table or basin
+- Fixed heating coils staying lit after breaking a foundry controller
+- Fixed entities taking damage and items being collected outside the foundry's inner cavity
+- Fixed molten metal being drained out of a casting table or basin while it was cooling
+- Fixed items not melting in the new slots after enlarging a foundry
+- Fixed a crash when casting with a fluid that has no bucket
+- Improved recipe lookup performance, and recipe caches are now cleared on datapack reload
+
+
 26.1.2-1.16.4
 
 - Added meltable item tags (productivemetalworks:meltable, with metals/gems/organic subtags)
