@@ -28,7 +28,7 @@ repositories {
     }
     maven {
         name = "JEI"
-        url 'https://maven.blamejared.com'
+        url = "https://maven.blamejared.com"
     }
     maven {
         url = "https://raw.githubusercontent.com/Fuzss/modresources/main/maven/"
@@ -38,6 +38,10 @@ repositories {
     }
     maven {
         url = "https://mvn.devos.one/snapshots" // Registrate
+    }
+    maven {
+        name = "CaffeineMC"
+        url = "https://maven.caffeinemc.net/releases"
     }
 }
 
@@ -188,6 +192,9 @@ dependencies {
     implementation "curse.maven:blueprint-382216:6449863" // clayworks
     implementation "curse.maven:gallery-1173553:6449910" // clayworks
     implementation "curse.maven:create-ironworks-1068172:7758311" // clayworks
+
+    // Sodium API only: guarded by a Class.forName runtime check, so Sodium will stay optional
+    compileOnly "net.caffeinemc:sodium-neoforge-api:${sodium_version}"
 }
 
 tasks.withType(ProcessResources).configureEach {

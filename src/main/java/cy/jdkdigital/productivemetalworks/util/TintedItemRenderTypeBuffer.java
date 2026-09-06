@@ -45,6 +45,6 @@ public class TintedItemRenderTypeBuffer implements MultiBufferSource
             renderType = RenderType.entityTranslucentCull(texture);
         }
 
-        return new TintedVertexBuilder(inner.getBuffer(renderType), red, green, blue, alpha);
+        return TintedVertexBuilder.create(inner.getBuffer(renderType), red, green, blue, alpha);
     }
 }
